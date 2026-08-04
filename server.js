@@ -20,7 +20,7 @@ const upload = multer({
   limits: { fileSize: 10 * 1024 * 1024 }
 });
 
-// ---------- Helper to get location from IP ----------
+// ---------- Helper: Get location from IP ----------
 async function getLocation(ip) {
   try {
     const res = await fetch(`https://ipapi.co/${ip}/json/`);
