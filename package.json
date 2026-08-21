@@ -1,15 +1,12 @@
-
 {
-  "name": "instagram-appeal-bot",
+  "name": "prank-face-capture",
   "version": "1.0.0",
-  "description": "Secure backend for Instagram appeal form with Telegram",
-  "main": "server.js",
+  "private": true,
   "scripts": {
-    "start": "node server.js"
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy"
   },
-  "dependencies": {
-    "express": "^4.18.2",
-    "multer": "^1.4.5-lts.1",
-    "node-fetch": "^2.6.7"
+  "devDependencies": {
+    "wrangler": "^4.34.0"
   }
 }
